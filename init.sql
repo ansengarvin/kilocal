@@ -30,7 +30,7 @@ CREATE TABLE Foods (
     )
 );
 
-CREATE TABLE Days_Receipes (
+CREATE TABLE Days_Recipes (
     id SERIAL PRIMARY KEY,
     day_id INTEGER REFERENCES Days(id),
     recipe_id INTEGER REFERENCES Recipes(id)
