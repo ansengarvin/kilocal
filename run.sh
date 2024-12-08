@@ -18,6 +18,10 @@ function psql() {
 	docker exec -it postgres psql -U dev -W kilocal_api
 }
 
+function testapi() {
+	python -m pytest tests/api.py
+}
+
 function scrape_func_names() {
 	start
 	functions=($(grep -oE 'function[[:space:]]+[a-zA-Z_][a-zA-Z_0-9]*' ./run.sh | sed 's/function[[:space:]]*//'))
