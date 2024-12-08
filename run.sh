@@ -8,7 +8,18 @@ function stop() {
     docker-compose down
 }
 
+function rebuild () {
+	stop
+	docker compose up --build -d
+}
+
+function psql() {
+	start
+	docker exec -it postgres psql -U dev -W kilocal_api
+}
+
 function scrape_func_names() {
+	start
 	functions=($(grep -oE 'function[[:space:]]+[a-zA-Z_][a-zA-Z_0-9]*' ./run.sh | sed 's/function[[:space:]]*//'))
 }
 
