@@ -6,9 +6,6 @@ config = dotenv_values(".env")
 token = None
 
 def test_config():
-    print("Secret Key:", config["SECRET_KEY"])
-    print("Test Password:", config["TEST_PASSWORD"])
-    assert config["SECRET_KEY"]
     assert config["TEST_EMAIL"]
     assert config["TEST_PASSWORD"]
 
@@ -21,6 +18,7 @@ def test_404():
 
 # Testing user creation
 def test_create_user():
+    test_config()
     url = "http://localhost:8000/users"
     data = {
         "name": "John Doe",
@@ -28,32 +26,35 @@ def test_create_user():
         "password": config["TEST_PASSWORD"],
         "weight": 150
     }
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, timeout=10)
     assert response.status_code == 201
     assert "id" in response.json()
     assert response.json()["name"] == data["name"]
     assert response.json()["email"] == data["email"]
     assert response.json()["weight"] == data["weight"]
+    assert "token" in response.json()
 
 # Testing creation of a duplicate user
 def test_duplicate_user():
+    test_config()
     url = "http://localhost:8000/users"
     data = {
         "name": "John Doe",
-        "email": "johndoe@ansengarvin.com",
-        "password": "password",
+        "email": config["TEST_EMAIL"],
+        "password": config["TEST_PASSWORD"],
         "weight": 150
     }
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, timeout=10)
     assert response.status_code == 403
 
 def test_login():
+    test_config()
     url = "http://localhost:8000/login"
     data = {
         "email": config["TEST_EMAIL"],
         "password": config["TEST_PASSWORD"]
     }
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, timeout=10)
     assert response.status_code == 200
     assert "token" in response.json()
     global token
