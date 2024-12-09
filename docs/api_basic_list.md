@@ -10,7 +10,7 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
     * POST
 * /users/{id}
     * GET
-    * PATCH
+    * PUT
 * /users/{id}/days
     * POST
     * GET
@@ -21,10 +21,11 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
     * GET
 * /users/{id}/recipes/{recipe_id}
     * GET
-    * PATCH
+    * PUT
+    * DELETE
 * /users/{id}/foods
     * POST
 * /users/{id}/foods/{food_id}
     * GET
-    * PATCH
+    * PUT
     * DELETE
