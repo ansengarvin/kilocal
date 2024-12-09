@@ -27,12 +27,12 @@ def test_create_user():
         "weight": 150
     }
     response = requests.post(url, json=data, timeout=10)
-    assert response.status_code == 201
     assert "id" in response.json()
     assert response.json()["name"] == data["name"]
     assert response.json()["email"] == data["email"]
     assert response.json()["weight"] == data["weight"]
     assert "token" in response.json()
+    assert response.status_code == 201
 
 # Testing creation of a duplicate user
 def test_duplicate_user():

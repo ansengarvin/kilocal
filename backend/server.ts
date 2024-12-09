@@ -1,34 +1,56 @@
 
 import express from 'express'
-const pgp = require('pg-promise')()
+import 'dotenv/config'
+import pg from 'pg'
 var bcrypt = require('bcryptjs')
 
 const app = express();
 const port = process.env.PORT || 8000
 app.use(express.json());
 
-app.get('/test', function (req, res) {
-    res.json({ message: 'Hello, world!' });
+const {Pool} = pg
+
+const pool = new Pool({
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    database: process.env.DB_NAME,
+    idleTimeoutMillis: 0
+})
+
+app.get('/test', async function (req, res) {
+    try {
+        console.log("Trying to connect to " + "postgres://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST + ":" + process.env.DB_PORT + "/" + process.env.DB_NAME)
+
+        const result = await pool.query('SELECT NOW()')
+        console.log(result)
+        res.status(200).send({
+            message: 'Hello, world!',
+            result: result.rows[0].now
+        });
+    } catch (err) {
+        res.status(400).send({
+            err: err.message
+        })
+    }
+    
 });
 
-app.post('/users', function (req, res) {
-    console.log("POST DETECTED")
+app.post('/users', async function (req, res) {
     try {
         if (!req.body.name || !req.body.email || !req.body.password) {
             res.status(400).send({
                 err: "Missing name, email, and/or password."
             })
         }
-        bcrypt.hash(req.body.password, 8, function(err, hash){
+        bcrypt.hash(req.body.password, 8, async function(err, hash){
             if (err) {
                 res.status(400).send({
                     err: err
                 })
             } else {
-                console.log(hash)
-                res.status(201).send({
-                    message: "sent"
-                })
+                
             }
         })
     } catch(err) {
@@ -36,7 +58,6 @@ app.post('/users', function (req, res) {
             err: err.message
         })
     }
-    
 
 })
 
