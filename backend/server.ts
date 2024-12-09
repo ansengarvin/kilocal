@@ -21,10 +21,7 @@ const pool = new Pool({
 
 app.get('/test', async function (req, res) {
     try {
-        console.log("Trying to connect to " + "postgres://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST + ":" + process.env.DB_PORT + "/" + process.env.DB_NAME)
-
         const result = await pool.query('SELECT NOW()')
-        console.log(result)
         res.status(200).send({
             message: 'Hello, world!',
             result: result.rows[0].now
@@ -50,7 +47,18 @@ app.post('/users', async function (req, res) {
                     err: err
                 })
             } else {
-                
+                const text = "INSERT INTO users(name, email, password, weight) VALUES($1, $2, $3, $4) RETURNING id, name, email, weight"
+                const values = [req.body.name, req.body.email, hash, req.body.weight]
+
+                const result = await pool.query(text, values)
+                console.log("New User:\n" + result.rows)
+                res.status(201).send({
+                    id: result.rows[0].id,
+                    name: result.rows[0].name,
+                    email: result.rows[0].email,
+                    weight: result.rows[0].weight,
+                    token: "todo"
+                })
             }
         })
     } catch(err) {

@@ -24,7 +24,7 @@ CREATE TABLE Foods (
     calories INTEGER NOT NULL,
     day_id INTEGER REFERENCES Days(id),
     recipe_id INTEGER REFERENCES Recipes(id),
-    order INTEGER NOT NULL,
+    position INTEGER NOT NULL,
     CONSTRAINT check_day_recipe check (
         (day_id IS NOT NULL AND recipe_id IS NULL) OR
         (day_id IS NULL AND recipe_id IS NOT NULL)
@@ -34,7 +34,7 @@ CREATE TABLE Foods (
 CREATE TABLE Days_Recipes (
     id SERIAL PRIMARY KEY,
     day_id INTEGER REFERENCES Days(id),
-    recipe_id INTEGER REFERENCES Recipes(id)
-    order INTEGER NOT NULL
+    recipe_id INTEGER REFERENCES Recipes(id),
+    position INTEGER NOT NULL
 );
 

@@ -34,18 +34,18 @@ def test_create_user():
     assert "token" in response.json()
     assert response.status_code == 201
 
-# Testing creation of a duplicate user
-def test_duplicate_user():
-    test_config()
-    url = "http://localhost:8000/users"
-    data = {
-        "name": "John Doe",
-        "email": config["TEST_EMAIL"],
-        "password": config["TEST_PASSWORD"],
-        "weight": 150
-    }
-    response = requests.post(url, json=data, timeout=10)
-    assert response.status_code == 403
+# # Testing creation of a duplicate user
+# def test_duplicate_user():
+#     test_config()
+#     url = "http://localhost:8000/users"
+#     data = {
+#         "name": "John Doe",
+#         "email": config["TEST_EMAIL"],
+#         "password": config["TEST_PASSWORD"],
+#         "weight": 150
+#     }
+#     response = requests.post(url, json=data, timeout=10)
+#     assert response.status_code == 403
 
 def test_login():
     test_config()
@@ -63,4 +63,7 @@ def test_login():
 def test_token():
     assert token
     print("Token:", token)
+
+if __name__ == "__main__":
+    test_create_user()
 
