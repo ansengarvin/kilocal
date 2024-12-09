@@ -1,25 +1,34 @@
+# Builds the database
+function build () {
+	docker compose up --build -d
+}
+
+# Destroys the database
+function destroy() {
+	echo "Destroying DB. Remember to delete postgres-data."
+	docker-compose down --volumes
+}
+
+# Starts the database
 function start() {
     echo "Starting DB"
     docker-compose up -d
 }
 
+# Stops the database
 function stop() {
     echo "Stopping DB"
     docker-compose down
 }
 
-function rebuild () {
-	docker compose down --volumes
-	docker compose up --build -d
-}
-
+# Opens a postgres shell.
 function psql() {
 	start
 	docker exec -it postgres psql -U dev -W kilocal_api
 }
 
-function testapi() {
-	python -m pytest tests/api.py
+function test() {
+	python -m pytest -s tests/api.py
 }
 
 function scrape_func_names() {
