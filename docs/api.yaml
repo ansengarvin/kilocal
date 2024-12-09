@@ -55,6 +55,9 @@ paths:
                   weight:
                     type: number
                     description: The weight of the new user
+        '403':
+          description: User already exists
+
     
   /users/{id}:
     get:
@@ -87,8 +90,10 @@ paths:
                   weight:
                     type: number
                     description: The weight of the user
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist
     put:
       summary: Update a user by id
       description: Update a user by their id
@@ -137,8 +142,10 @@ paths:
                     description: The weight of the user
         '400':
           description: Invalid request
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist
   
   /users/{id}/days:
     get:
@@ -171,8 +178,10 @@ paths:
                     calories:
                       type: number
                       description: The total calories for the day
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist
     post:
       summary: Create a new day for a user
       description: Create a new day for a user by their ID
@@ -209,8 +218,10 @@ paths:
                     type: string
                     format: date
                     description: The date of the day
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist
 
   /users/{id}/days/{dayId}:
     get:
@@ -295,9 +306,10 @@ paths:
                               order:
                                 type: integer
                                 description: The position of the food item in the recipe
-
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, day does not exist, or access to this user's information is unauthorized.
+          description: User does not exist, day does not exist.
     delete:
       summary: Delete a day by id
       description: Delete a day by its id
@@ -317,8 +329,10 @@ paths:
       responses:
         '204':
           description: No Content
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, day does not exist, or access to this user's information is unauthorized.
+          description: User does not exist
   /users/{id}/recipes/:
     get:
       summary: Get all recipes for a user
@@ -349,8 +363,10 @@ paths:
                     calories:
                       type: number
                       description: The total calories for the recipe
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist.
     post:
       summary: Create a new recipe for a user
       description: Create a new recipe for a user by their ID
@@ -405,8 +421,10 @@ paths:
                   calories:
                     type: number
                     description: The total calories for the recipe
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist
 
   /users/{id}/recipes/{recipeId}:
     get:
@@ -459,8 +477,10 @@ paths:
                         order:
                           type: integer
                           description: The position of the food item in the recipe
+        '401':  
+          description: Unauthorized
         '404':
-          description: User does not exist, recipe does not exist, or access to this user's information is unauthorized.
+          description: User does not exist, recipe does not exist.
     put:
       summary: Update a recipe by id
       description: Update a recipe by its id
@@ -506,8 +526,10 @@ paths:
                     description: The total calories for the recipe
         '400':
           description: Invalid request
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, recipe does not exist, or access to this user's information is unauthorized.
+          description: User does not exist.
     delete:
       summary: Delete a recipe by id
       description: Delete a recipe by its id
@@ -560,8 +582,10 @@ paths:
                     calories:
                       type: number
                       description: The number of calories of this food item
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist.
     post:
       summary: Create a new food item for a user
       description: Create a new food item for a user by their ID
@@ -602,8 +626,10 @@ paths:
                   calories:
                     type: number
                     description: The number of calories of this food item
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, or access to this user's information is unauthorized.
+          description: User does not exist.
   /users/{id}/foods/{foodId}:
     get:
       summary: Get a food item by id
@@ -637,9 +663,11 @@ paths:
                     description: The name of the food item
                   calories:
                     type: number
-                    description: The number of calories of this food item
+                    description: The number of calories of this food item.
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, food item does not exist, or access to this user's information is unauthorized.
+          description: User does not exist.
     put:
       summary: Update a food item by id
       description: Update a food item by its id
@@ -688,8 +716,10 @@ paths:
                     description: The number of calories of this food item
         '400':
           description: Invalid request
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, food item does not exist, or access to this user's information is unauthorized.
+          description: User does not exist.
     delete:
       summary: Delete a food item by id
       description: Delete a food item by its id
@@ -709,5 +739,7 @@ paths:
       responses:
         '204':
           description: No Content
+        '401':
+          description: Unauthorized
         '404':
-          description: User does not exist, food item does not exist, or access to this user's information is unauthorized.
+          description: User does not exist.
