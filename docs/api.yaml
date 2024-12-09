@@ -1,0 +1,298 @@
+openapi: 3.0.3
+info:
+  title: KiloCalorie API
+  description: A RESTful API for tracking daily caloric intake
+  version: 0.0.0
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      description: Create a new user with the given username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the new user
+                password:
+                  type: string
+                  description: The password of the new user
+                name:
+                  type: string
+                  description: The name of the new user
+                weight:
+                  type: number
+                  description: The weight of the new user
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the new user
+                  email:
+                    type: string
+                    description: The email of the new user
+                  name:
+                    type: string
+                    description: The name of the new user
+                  weight:
+                    type: number
+                    description: The weight of the new user
+    
+  /users/{id}:
+    get:
+      summary: Get a user by id
+      description: Get a user by their id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to get
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the user
+                  email:
+                    type: string
+                    description: The email of the user
+                  name:
+                    type: string
+                    description: The name of the user
+                  weight:
+                    type: number
+                    description: The weight of the user
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+    put:
+      summary: Update a user by id
+      description: Update a user by their id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user
+                name:
+                  type: string
+                  description: The name of the user
+                weight:
+                  type: number
+                  description: The weight of the user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the user
+                  email:
+                    type: string
+                    description: The email of the user
+                  name:
+                    type: string
+                    description: The name of the user
+                  weight:
+                    type: number
+                    description: The weight of the user
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+  
+  /users/{id}/days:
+    get:
+      summary: Get all days for a user
+      description: Get all days for a user by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to get days for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The id of the day
+                    date:
+                      type: string
+                      format: date
+                      description: The date of the day
+                    calories:
+                      type: number
+                      description: The total calories for the day
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+    post:
+      summary: Create a new day for a user
+      description: Create a new day for a user by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to create a day for
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+                  description: The date of the day
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the day
+                  date:
+                    type: string
+                    format: date
+                    description: The date of the day
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+
+  /users/{id}/days/{dayId}:
+    get:
+      summary: Get a day by id
+      description: Get a day by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to get a day for
+          schema:
+            type: integer
+        - name: dayId
+          in: path
+          required: true
+          description: The id of the day to get
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the day
+                  date:
+                    type: string
+                    format: date
+                    description: The date of the day
+                  foods:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The id of the food item
+                        name:
+                          type: string
+                          description: The name of the meal
+                        calories:
+                          type: number
+                          description: The total calories for the meal
+                        order:
+                          type: integer
+                          description: The position of the meal in the day
+                  recipes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The id of the recipe
+                        name:
+                          type: string
+                          description: The name of the recipe
+                        calories:
+                          type: number
+                          description: The total calories for the recipe
+                        order:
+                          type: integer
+                          description: The position of the recipe in the day
+                        foods:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                description: The id of the food item
+                              name:
+                                type: string
+                                description: The name of the food in the recipe
+                              calories:
+                                type: number
+                                description: The number of calories of this food item
+                              order:
+                                type: integer
+                                description: The position of the food item in the recipe
+
+        '404':
+          description: User does not exist, day does not exist, or access to this user's information is unauthorized.
