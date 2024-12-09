@@ -12,6 +12,37 @@ components:
       bearerFormat: JWT
 
 paths:
+  /login:
+    post:
+      summary: Login
+      description: Login with the given username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user
+                password:
+                  type: string
+                  description: The password of the user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: The JWT token
+        '401':
+          description: Unauthorized
+
   /users:
     post:
       summary: Create a new user
@@ -55,6 +86,9 @@ paths:
                   weight:
                     type: number
                     description: The weight of the new user
+                  token:
+                    type: string
+                    description: The token of the new user
         '403':
           description: User already exists
 
