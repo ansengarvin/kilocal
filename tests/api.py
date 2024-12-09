@@ -42,10 +42,10 @@ def test_create_user():
     assert response.json()["name"] == data["name"]
     assert response.json()["email"] == data["email"]
     assert response.json()["weight"] == data["weight"]
-    assert "token" in response.json()
-    test_token(response.json()["token"])
     assert response.status_code == 201
 
+
+# Testing a valid login.
 def test_login():
     test_config()
     url = "http://localhost:8000/login"
@@ -54,11 +54,9 @@ def test_login():
         "password": config["TEST_PASSWORD"]
     }
     response = requests.post(url, json=data, timeout=10)
-    assert response.status_code == 200
     assert "token" in response.json()
-
-
-
+    assert response.status_code == 200
+    test_token(response.json()["token"])
     global token
     token = response.json()["token"]
 

@@ -48,17 +48,19 @@ app.post('/users', async function (req, res) {
                     err: err
                 })
             } else {
+                // TODO: Check if email is in database first.
+
+                // Adds the user into the database.
                 const text = "INSERT INTO users(name, email, password, weight) VALUES($1, $2, $3, $4) RETURNING id, name, email, weight"
                 const values = [req.body.name, req.body.email, hash, req.body.weight]
-
                 const result = await pool.query(text, values)
-                console.log("New User:\n" + result.rows)
+
+                // Returns user information.
                 res.status(201).send({
                     id: result.rows[0].id,
                     name: result.rows[0].name,
                     email: result.rows[0].email,
-                    weight: result.rows[0].weight,
-                    token: generateAuthToken(result.rows[0].id)
+                    weight: result.rows[0].weight
                 })
             }
         })
@@ -67,7 +69,41 @@ app.post('/users', async function (req, res) {
             err: err.message
         })
     }
+})
 
+app.post('/login', async function(req, res) {
+    try {
+        // Ensure username and password provided
+        if (!req.body.email || !req.body.password) {
+            res.status(400).send({err: "Missing email or password"})
+        }
+
+        // Grabs user in the database
+        const text = "SELECT * FROM users WHERE email = $1"
+        const values = [req.body.email]
+        const result = await pool.query(text, values)
+
+        // If no user or password incorrect, send error
+        
+        if (!(result.rowCount && await bcrypt.compare(req.body.password, result.rows[0].password))) {
+            console.log(req.body.password)
+            console.log(result.rowCount)
+            console.log(text, values)
+            res.status(401).send({
+                err: "Invalid Credentials"
+            })
+        } else {
+            const token = generateAuthToken(result.rows[0].id)
+            res.status(200).send ({
+                token: token
+            })
+        }
+
+    } catch(err) {
+        res.status(400).send({
+            err: err.message
+        })
+    }
 })
 
 app.use('*', function (req, res) {
