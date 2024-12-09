@@ -1,9 +1,20 @@
 import requests
+import pytest
 import json
+import jwt
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
 token = None
+
+@pytest.mark.skip("Helper function")
+def test_token(token):
+    try:
+        contents = jwt.decode(token, config["SECRET_KEY"], algorithms="HS256")
+        assert "sub" in contents
+        assert "admin" in contents
+    except:
+        assert "JWT decoding failed" == False
 
 def test_config():
     assert config["TEST_EMAIL"]
@@ -32,20 +43,8 @@ def test_create_user():
     assert response.json()["email"] == data["email"]
     assert response.json()["weight"] == data["weight"]
     assert "token" in response.json()
+    test_token(response.json()["token"])
     assert response.status_code == 201
-
-# # Testing creation of a duplicate user
-# def test_duplicate_user():
-#     test_config()
-#     url = "http://localhost:8000/users"
-#     data = {
-#         "name": "John Doe",
-#         "email": config["TEST_EMAIL"],
-#         "password": config["TEST_PASSWORD"],
-#         "weight": 150
-#     }
-#     response = requests.post(url, json=data, timeout=10)
-#     assert response.status_code == 403
 
 def test_login():
     test_config()
@@ -57,12 +56,11 @@ def test_login():
     response = requests.post(url, json=data, timeout=10)
     assert response.status_code == 200
     assert "token" in response.json()
+
+
+
     global token
     token = response.json()["token"]
-
-def test_token():
-    assert token
-    print("Token:", token)
 
 if __name__ == "__main__":
     test_create_user()

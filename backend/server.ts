@@ -2,6 +2,7 @@
 import express from 'express'
 import 'dotenv/config'
 import pg from 'pg'
+import { generateAuthToken, requireAuthentication } from './lib/authentication'
 var bcrypt = require('bcryptjs')
 
 const app = express();
@@ -57,7 +58,7 @@ app.post('/users', async function (req, res) {
                     name: result.rows[0].name,
                     email: result.rows[0].email,
                     weight: result.rows[0].weight,
-                    token: "todo"
+                    token: generateAuthToken(result.rows[0].id)
                 })
             }
         })
