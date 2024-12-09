@@ -89,7 +89,7 @@ paths:
                     description: The weight of the user
         '404':
           description: User does not exist, or access to this user's information is unauthorized.
-    put:
+    patch:
       summary: Update a user by id
       description: Update a user by their id
       parameters:
@@ -296,3 +296,298 @@ paths:
 
         '404':
           description: User does not exist, day does not exist, or access to this user's information is unauthorized.
+    delete:
+      summary: Delete a day by id
+      description: Delete a day by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to delete a day for
+          schema:
+            type: integer
+        - name: dayId
+          in: path
+          required: true
+          description: The id of the day to delete
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: User does not exist, day does not exist, or access to this user's information is unauthorized.
+  /users/{id}/recipes/:
+    get:
+      summary: Get all recipes for a user
+      description: Get all recipes for a user by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to get recipes for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The id of the recipe
+                    name:
+                      type: string
+                      description: The name of the recipe
+                    calories:
+                      type: number
+                      description: The total calories for the recipe
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+    post:
+      summary: Create a new recipe for a user
+      description: Create a new recipe for a user by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to create a recipe for
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the recipe
+                foods:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The id of the food item
+                      name:
+                        type: string
+                        description: The name of the food in the recipe
+                      calories:
+                        type: number
+                        description: The number of calories of this food item
+                      order:
+                        type: integer
+                        description: The position of the food item in the recipe
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the recipe
+                  name:
+                    type: string
+                    description: The name of the recipe
+                  calories:
+                    type: number
+                    description: The total calories for the recipe
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+
+  /users/{id}/recipes/{recipeId}:
+    get:
+      summary: Get a recipe by id
+      description: Get a recipe by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to get a recipe for
+          schema:
+            type: integer
+        - name: recipeId
+          in: path
+          required: true
+          description: The id of the recipe to get
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the recipe
+                  name:
+                    type: string
+                    description: The name of the recipe
+                  calories:
+                    type: number
+                    description: The total calories for the recipe
+                  foods:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The id of the food item
+                        name:
+                          type: string
+                          description: The name of the food in the recipe
+                        calories:
+                          type: number
+                          description: The number of calories of this food item
+                        order:
+                          type: integer
+                          description: The position of the food item in the recipe
+        '404':
+          description: User does not exist, recipe does not exist, or access to this user's information is unauthorized.
+
+  /users/{id}/foods/:
+    get:
+      summary: Get all foods for a user
+      description: Get all foods for a user by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to get foods for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The id of the food item
+                    name:
+                      type: string
+                      description: The name of the food item
+                    calories:
+                      type: number
+                      description: The number of calories of this food item
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+    post:
+      summary: Create a new food item for a user
+      description: Create a new food item for a user by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to create a food item for
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the food item
+                calories:
+                  type: number
+                  description: The number of calories of this food item
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the food item
+                  name:
+                    type: string
+                    description: The name of the food item
+                  calories:
+                    type: number
+                    description: The number of calories of this food item
+        '404':
+          description: User does not exist, or access to this user's information is unauthorized.
+  /users/{id}/foods/{foodId}:
+    get:
+      summary: Get a food item by id
+      description: Get a food item by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to get a food item for
+          schema:
+            type: integer
+        - name: foodId
+          in: path
+          required: true
+          description: The id of the food item to get
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The id of the food item
+                  name:
+                    type: string
+                    description: The name of the food item
+                  calories:
+                    type: number
+                    description: The number of calories of this food item
+        '404':
+          description: User does not exist, food item does not exist, or access to this user's information is unauthorized.
+    delete:
+      summary: Delete a food item by id
+      description: Delete a food item by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to delete a food item for
+          schema:
+            type: integer
+        - name: foodId
+          in: path
+          required: true
+          description: The id of the food item to delete
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: User does not exist, food item does not exist, or access to this user's information is unauthorized.
