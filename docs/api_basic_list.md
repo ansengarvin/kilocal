@@ -6,26 +6,47 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
 
 ## Paths
 
+### User Entries
 * /users
     * POST
+
 * /users/{id}
     * GET
     * PUT
-* /users/{id}/days
-    * POST
-    * GET
-* /users/{id}/days/{day_id}
-    * GET
+
+### Recipe Entries
 * /users/{id}/recipes/
     * POST
     * GET
+
 * /users/{id}/recipes/{recipe_id}
     * GET
     * PUT
     * DELETE
-* /users/{id}/foods
-    * POST
-* /users/{id}/foods/{food_id}
+
+* /users/{id}/recipes/{recipe_id}/food
     * GET
+    * POST
+
+* /users/{id}/recipes/{recipe_id}/food/{food_id}
     * PUT
     * DELETE
+
+### Day Entries
+* /users/{id}/days/{date}/
+    * GET
+
+* /users/{id}/days/{date}/recipes
+    * POST
+
+* /users/{id}/days/{date}/recipes/{recipe_id}
+    * DELETE
+
+* /users/{id}/days/{date}/food
+    * POST
+
+* /users{id}/days/{date}/food/{food_id}
+    * PUT
+    * DELETE
+
+
