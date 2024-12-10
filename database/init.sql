@@ -6,35 +6,30 @@ CREATE TABLE Users (
     weight FLOAT
 );
 
-CREATE TABLE Days (
-    id SERIAL PRIMARY KEY,
-    date DATE NOT NULL,
-    user_id INTEGER REFERENCES Users(id)
-);
-
 CREATE TABLE Recipes (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    user_id INTEGER REFERENCES Users(id) NOT NULL
+    user_id INTEGER REFERENCES Users(id) NOT NULL,
+    name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Foods (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    calories INTEGER NOT NULL,
-    day_id INTEGER REFERENCES Days(id),
+    user_id INTEGER REFERENCES Users(id) NOT NULL,
     recipe_id INTEGER REFERENCES Recipes(id),
-    position INTEGER NOT NULL,
+    date DATE,
     CONSTRAINT check_day_recipe check (
-        (day_id IS NOT NULL AND recipe_id IS NULL) OR
-        (day_id IS NULL AND recipe_id IS NOT NULL)
-    )
+        (date IS NOT NULL AND recipe_id IS NULL) OR
+        (date IS NULL AND recipe_id IS NOT NULL)
+    ),
+    calories INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    name VARCHAR(255)
 );
 
 CREATE TABLE Days_Recipes (
     id SERIAL PRIMARY KEY,
-    day_id INTEGER REFERENCES Days(id),
-    recipe_id INTEGER REFERENCES Recipes(id),
+    date DATE NOT NULL,
+    recipe_id INTEGER REFERENCES Recipes(id) NOT NULL,
     position INTEGER NOT NULL
 );
 
