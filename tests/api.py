@@ -7,7 +7,9 @@ from dotenv import dotenv_values
 config = dotenv_values(".env")
 
 def pytest_configure():
-    pytest.token = False
+    pytest.id = None
+    pytest.token = None
+    pytest.header = None
 
 @pytest.mark.skip("Helper function")
 def test_token(token):
@@ -40,6 +42,7 @@ def test_create_user():
     }
     response = requests.post(url, json=data, timeout=10)
     assert "id" in response.json()
+    pytest.id = response.json()["id"]
     assert response.json()["name"] == data["name"]
     assert response.json()["email"] == data["email"]
     assert response.json()["weight"] == data["weight"]
@@ -59,6 +62,14 @@ def test_login():
     assert response.status_code == 200
     assert test_token(response.json()["token"])
     pytest.token = response.json()["token"]
+    pytest.header = {'Authorization': pytest.token}
+
+def test_post_food_named():
+    url = "http://localhost:8000/days"
+    data = {
+
+    }
+    reponse = requests.post(url, json=data, headers=pytest.header)
 
 if __name__ == "__main__":
     test_create_user()

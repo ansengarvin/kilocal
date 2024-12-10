@@ -755,9 +755,15 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
-                  description: The id of the food item to add
+                calories:
+                  type: number
+                  description: The number of calories of this food item
+                name:
+                  type: string
+                  description: Optional. The name of the food item.
+                position:
+                  type: number
+                  description: Optional. The relative position of the food item. Will be added to the end otherwise.
       responses:
         '201':
           description: Created
@@ -766,15 +772,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  name:
-                    type: string
-                    description: The name of the food in the recipe
-                  calories:
-                    type: number
-                    description: The number of calories of this food item
-                  position:
+                  id:
                     type: integer
-                    description: The position of the food item in the day
+                    description: The id of the food item added.
         '401':
           description: Unauthorized
         '404':
