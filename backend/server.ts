@@ -5,14 +5,9 @@ import pg from 'pg'
 import { generateAuthToken, requireAuthentication } from './lib/authentication'
 var bcrypt = require('bcryptjs')
 
-var api = require('./api')
-
-
-
 const app = express();
 const port = process.env.PORT || 8000
 app.use(express.json());
-app.use('/users/{id}', api)
 
 const {Pool} = pg
 
@@ -48,24 +43,30 @@ app.post('/users', async function (req, res) {
             })
         }
         bcrypt.hash(req.body.password, 8, async function(err, hash){
-            if (err) {
+            try {
+                if (err) {
+                    res.status(400).send({
+                        err: err
+                    })
+                } else {
+                    // TODO: Check if email is in database first.
+    
+                    // Adds the user into the database.
+                    const text = "INSERT INTO users(name, email, password, weight) VALUES($1, $2, $3, $4) RETURNING id, name, email, weight"
+                    const values = [req.body.name, req.body.email, hash, req.body.weight]
+                    const result = await pool.query(text, values)
+    
+                    // Returns user information.
+                    res.status(201).send({
+                        id: result.rows[0].id,
+                        name: result.rows[0].name,
+                        email: result.rows[0].email,
+                        weight: result.rows[0].weight
+                    })
+                }
+            } catch (err) {
                 res.status(400).send({
-                    err: err
-                })
-            } else {
-                // TODO: Check if email is in database first.
-
-                // Adds the user into the database.
-                const text = "INSERT INTO users(name, email, password, weight) VALUES($1, $2, $3, $4) RETURNING id, name, email, weight"
-                const values = [req.body.name, req.body.email, hash, req.body.weight]
-                const result = await pool.query(text, values)
-
-                // Returns user information.
-                res.status(201).send({
-                    id: result.rows[0].id,
-                    name: result.rows[0].name,
-                    email: result.rows[0].email,
-                    weight: result.rows[0].weight
+                    err: err.message
                 })
             }
         })
@@ -91,15 +92,13 @@ app.post('/login', async function(req, res) {
         // If no user or password incorrect, send error
         
         if (!(result.rowCount && await bcrypt.compare(req.body.password, result.rows[0].password))) {
-            console.log(req.body.password)
-            console.log(result.rowCount)
-            console.log(text, values)
             res.status(401).send({
                 err: "Invalid Credentials"
             })
         } else {
             const token = generateAuthToken(result.rows[0].id)
             res.status(200).send ({
+                id: result.rows[0].id,
                 token: token
             })
         }
@@ -109,6 +108,42 @@ app.post('/login', async function(req, res) {
             err: err.message
         })
     }
+})
+
+app.post('/users/:id/days/:date/foods', requireAuthentication, async function(req, res) {
+    try {
+        if (! req.body.calories) {
+            res.status(400).send({
+                error: "Request body must contain calories"
+            })
+        } else {
+            // TODO: If no position provided, calculate position based on the positions of other foods and recipes on this day.
+
+            // TODO: If position provided, insert into position and push all other positions down. Will need to use a transaction to do this in batch.
+
+            // Insert the food into the database
+            const text = 'INSERT INTO foods(date, user_id, name, calories, position) VALUES($1, $2, $3, $4, $5) RETURNING id'
+            const values = [req.params.date, req.params.id, req.body.id, req.body.calories, 0]
+
+            const result = await pool.query(text, values)
+
+            if (!result.rowCount) {
+                res.status(400).send({
+                    error: "Error inserting food"
+                })
+            } else {
+                res.status(201).send({
+                    id: result.rows[0].id
+                })
+            }
+        }
+
+    } catch (err) {
+        res.status(400).send({
+            err: err.message
+        })
+    }
+    
 })
 
 app.use('*', function (req, res) {

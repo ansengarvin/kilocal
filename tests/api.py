@@ -58,18 +58,24 @@ def test_login():
         "password": config["TEST_PASSWORD"]
     }
     response = requests.post(url, json=data, timeout=10)
+    assert "id" in response.json()
     assert "token" in response.json()
     assert response.status_code == 200
     assert test_token(response.json()["token"])
+    pytest.id = str(response.json()["id"])
     pytest.token = response.json()["token"]
-    pytest.header = {'Authorization': pytest.token}
+    pytest.header = {'Authorization': 'Bearer ' + pytest.token}
 
 def test_post_food_named():
-    url = "http://localhost:8000/days"
+    url = "http://localhost:8000/users/" + pytest.id + "/days/2024-12-09/foods"
     data = {
-
+        "calories": 20,
+        "name": "apple",
+        "position": 0
     }
-    reponse = requests.post(url, json=data, headers=pytest.header)
+    response = requests.post(url, json=data, headers=pytest.header)
+    assert "id" in response.json()
+    assert response.status_code == 201
 
 if __name__ == "__main__":
     test_create_user()
