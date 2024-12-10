@@ -5,9 +5,14 @@ import pg from 'pg'
 import { generateAuthToken, requireAuthentication } from './lib/authentication'
 var bcrypt = require('bcryptjs')
 
+var api = require('./api')
+
+
+
 const app = express();
 const port = process.env.PORT || 8000
 app.use(express.json());
+app.use('/users/{id}', api)
 
 const {Pool} = pg
 
