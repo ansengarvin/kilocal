@@ -12,18 +12,23 @@ CREATE TABLE Recipes (
     name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE Foods (
+CREATE TABLE Days (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES Users(id) NOT NULL,
+    date DATE NOT NULL
+);
+
+CREATE TABLE Foods (
+    id SERIAL PRIMARY KEY,
+    day_id INTEGER REFERENCES Days(id),
     recipe_id INTEGER REFERENCES Recipes(id),
-    date DATE,
-    CONSTRAINT check_day_recipe check (
-        (date IS NOT NULL AND recipe_id IS NULL) OR
-        (date IS NULL AND recipe_id IS NOT NULL)
-    ),
     calories INTEGER NOT NULL,
     position INTEGER NOT NULL,
-    name VARCHAR(255)
+    name VARCHAR(255),
+    CONSTRAINT check_day_recipe check (
+        (day_id IS NOT NULL AND recipe_id IS NULL) OR
+        (day_id IS NULL AND recipe_id IS NOT NULL)
+    )
 );
 
 CREATE TABLE Days_Recipes (
