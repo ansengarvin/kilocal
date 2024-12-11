@@ -180,6 +180,24 @@ paths:
           description: Unauthorized
         '404':
           description: User does not exist
+    delete:
+      summary: Delete a user by id
+      description: Delete a user by their id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to delete
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '404':
+          description: User does not exist
+
   
 
   /users/{id}/recipes/:

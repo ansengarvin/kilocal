@@ -8,33 +8,45 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
 
 ### User Entries
 * /users
-    * POST
+    * POST (create new user)
+
+* /users/login
+    * POST (login)
 
 * /users/{id}
-    * GET
-    * PUT
+    * GET (information from a single user acct)
+    * PUT (edit user info)
+    * DELETE (deletes the user and all associated data)
 
-### Recipe Entries
 * /users/{id}/recipes/
-    * POST
-    * GET
+    * GET (all recipes that the user has)
 
-* /users/{id}/recipes/{recipe_id}
-    * GET
-    * PUT
-    * DELETE
 
-* /users/{id}/recipes/{recipe_id}/food
-    * GET
-    * POST
+### User Day Entries
+* /users/{id}/days/{date}
+    * GET (all foods and recipes for that day)
 
-* /users/{id}/recipes/{recipe_id}/food/{food_id}
-    * PUT
-    * DELETE
+### Recipes
+* /recipes
+    * POST (post a new recipe to a user's book)
+
+* /recipes/{recipe_id}
+    * GET (get all foods for a single recipe)
+    * PUT (edit the name of a single recipe)
+
+* /recipes/{recipe_id}/foods
+    * POST (post a food in an existing recipe)
+
+* /recipes/{recipe_id}/foods/{food_id}
+    * PUT (edit the recipe for a single food)
+    * DELETE (delete a food from a recipe book)
+
+
+### Foods
+/
 
 ### Day Entries
-* /users/{id}/days/{date}/
-    * GET
+
 
 * /users/{id}/days/{date}/recipes
     * POST
