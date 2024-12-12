@@ -21,17 +21,18 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
 * /users/{id}/recipes/
     * GET (all recipes that the user has)
 
+* /users/{id}/days/
+    * GET (all information for a users' days)
 
-### User Day Entries
 * /users/{id}/days/{date}
-    * GET (all foods and recipes for that day)
+    * GET (all information for a users' day)
 
 ### Recipes
 * /recipes
     * POST (post a new recipe to a user's book)
 
 * /recipes/{recipe_id}
-    * GET (get all foods for a single recipe)
+    * GET (get all foods for a single recipe)q
     * PUT (edit the name of a single recipe)
 
 * /recipes/{recipe_id}/foods
@@ -41,24 +42,23 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
     * PUT (edit the recipe for a single food)
     * DELETE (delete a food from a recipe book)
 
-
-### Foods
-/
-
 ### Day Entries
+* /days/
+    * POST (add a new day)
 
+* /days/{day_id}/
+    * GET (get a single day)
+    * PUT (edit a day)
+    * DELETE (delete a day's entry)
 
-* /users/{id}/days/{date}/recipes
-    * POST
+* /days/{day_id}/recipes
+    * POST (add a user's recipe to a day)
 
-* /users/{id}/days/{date}/recipes/{recipe_id}
+* /days/{day_id}/recipes/{recipe_id}
     * DELETE
 
-* /users/{id}/days/{date}/food
+* /days/{day_id}/foods
     * POST
 
-* /users{id}/days/{date}/food/{food_id}
-    * PUT
+* /days/{day_id}/foods/{food_id}
     * DELETE
-
-
