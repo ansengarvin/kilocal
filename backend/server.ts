@@ -152,4 +152,5 @@ app.use('*', function (req, res) {
 
 app.listen(port, function () {
     console.log('== server is running on PORT:', port);
+    console.log('Our pool variables from env:', process.env.DB_USER, process.env.DB_PASS, process.env.DB_HOST, process.env.DB_PORT, process.env.DB_NAME);
 });

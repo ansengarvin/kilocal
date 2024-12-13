@@ -31,6 +31,14 @@ function test() {
 	python -m pytest -s tests/api.py
 }
 
+function test_restart() {
+	destroy
+	sleep 2
+	build
+	sleep 5
+	test
+}
+
 function scrape_func_names() {
 	functions=($(grep -oE 'function[[:space:]]+[a-zA-Z_][a-zA-Z_0-9]*' ./run.sh | sed 's/function[[:space:]]*//'))
 }

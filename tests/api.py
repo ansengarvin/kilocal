@@ -42,7 +42,7 @@ def test_create_user():
     }
     response = requests.post(url, json=data, timeout=10)
     assert "id" in response.json()
-    pytest.id = response.json()["id"]
+    pytest.id = str(response.json()["id"])
     assert response.json()["name"] == data["name"]
     assert response.json()["email"] == data["email"]
     assert response.json()["weight"] == data["weight"]
@@ -52,7 +52,7 @@ def test_create_user():
 # Testing a valid login.
 def test_login():
     test_config()
-    url = "http://localhost:8000/login"
+    url = "http://localhost:8000/users/login"
     data = {
         "email": config["TEST_EMAIL"],
         "password": config["TEST_PASSWORD"]

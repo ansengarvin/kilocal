@@ -1,15 +1,13 @@
 networks:
-  backend:
+  apiserver:
     driver: bridge
 
 services:
   postgres:
     image: postgres:latest
     container_name: postgres
-    ports:
-      - "5432:5432"
     networks:
-      - backend
+      - apiserver
     environment:
       POSTGRES_DB: "kilocal_api"
       POSTGRES_USER: "dev"
@@ -17,3 +15,19 @@ services:
     volumes:
       #- ./database/postgres-data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+  backend:
+    image: node:latest
+    container_name: backend
+    user:
+      "node"
+    working_dir: /home/node/app
+    expose:
+      - "8000"
+    ports:
+      - 8000:8000
+    networks:
+      - apiserver
+    volumes:
+      - ./backend:/home/node/app
+    command: "npm start"
+
