@@ -28,7 +28,7 @@ function psql() {
 }
 
 function test_basic() {
-	python -m pytest -s tests/api.py
+	python -m pytest -s tests/*.py
 }
 
 function test() {

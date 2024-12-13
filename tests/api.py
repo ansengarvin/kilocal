@@ -72,8 +72,43 @@ def test_delete_unauthorized():
     response = requests.delete(url)
     assert response.status_code == 401
 
+def test_day_create_unauthorized():
+    test_config()
+    url = "http://localhost:8000/days"
+    data = {
+        "date": "2021-01-01"
+    }
+    response = requests.post(url, json=data)
+    assert response.status_code == 401
 
-# User Delete Tests
+def test_day_create_baddata():
+    test_config()
+    url = "http://localhost:8000/days"
+    data = {
+        "no": "data"
+    }
+    response = requests.post(url, json=data, headers = pytest.header)
+    assert response.status_code == 400
+
+def test_day_create():
+    test_config()
+    url = "http://localhost:8000/days"
+    data = {
+        "date": "2021-01-01"
+    }
+    response = requests.post(url, json=data, headers = pytest.header)
+    assert response.status_code == 201
+
+def test_day_create_duplicte():
+    test_config()
+    url = "http://localhost:8000/days"
+    data = {
+        "date": "2021-01-01"
+    }
+    response = requests.post(url, json=data, headers = pytest.header)
+    assert response.status_code == 400
+
+# User Delete Test
 def test_delete():
     test_config()
     url = "http://localhost:8000/users/" + pytest.user_id
