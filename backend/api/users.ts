@@ -2,7 +2,7 @@ import {Router} from 'express'
 var bcrypt = require('bcryptjs')
 
 const router = Router()
-import { generateAuthToken, requireAuthentication } from '../lib/authentication'
+import { generateAuthToken, requireAuthentication, validateSameUser } from '../lib/authentication'
 import {pool} from '../lib/database'
 
 router.post('/', async function (req, res) {
@@ -79,5 +79,20 @@ router.post('/login', async function(req, res) {
         })
     }
 })
+
+router.delete('/:user_id', requireAuthentication, validateSameUser, async function (req, res) {
+    try {
+        console.log("Deleting user", req.params.user_id)
+        const text = "DELETE FROM users WHERE id = $1"
+        const values = [req.params.user_id]
+        await pool.query(text, values)
+        res.status(204).send()
+    } catch (err) {
+        console.log(err)
+        res.status(400).send({
+            err: err
+        })
+    }
+}) 
 
 module.exports = router

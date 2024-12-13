@@ -31,9 +31,19 @@ export function requireAuthentication(req, res, next) {
             req.admin = payload.admin
             next()
         } catch (err) {
-            res.status(403).send({
+            res.status(401).send({
                 error: "Invalid authentication token"
             })
         }
+    }
+}
+
+export function validateSameUser(req, res, next) {
+    if (req.user !== req.params.user_id) {
+        res.status(403).send({
+            err: "Unauthorized"
+        })
+    } else {
+        next()
     }
 }
