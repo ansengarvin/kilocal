@@ -113,7 +113,7 @@ def test_delete_unauthorized_user():
     }
     response = requests.post(url, json=data, timeout=10)
     assert response.status_code == 200
-    token_a = response.json()["token"]
+    token_b = response.json()["token"]
 
     # First user tries to delete second user with their own token
     url = "http://localhost:8000/users/" + str(id_b)
