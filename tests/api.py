@@ -68,11 +68,11 @@ def test_login():
 
 
 # This must be the last thing done, or other tests will not work.
-# def test_delete():
-#     test_config()
-#     url = "http://localhost:8000/users/" + pytest.user_id
-#     response = requests.delete(url, auth = pytest.header)
-#     assert response.status_code == 204
+def test_delete():
+    test_config()
+    url = "http://localhost:8000/users/" + pytest.user_id
+    response = requests.delete(url, auth = pytest.header)
+    assert response.status_code == 204
 
 
 if __name__ == "__main__":
