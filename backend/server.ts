@@ -1,7 +1,6 @@
 
 import express from 'express'
 import 'dotenv/config'
-import { generateAuthToken, requireAuthentication } from './lib/authentication'
 import {pool} from './lib/database'
 
 
