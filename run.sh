@@ -33,7 +33,6 @@ function test_basic() {
 
 function test() {
 	destroy
-	sleep 2
 	build
 	sleep 5
 	test_basic
