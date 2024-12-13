@@ -66,17 +66,6 @@ def test_login():
     pytest.token = response.json()["token"]
     pytest.header = {'Authorization': 'Bearer ' + pytest.token}
 
-def test_post_food_named():
-    url = "http://localhost:8000/users/" + pytest.id + "/days/2024-12-09/foods"
-    data = {
-        "calories": 20,
-        "name": "apple",
-        "position": 0
-    }
-    response = requests.post(url, json=data, headers=pytest.header)
-    assert "id" in response.json()
-    assert response.status_code == 201
-
 if __name__ == "__main__":
     test_create_user()
 

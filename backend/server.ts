@@ -77,7 +77,7 @@ app.post('/users', async function (req, res) {
     }
 })
 
-app.post('/login', async function(req, res) {
+app.post('/users/login', async function(req, res) {
     try {
         // Ensure username and password provided
         if (!req.body.email || !req.body.password) {
@@ -152,5 +152,4 @@ app.use('*', function (req, res) {
 
 app.listen(port, function () {
     console.log('== server is running on PORT:', port);
-    console.log('Our pool variables from env:', process.env.DB_USER, process.env.DB_PASS, process.env.DB_HOST, process.env.DB_PORT, process.env.DB_NAME);
 });
