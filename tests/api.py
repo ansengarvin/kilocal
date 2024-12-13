@@ -118,7 +118,7 @@ def test_delete_unauthorized_user():
     # First user tries to delete second user with their own token
     url = "http://localhost:8000/users/" + str(id_b)
     response = requests.delete(url, headers = {'Authorization': 'Bearer ' + token_a})
-    assert response.status_code == 401
+    assert response.status_code == 403
 
     # Database Cleanup
     url = "http://localhost:8000/users/" + str(id_a)

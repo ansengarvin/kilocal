@@ -37,3 +37,13 @@ export function requireAuthentication(req, res, next) {
         }
     }
 }
+
+export function validateSameUser(req, res, next) {
+    if (req.user !== req.params.user_id) {
+        res.status(403).send({
+            err: "Unauthorized"
+        })
+    } else {
+        next()
+    }
+}
