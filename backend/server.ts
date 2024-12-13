@@ -2,7 +2,7 @@
 import express from 'express'
 import 'dotenv/config'
 import { generateAuthToken, requireAuthentication } from './lib/authentication'
-const pool = require('./lib/database')
+import {pool} from './lib/database'
 
 
 var api = require('./api')
@@ -17,7 +17,7 @@ app.get('/test', async function (req, res) {
     try {
         const result = await pool.query('SELECT NOW()')
         res.status(200).send({
-            message: 'Hello, world!',
+            message: 'time:',
             result: result.rows[0].now
         });
     } catch (err) {
