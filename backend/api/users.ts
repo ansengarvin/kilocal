@@ -80,4 +80,19 @@ router.post('/login', async function(req, res) {
     }
 })
 
+router.delete('/:user_id', requireAuthentication, async function (req, res) {
+    try {
+        console.log("Deleting user", req.params.user_id)
+        const text = "DELETE FROM users WHERE id = $1"
+        const values = [req.params.user_id]
+        await pool.query(text, values)
+        res.status(204).send()
+    } catch (err) {
+        console.log(err)
+        res.status(400).send({
+            err: err
+        })
+    }
+}) 
+
 module.exports = router

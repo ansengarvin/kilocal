@@ -31,7 +31,7 @@ export function requireAuthentication(req, res, next) {
             req.admin = payload.admin
             next()
         } catch (err) {
-            res.status(403).send({
+            res.status(401).send({
                 error: "Invalid authentication token"
             })
         }
