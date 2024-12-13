@@ -72,6 +72,8 @@ def test_delete_unauthorized():
     response = requests.delete(url)
     assert response.status_code == 401
 
+
+# User Delete Tests
 def test_delete():
     test_config()
     url = "http://localhost:8000/users/" + pytest.user_id

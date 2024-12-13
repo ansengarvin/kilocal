@@ -631,9 +631,10 @@ paths:
                     type: string
                     format: date
                     description: The date of the new day
+        '401':
+          description: Unauthorized
         '400':
           description: Invalid request
-
   /days/{day_id}:
     get:
       summary: Get a day by id
