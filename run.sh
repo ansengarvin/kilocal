@@ -27,15 +27,15 @@ function psql() {
 	docker exec -it postgres psql -U dev -W kilocal_api
 }
 
-function test_basic() {
-	python -m pytest -s tests/*/*.py
+function test_short() {
+	python -m pytest --tb=short tests/*/*.py
 }
 
 function test() {
 	destroy
 	build
 	sleep 5
-	test_basic
+	test_short
 }
 
 function scrape_func_names() {

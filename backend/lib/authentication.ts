@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import express from 'express'
+import express, {Request, Response, NextFunction} from 'express'
 var jwt = require('jsonwebtoken')
 
 export function generateAuthToken(userId: number, admin: boolean = false) {
@@ -10,7 +10,7 @@ export function generateAuthToken(userId: number, admin: boolean = false) {
     return jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: "24h"})
 }
 
-export function requireAuthentication(req, res, next) {
+export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get("Authorization") || ""
 
     if (!authHeader) {
@@ -38,7 +38,7 @@ export function requireAuthentication(req, res, next) {
     }
 }
 
-export function validateSameUser(req, res, next) {
+export function validateSameUser(req: Request, res: Response, next: NextFunction) {
     if (req.user !== req.params.user_id) {
         res.status(403).send({
             err: "Unauthorized"

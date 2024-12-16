@@ -11,6 +11,15 @@ const port = process.env.PORT || 8000
 app.use(express.json());
 app.use('/', api)
 
+declare global {
+    namespace Express {
+      interface Request {
+        user?: String,
+        admin?: boolean
+      }
+    }
+  }
+
 
 app.get('/test', async function (req, res) {
     try {
