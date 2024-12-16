@@ -23,6 +23,7 @@ def test_day_create():
     }
     response = requests.post(url, json=data, headers = pytest.header)
     assert response.status_code == 201
+    assert "id" in response.json()
 
 def test_day_create_duplicte():
     url = "http://localhost:8000/days"

@@ -6,13 +6,13 @@ import pytest
 # test_delete() is inside of the cleanup test folder, so we can delete the test user last (once all other tests are complete).
 ###
 
-def test_delete_unauthorized():
+def test_user_delete_unauthorized():
     url = "http://localhost:8000/users/" + pytest.user_id
     response = requests.delete(url)
     assert response.status_code == 401
 
 
-def test_delete_forbidden():
+def test_user_delete_forbidden():
     # Creates a generic user
     url = "http://localhost:8000/users"
     data = {

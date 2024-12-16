@@ -28,7 +28,7 @@ function psql() {
 }
 
 function test_short() {
-	python -m pytest --tb=short tests/*/*.py
+	python -m pytest -s --tb=short tests/*/*.py
 }
 
 function test() {
