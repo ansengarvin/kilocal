@@ -17,6 +17,7 @@ def pytest_configure():
     pytest.user_id = None
     pytest.token = None
     pytest.header = None
+    pytest.date_increment = 0
 
 # Testing user creation
 def test_create_user():

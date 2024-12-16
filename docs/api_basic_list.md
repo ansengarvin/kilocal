@@ -27,6 +27,37 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
 * /users/{id}/days/{date}
     * GET (all information for a users' day)
 
+### Day Entries
+All of these operations are authenticated and will take the user's ID from the token.
+
+* /days
+    * POST
+        * Creates a new day with the given date.
+
+* /days/{date}
+    * GET (get a single day)
+        * Creates a new day if the day doesn't already exist.
+
+* /days/{date}/food
+    * POST
+        * Adds a non-recipe calorie entry into the user's day.
+        * Creates day if does not exist.
+
+* /days/{date}/food/{food_id}
+    * DELETE
+        * Deletes the food item from the day.
+
+* /days/{date}/recipes
+    * POST
+        * Adds a recipe from the user's list of recipes into the day.
+        * Returns the ID of the recipe-day entry
+        * Creates day if does not exist
+
+* /days/{date}/recipes/{day_recipe_id}
+    * DELETE
+        * Deletes the recipe from the day.
+        * Requires the id of the day_recipes table, NOT the recipe itself.
+
 ### Recipes
 * /recipes
     * POST (post a new recipe to a user's book)
@@ -41,24 +72,3 @@ For more detail, look at [api.yaml](./api.yaml) (Recommended to copy/paste it in
 * /recipes/{recipe_id}/foods/{food_id}
     * PUT (edit the recipe for a single food)
     * DELETE (delete a food from a recipe book)
-
-### Day Entries
-* /days/
-    * POST (add a new day)
-
-* /days/{day_id}/
-    * GET (get a single day)
-    * PUT (edit a day)
-    * DELETE (delete a day's entry)
-
-* /days/{day_id}/recipes
-    * POST (add a user's recipe to a day)
-
-* /days/{day_id}/recipes/{recipe_id}
-    * DELETE
-
-* /days/{day_id}/foods
-    * POST
-
-* /days/{day_id}/foods/{food_id}
-    * DELETE
