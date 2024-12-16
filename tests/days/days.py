@@ -3,7 +3,7 @@ import requests
 
 class Day:
     def __init__(self, date):
-        self.date = date,
+        self.date = date
         self.food = [
             {
                 "calories": 80,
@@ -42,13 +42,23 @@ def test_day():
     day = Day("2003-11-11")
 
     ## Testing day food post
+    print(day.date)
     url = "http://localhost:8000/days/" + day.date + "/food"
     data = day.food[0]
 
-    # Testing day
+    response = requests.post(url, json=data, headers = pytest.header)
+    assert response.status_code == 201, "days food POST returned wrong status code"
+    assert "id" in response.json(), "days food ID not present in return body"
 
+
+#####################
+# Edge Case Testing #
+#####################
 def test_day_create_duplicate():
+    # Creates a day
     day = Day("2001-11-11")
+
+    # Duplicates the above day
     url = "http://localhost:8000/days"
     data = {
         "date": "2001-11-11"
