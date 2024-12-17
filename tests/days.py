@@ -127,7 +127,6 @@ def test_day_food_delete_unauthorized():
     data = day.food[0]
     response = requests.post(url, json=data, headers = pytest.header)
     food_id = response.json()["id"]
-    print(food_id)
 
     # Try to delete food as unauthorized user.
     # Returns 404 instead of 401 because it references the user's day id associated with the date with the food id.
