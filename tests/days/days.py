@@ -47,17 +47,25 @@ def test_day():
     data = day.food[0]
 
     response = requests.post(url, json=data, headers = pytest.header)
-    assert response.status_code == 201, "days food POST returned wrong status code:"
+    assert response.status_code == 201, "days food POST returned wrong status code"
     assert "id" in response.json(), "days food ID not present in return body"
 
     ## Testing day food get
-    url = "http://localhost:8000/days/" + day.date
-    response = requests.get(url, headers = pytest.header)
+    url_get = "http://localhost:8000/days/" + day.date
+    response = requests.get(url_get, headers = pytest.header)
     assert response.status_code == 200, "days food GET returned wrong status code:"
     assert "food" in response.json(), "days food not present in return body"
-    for i in range(len(day.food)):
-        assert day.food[i]["name"] == response.json()["food"][i]["name"], "days food name does not match"
-        assert day.food[i]["calories"] == response.json()["food"][i]["calories"], "days food calories does not match"
+    assert day.food[0]["name"] == response.json()["food"][0]["name"], "days food name does not match"
+    assert day.food[0]["calories"] == response.json()["food"][0]["calories"], "days food calories does not match"
+    
+    food_id = response.json()["food"][0]["id"]
+    
+    ## Testing day food delete
+    url = "http://localhost:8000/days/" + day.date + "/food/" + str(food_id)
+    response = requests.delete(url, headers = pytest.header)
+    assert response.status_code == 204, "days food DELETE returned wrong status code"
+    response = requests.get(url_get, headers = pytest.header)
+    assert response.json()["food"] == [], "days food not deleted"
 
 
 
