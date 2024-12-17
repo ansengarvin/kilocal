@@ -37,6 +37,7 @@ class Day:
         assert response.status_code == 201
         assert "id" in response.json()
  
+ 
 def test_day():
     # Testing day create
     day = Day("2003-11-11")
@@ -67,8 +68,6 @@ def test_day():
     assert response.status_code == 204, "days food DELETE returned wrong status code"
     response = requests.get(url_get, headers = pytest.header)
     assert response.json()["food"] == [], "days food not deleted"
-
-
 
 
 #####################
