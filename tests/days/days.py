@@ -62,6 +62,7 @@ def test_day():
     
     ## Testing day food delete
     url = "http://localhost:8000/days/" + day.date + "/food/" + str(food_id)
+    print(url)
     response = requests.delete(url, headers = pytest.header)
     assert response.status_code == 204, "days food DELETE returned wrong status code"
     response = requests.get(url_get, headers = pytest.header)

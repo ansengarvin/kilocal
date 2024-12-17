@@ -1,10 +1,12 @@
 import {Router} from 'express'
-import { requireAuthentication } from '../lib/authentication'
+import { requireAuthentication, validateSameUser } from '../lib/authentication'
 import {pool} from '../lib/database'
 
 const router = Router()
 
-async function check_if_day_exists_or_create(user, date: String) {
+// Gets a day ID if the day entry exists.
+// If the day entry does not exist, creates then returns ID.
+async function get_day_id(user, date: String) {
     let text = "SELECT id FROM days WHERE date = $1"
     let values = [date]
     let result = await pool.query(text, values)
@@ -68,7 +70,7 @@ router.post('/:date/food', requireAuthentication, async function(req, res) {
         if (!req.body || !req.body.calories) {
             res.status(400).send({err: "entry must have request body with calories"})
         } else {
-            let day_id = await check_if_day_exists_or_create(req.user, req.params.date)
+            let day_id = await get_day_id(req.user, req.params.date)
 
             let text = "INSERT INTO Foods(day_id, name, calories, position) VALUES($1, $2, $3, $4) RETURNING id"
             let values = [day_id, req.body.name, req.body.calories, 0] // TODO: Calculate position instead of 0
@@ -89,7 +91,7 @@ router.post('/:date/food', requireAuthentication, async function(req, res) {
 // Gets the contents of a day
 router.get('/:date', requireAuthentication, async function(req, res) {
     try {
-        let day_id = await check_if_day_exists_or_create(req.user, req.params.date)
+        let day_id = await get_day_id(req.user, req.params.date)
 
         let text = "SELECT id, name, calories FROM foods WHERE day_id = $1"
         let values = [day_id]
@@ -103,6 +105,27 @@ router.get('/:date', requireAuthentication, async function(req, res) {
 
 
     } catch(err) {
+        console.log(err)
+        res.status(500).send({
+            err: err
+        })
+    }
+})
+
+router.delete('/:date/food/:food_id', requireAuthentication, async function(req, res) {
+    try {
+        let day_id = await get_day_id(req.user, req.params.date)
+
+        let text = `
+            DELETE FROM foods
+            WHERE id = $1 AND day_id = $2
+        `
+        let values = [req.params.food_id, day_id]
+
+        await pool.query(text, values)
+        res.status(204).send()
+
+    } catch(err){
         console.log(err)
         res.status(500).send({
             err: err
