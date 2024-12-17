@@ -9,6 +9,11 @@ function destroy() {
 	docker-compose down --volumes
 }
 
+function rebuild () {
+	destroy
+	build
+}
+
 # Starts the database
 function start() {
     echo "Starting DB"
