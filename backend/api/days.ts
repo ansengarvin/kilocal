@@ -6,16 +6,16 @@ const router = Router()
 
 // Gets a day ID if the day entry exists.
 // If the day entry does not exist, creates then returns ID.
-async function get_day_id(user, date: String) {
-    let text = "SELECT id FROM days WHERE date = $1"
-    let values = [date]
+async function get_day_id(user_id, date: String) {
+    let text = "SELECT id FROM days WHERE user_id = $1 AND date = $2"
+    let values = [user_id, date]
     let result = await pool.query(text, values)
 
     if (result.rowCount != 0) {
         return result.rows[0].id
     } else {
         text = "INSERT INTO days(user_id, date) VALUES($1, $2) RETURNING id"
-        values = [user, date]
+        values = [user_id, date]
         result = await pool.query(text, values)
         return result.rows[0].id
     }
@@ -121,10 +121,16 @@ router.delete('/:date/food/:food_id', requireAuthentication, async function(req,
             WHERE id = $1 AND day_id = $2
         `
         let values = [req.params.food_id, day_id]
+        let result = await pool.query(text, values)
 
-        await pool.query(text, values)
-        res.status(204).send()
-
+        // On successful delete, result.rows contains the number of items deleted.
+        if (result.rowCount === 0) {
+            res.status(404).send({
+                err: "Food not found"
+            })
+        } else {
+            res.status(204).send()
+        }
     } catch(err){
         console.log(err)
         res.status(500).send({

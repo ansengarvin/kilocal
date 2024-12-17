@@ -101,3 +101,37 @@ def test_day_create_baddata():
     }
     response = requests.post(url, json=data, headers = pytest.header)
     assert response.status_code == 400
+
+def test_day_food_delete_unauthorized():
+    # Creates a user
+    url = "http://localhost:8000/users"
+    data = {
+        "name": "Bad Actor",
+        "email": "unauthorized@ansengarvin.com",
+        "password": "password",
+    }
+    response = requests.post(url, json=data)
+
+    # Log in as user
+    url = "http://localhost:8000/users/login"
+    data = {
+        "email": "unauthorized@ansengarvin.com",
+        "password": "password"
+    }
+    response = requests.post(url, json=data)
+    wrong_header = {'Authorization': 'Bearer ' + response.json()["token"]}
+
+    # Create a day and food entry in the day
+    day = Day("2004-11-11")
+    url = "http://localhost:8000/days/" + day.date + "/food"
+    data = day.food[0]
+    response = requests.post(url, json=data, headers = pytest.header)
+    food_id = response.json()["id"]
+    print(food_id)
+
+    # Try to delete food as unauthorized user.
+    # Returns 404 instead of 401 because it references the user's day id associated with the date with the food id.
+    # If that food id isn't a part of that day, then 404.
+    url = "http://localhost:8000/days/" + day.date + "/food/" + str(food_id)
+    response = requests.delete(url, headers = wrong_header)
+    assert response.status_code == 404
