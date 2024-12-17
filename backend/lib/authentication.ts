@@ -20,10 +20,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
         })
     } else {
         const authHeaderSplit = authHeader.split(" ")
-        console.log(authHeader)
-        console.log(authHeaderSplit)
         const token = authHeaderSplit[0] === "Bearer" ? authHeaderSplit[1] : null
-        console.log(token)
 
         try {
             const payload = jwt.verify(token, process.env.SECRET_KEY)

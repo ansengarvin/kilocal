@@ -47,7 +47,7 @@ def test_day():
     data = day.food[0]
 
     response = requests.post(url, json=data, headers = pytest.header)
-    assert response.status_code == 201, "days food POST returned wrong status code"
+    assert response.status_code == 201, "days food POST returned wrong status code:"
     assert "id" in response.json(), "days food ID not present in return body"
 
 
