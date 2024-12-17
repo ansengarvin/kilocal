@@ -68,19 +68,41 @@ router.post('/:date/food', requireAuthentication, async function(req, res) {
         if (!req.body || !req.body.calories) {
             res.status(400).send({err: "entry must have request body with calories"})
         } else {
-            // Gets the user's day ID
             let day_id = await check_if_day_exists_or_create(req.user, req.params.date)
-
-            console.log("Day ID is ", day_id)
 
             let text = "INSERT INTO Foods(day_id, name, calories, position) VALUES($1, $2, $3, $4) RETURNING id"
             let values = [day_id, req.body.name, req.body.calories, 0] // TODO: Calculate position instead of 0
             let result = await pool.query(text, values)
+
             res.status(201).send({
                 id: result.rows[0].id
             })
         }
     } catch (err) { 
+        console.log(err)
+        res.status(500).send({
+            err: err
+        })
+    }
+})
+
+// Gets the contents of a day
+router.get('/:date', requireAuthentication, async function(req, res) {
+    try {
+        let day_id = await check_if_day_exists_or_create(req.user, req.params.date)
+
+        let text = "SELECT id, name, calories FROM foods WHERE day_id = $1"
+        let values = [day_id]
+        let result = await pool.query(text, values)
+
+        // TODO: Implement recipe getting
+
+        res.status(200).send({
+            food: result.rows
+        })
+
+
+    } catch(err) {
         console.log(err)
         res.status(500).send({
             err: err

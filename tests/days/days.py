@@ -50,6 +50,17 @@ def test_day():
     assert response.status_code == 201, "days food POST returned wrong status code:"
     assert "id" in response.json(), "days food ID not present in return body"
 
+    ## Testing day food get
+    url = "http://localhost:8000/days/" + day.date
+    response = requests.get(url, headers = pytest.header)
+    assert response.status_code == 200, "days food GET returned wrong status code:"
+    assert "food" in response.json(), "days food not present in return body"
+    for i in range(len(day.food)):
+        assert day.food[i]["name"] == response.json()["food"][i]["name"], "days food name does not match"
+        assert day.food[i]["calories"] == response.json()["food"][i]["calories"], "days food calories does not match"
+
+
+
 
 #####################
 # Edge Case Testing #
