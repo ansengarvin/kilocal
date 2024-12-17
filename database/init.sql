@@ -23,8 +23,8 @@ CREATE TABLE Days (
 
 CREATE TABLE Foods (
     id SERIAL PRIMARY KEY,
-    day_id INTEGER NOT NULL,
-    recipe_id INTEGER NOT NULL,
+    day_id INTEGER,
+    recipe_id INTEGER,
     calories INTEGER NOT NULL,
     position INTEGER NOT NULL,
     name VARCHAR(255),

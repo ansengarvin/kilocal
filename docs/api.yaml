@@ -840,7 +840,7 @@ paths:
         '404':
           description: Day or recipe does not exist
 
-  /days/{day_id}/foods:
+  /foods:
     post:
       summary: Add a food to a day
       description: Add a food to a day
@@ -858,9 +858,15 @@ paths:
             schema:
               type: object
               properties:
-                food_id:
+                date:
+                  type: date
+                  description: The date where the food should be inserted
+                calories:
                   type: integer
-                  description: The id of the food to add
+                  description: The calories in this food entry.
+                name:
+                  type: string
+                  description: Optional - The name of this food entry.
       responses:
         '201':
           description: Created
@@ -872,9 +878,6 @@ paths:
                   id:
                     type: integer
                     description: The id of the food in the day
-                  food_id:
-                    type: integer
-                    description: The id of the food
         '400':
           description: Invalid request
         '401':
