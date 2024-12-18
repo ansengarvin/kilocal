@@ -12,11 +12,11 @@ const Grid = styled.div`
     display: grid;
     grid-template-areas:
         "header header header"
-        "gutter main gutter"
+        "leftgutter main rightgutter"
         "footer footer footer";
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
-    gap: 15px;
+    row-gap: 15px;
     width: 100vw;
     height: 100vh;
     background-color: green;
