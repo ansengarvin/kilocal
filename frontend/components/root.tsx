@@ -2,7 +2,7 @@ import * as React from "react"
 import styled from '@emotion/styled'
 import { Header } from "./header"
 import App from "../src/App"
-import { Outlet } from "react-router-dom"
+import { NavLink, Outlet } from "react-router-dom"
 
 interface RootProps {
     children?: React.ReactNode
@@ -19,12 +19,10 @@ const Grid = styled.div`
     row-gap: 15px;
     width: 100vw;
     height: 100vh;
-    background-color: green;
 `
 
 const Main = styled.main`
     grid-area: main;
-    background-color: #8000807d;
 `
 
 
@@ -33,7 +31,7 @@ export function Root(props: RootProps) {
 
     return (
         <Grid>
-            <Header/>
+            <Header bgColor = "grey" height = "100px" />
             <Main>
                 {children || <Outlet/>}
             </Main>
