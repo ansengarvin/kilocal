@@ -1,10 +1,13 @@
-import * as React from "react"
+import {useState, ReactNode} from 'react'
 import styled from '@emotion/styled'
 import { Header } from "./header"
 import { Outlet } from "react-router-dom"
+import Cookies from 'js-cookie'
+import { useEffect } from 'react'
+import LoginModal from './Login'
 
 interface RootProps {
-    children?: React.ReactNode
+    children?: ReactNode
 }
 
 const Grid = styled.div`
@@ -28,12 +31,30 @@ const Main = styled.main`
 export function Root(props: RootProps) {
     const {children} = props
 
+    const [loggedIn, setLoggedIn] = useState(false)
+
+    useEffect(() => {
+        if (!Cookies.get("auth")) {
+            setLoggedIn(false)
+        } else {
+            setLoggedIn(true)
+        }
+    })
+
+
     return (
+        <>
+        {
+            loggedIn ?
+             <></> :
+             <LoginModal/>
+        }
         <Grid>
             <Header bgColor = "grey" height = "100px" />
             <Main>
                 {children || <Outlet/>}
             </Main>
         </Grid>
+        </>
     )
 }

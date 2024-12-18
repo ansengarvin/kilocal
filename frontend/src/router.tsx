@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import { Root } from './components/root'
 import App from './routes/App'
 import Profile from './routes/Profile'
-import Login from './routes/Login'
+import Login from './components/Login'
 
 export const router = createBrowserRouter([
     {
