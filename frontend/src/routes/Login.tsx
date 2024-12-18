@@ -1,7 +1,7 @@
 function Login() {
     return (
       <>
-        Profile
+        Login
       </>
     )
   }
