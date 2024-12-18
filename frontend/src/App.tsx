@@ -1,8 +1,7 @@
 function App() {
-  console.log("app")
   return (
     <>
-      Kilocal
+      Kilocal App
     </>
   )
 }
