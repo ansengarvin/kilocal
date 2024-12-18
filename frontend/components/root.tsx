@@ -1,8 +1,7 @@
 import * as React from "react"
 import styled from '@emotion/styled'
 import { Header } from "./header"
-import App from "../src/App"
-import { NavLink, Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 
 interface RootProps {
     children?: React.ReactNode

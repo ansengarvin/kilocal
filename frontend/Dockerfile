@@ -12,5 +12,11 @@ RUN npm install
 # Copy files over
 COPY . .
 
+# Build for production
+RUN npm run build --omit=dev
+
+# Install serve
+RUN npm install -g serve
+
 # Expose port
-EXPOSE 5173
+EXPOSE 5000
