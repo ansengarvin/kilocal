@@ -30,4 +30,22 @@ services:
     volumes:
       - ./backend:/home/node/app
     command: "npm start"
-
+  frontend:
+    image: node:latest
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - 5000:3000
+    networks:
+      - apiserver
+    volumes:
+      - ./frontend:/app
+      - node_modules:/app/node_modules
+      - dist:/app/dist
+    command: "serve -s dist"
+volumes:
+  node_modules:
+  dist:
