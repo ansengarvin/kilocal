@@ -106,6 +106,13 @@ router.get('/:user_id', requireAuthentication, validateSameUser, async function 
         const text = "SELECT id, name, email, weight FROM users WHERE id = $1"
         const values = [req.params.user_id]
         const result = await pool.query(text, values)
+        if (result.rowCount) {
+            res.status(200).send(result.rows[0])
+        } else {
+            res.status(404).send({
+                err: "User not found"
+            })
+        }
     } catch (err) {
         res.status(400).send({
             err: err.message

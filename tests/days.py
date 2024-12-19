@@ -69,6 +69,13 @@ def test_day():
     response = requests.get(url_get, headers = pytest.header)
     assert response.json()["food"] == [], "days food not deleted"
 
+    ## Re-post the day for manual testing
+    url = "http://localhost:8000/days/" + day.date + "/food"
+    response = requests.post(url, json=data, headers = pytest.header)
+    assert response.status_code == 201, "manual test days food POST returned wrong status code"
+    assert "id" in response.json(), "manual test days food ID not present in return body"
+
+
 
 #####################
 # Edge Case Testing #
