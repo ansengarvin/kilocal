@@ -61,6 +61,7 @@ function LoginModal(props: loginProps) {
       if (body["token"]) {
         Cookies.set("auth", body["token"])
         setLoggedIn(true)
+        console.log("Token is recieved")
         return {"token": "recieved"}
       }
       
