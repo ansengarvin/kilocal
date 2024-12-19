@@ -49,30 +49,33 @@ router.post('/', async function (req, res) {
 
 router.post('/login', async function(req, res) {
     try {
+
+        console.log("Login called")
         // Ensure username and password provided
         if (!req.body.email || !req.body.password) {
             res.status(400).send({err: "Missing email or password"})
-        }
-
-        // Grabs user in the database
-        const text = "SELECT * FROM users WHERE email = $1"
-        const values = [req.body.email]
-        const result = await pool.query(text, values)
-
-        // If no user or password incorrect, send error
-        
-        if (!(result.rowCount && await bcrypt.compare(req.body.password, result.rows[0].password))) {
-            res.status(401).send({
-                err: "Invalid Credentials"
-            })
         } else {
-            const token = generateAuthToken(result.rows[0].id)
-            res.status(200).send ({
-                id: result.rows[0].id,
-                token: token
-            })
+            // Grabs user in the database
+            const text = "SELECT * FROM users WHERE email = $1"
+            const values = [req.body.email]
+            const result = await pool.query(text, values)
+
+            // If no user or password incorrect, send error
+            
+            if (!(result.rowCount && await bcrypt.compare(req.body.password, result.rows[0].password))) {
+                res.status(401).send({
+                    err: "Invalid Credentials"
+                })
+            } else {
+                const token = generateAuthToken(result.rows[0].id)
+                res.status(200).send ({
+                    id: result.rows[0].id,
+                    token: token
+                })
+            }
         }
 
+        
     } catch(err) {
         res.status(400).send({
             err: err.message

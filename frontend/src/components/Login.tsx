@@ -66,7 +66,7 @@ function LoginModal() {
           Information<br/>
           {isLoading && <>Loading.</>}
           {error && <>Error: {error.message}</> }
-          {data && <>{data}</>}
+          {data && <>Data: {data}</>}
         </div>
       </LoginWindow>
     )
