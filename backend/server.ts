@@ -13,7 +13,8 @@ app.use(express.json());
 
 // TODO: Change origin to prod origin
 app.use(cors({
-    origin: '*'
+    origin: '*',
+    optionsSuccessStatus: 200
 }))
 app.use('/', api)
 

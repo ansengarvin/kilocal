@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 const LoginWindow = styled.div `
   position: absolute;
@@ -45,7 +45,8 @@ function LoginModal() {
           password: password
         })
       })
-      return response.type
+      setLoginButtonPressed(false)
+      return response.json()
     }
   })
 
@@ -66,7 +67,11 @@ function LoginModal() {
           Information<br/>
           {isLoading && <>Loading.</>}
           {error && <>Error: {error.message}</> }
-          {data && <>Data: {data}</>}
+          {data && Object.keys(data).map((key) => (
+            <p key={key}>
+              {key}: {data[key]}
+            </p>
+          ))}
         </div>
       </LoginWindow>
     )
