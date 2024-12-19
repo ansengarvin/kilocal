@@ -1,6 +1,11 @@
 import styled from "@emotion/styled"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
+import Cookies from "js-cookie"
+
+interface loginProps {
+  setLoggedIn: Function 
+}
 
 const LoginWindow = styled.div `
   position: absolute;
@@ -22,16 +27,17 @@ const LoginWindow = styled.div `
     display: flex;
     flex-direction: column;
     align-items: center;
-
   }
 `
 
-function LoginModal() {
+function LoginModal(props: loginProps) {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const [loginButtonPressed, setLoginButtonPressed] = useState(false)
+
+  const {setLoggedIn} = props
 
   const {isLoading, error, data} = useQuery({
     enabled: (loginButtonPressed ? true : false),
@@ -49,7 +55,19 @@ function LoginModal() {
         })
       })
       setLoginButtonPressed(false)
-      return response.json()
+      const body = await response.json()
+      
+      // Set authentication token into cookie and set logged in to true
+      if (body["token"]) {
+        Cookies.set("auth", body["token"])
+        setLoggedIn(true)
+        return {"token": "recieved"}
+      }
+      
+      // Show whatever error the API server produced
+      else {
+        return response.json()
+      }
     }
   })
 
@@ -72,7 +90,7 @@ function LoginModal() {
           {error && <>Error: {error.message}</> }
           {data && Object.keys(data).map((key) => (
             <p key={key}>
-              {key}: {data[key]}
+              {data[key]}
             </p>
           ))}
         </div>

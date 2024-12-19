@@ -30,9 +30,10 @@ const Main = styled.main`
 
 export function Root(props: RootProps) {
     const {children} = props
-
     const [loggedIn, setLoggedIn] = useState(false)
 
+    // On first render, check if the user is logged in.
+    // TODO: Deal with refresh tokens
     useEffect(() => {
         if (!Cookies.get("auth")) {
             setLoggedIn(false)
@@ -47,7 +48,7 @@ export function Root(props: RootProps) {
             {
                 loggedIn ?
                 <></> :
-                <LoginModal/>
+                <LoginModal setLoggedIn= {setLoggedIn}/>
             }
             <Grid>
                 <Header bgColor = "grey" height = "100px" />
