@@ -5,10 +5,17 @@ import {pool} from './lib/database'
 
 
 var api = require('./api')
+var cors = require('cors')
 
 const app = express();
 const port = process.env.PORT || 8000
 app.use(express.json());
+
+// TODO: Change origin to prod origin
+app.use(cors({
+    origin: '*',
+    optionsSuccessStatus: 200
+}))
 app.use('/', api)
 
 declare global {
