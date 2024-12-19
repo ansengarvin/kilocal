@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { useQuery } from "@tanstack/react-query"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const LoginWindow = styled.div `
   position: absolute;
@@ -58,8 +58,8 @@ function LoginModal() {
             e.preventDefault()
             setLoginButtonPressed(true)
           }}>
-            Email <input value={email} onChange={e=>setEmail(e.target.value)}/><br/>
-            Password <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/><br/>
+            Email <input value={email} onChange={e=>setEmail(e.target.value)} disabled={isLoading}/><br/>
+            Password <input value={password} type="password" onChange={e=>setPassword(e.target.value)} disabled={isLoading}/><br/>
 
             <button type="submit">Login</button>
           </form>
