@@ -53,7 +53,7 @@ function LoginModal() {
       <LoginWindow>
         <div>
           Login<br/>
-
+          
           <form onSubmit={e => {
             e.preventDefault()
             setLoginButtonPressed(true)
