@@ -53,6 +53,9 @@ router.post('/login', async function(req, res) {
         console.log("Login called")
         // Ensure username and password provided
         if (!req.body.email || !req.body.password) {
+            console.log(req.body)
+            console.log(req.body.email)
+            console.log(req.body.password)
             res.status(400).send({err: "Missing email or password"})
         } else {
             // Grabs user in the database
