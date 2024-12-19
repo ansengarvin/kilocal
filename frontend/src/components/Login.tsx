@@ -28,20 +28,20 @@ const LoginWindow = styled.div `
 
 function LoginModal() {
 
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const [loginButtonPressed, setLoginButtonPressed] = useState(false)
 
   const {isLoading, error, data} = useQuery({
     enabled: (loginButtonPressed ? true : false),
-    queryKey: ["login", username, password],
+    queryKey: ["login", email, password],
     queryFn: async () => {
       const url = "http://localhost:8000/users/login"
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
-          username: username,
+          email: email,
           password: password
         })
       })
@@ -58,8 +58,8 @@ function LoginModal() {
             e.preventDefault()
             setLoginButtonPressed(true)
           }}>
-            Username <input value={username} onChange={e=>setUsername(e.target.value)}/><br/>
-            Password: <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/><br/>
+            Email <input value={email} onChange={e=>setEmail(e.target.value)}/><br/>
+            Password <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/><br/>
 
             <button type="submit">Login</button>
           </form>

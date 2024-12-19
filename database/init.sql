@@ -44,4 +44,3 @@ CREATE TABLE Days_Recipes (
     position INTEGER NOT NULL,
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE
 );
-
