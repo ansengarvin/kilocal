@@ -39,6 +39,7 @@ function test_short() {
 function test() {
 	destroy
 	build
+	echo "Waiting 5 seconds for backend to set up."
 	sleep 5
 	test_short
 }

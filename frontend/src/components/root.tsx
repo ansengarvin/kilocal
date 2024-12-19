@@ -44,17 +44,17 @@ export function Root(props: RootProps) {
 
     return (
         <>
-        {
-            loggedIn ?
-             <></> :
-             <LoginModal/>
-        }
-        <Grid>
-            <Header bgColor = "grey" height = "100px" />
-            <Main>
-                {children || <Outlet/>}
-            </Main>
-        </Grid>
+            {
+                loggedIn ?
+                <></> :
+                <LoginModal/>
+            }
+            <Grid>
+                <Header bgColor = "grey" height = "100px" />
+                <Main>
+                    {children || <Outlet/>}
+                </Main>
+            </Grid>
         </>
     )
 }

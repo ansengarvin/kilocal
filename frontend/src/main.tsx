@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import {Global, css} from '@emotion/react'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router.tsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const globalStyle = css`
   html, body {
@@ -10,9 +11,13 @@ const globalStyle = css`
   }
 `
 
+const queryClient = new QueryClient()
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Global styles={globalStyle}/>
-    <RouterProvider router = {router}/>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router = {router}/>
+    </QueryClientProvider>
   </StrictMode>,
 )
