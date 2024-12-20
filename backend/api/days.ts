@@ -67,11 +67,11 @@ router.post('/', requireAuthentication, async function(req, res) {
 // Add a food to a day
 router.post('/:date/food', requireAuthentication, async function(req, res) {
     try {
-        if (!req.body || !req.body.calories) {
+        console.log(req.body)
+        if (!req.body || req.body.calories===null) {
             res.status(400).send({err: "entry must have request body with calories"})
         } else {
             let day_id = await get_day_id(req.user, req.params.date)
-
             let text = "INSERT INTO Foods(day_id, name, calories, position) VALUES($1, $2, $3, $4) RETURNING id"
             let values = [day_id, req.body.name, req.body.calories, 0] // TODO: Calculate position instead of 0
             let result = await pool.query(text, values)
