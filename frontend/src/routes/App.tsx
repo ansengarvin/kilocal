@@ -1,8 +1,5 @@
 import styled from "@emotion/styled";
-
-interface appProps {
-  loggedIn: boolean
-}
+import { useOutletContext } from "react-router-dom";
 
 const AppPage = styled.div`
   display: flex;
@@ -19,14 +16,13 @@ const AppWindow = styled.div`
   border: 1px solid black;
 `
 
-function App(props: appProps) {
-  const {loggedIn} = props
+function App() {
+  const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
 
   const currentDate = new Date();
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth() + 1
   const day = currentDate.getDate()
-
   const formattedDate = `${year}-${month}-${day}`
 
   return (

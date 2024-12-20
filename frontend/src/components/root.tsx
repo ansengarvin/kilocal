@@ -55,7 +55,7 @@ export function Root(props: RootProps) {
             <Grid>
                 <Header bgColor = "grey" height = "100px" />
                 <Main>
-                    {children || <Outlet context={{setLoggedIn}}/>}
+                    {children || <Outlet context={{loggedIn, setLoggedIn}}/>}
                 </Main>
             </Grid>
         </>
