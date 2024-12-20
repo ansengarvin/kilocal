@@ -10,7 +10,6 @@ export const ContentWindow = styled.div`
 
   div.left {
     grid-area: left;
-    
   }
 
   div.right{
@@ -40,5 +39,8 @@ export const ContentWindow = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 `
