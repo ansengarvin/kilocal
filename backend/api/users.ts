@@ -101,11 +101,12 @@ router.delete('/:user_id', requireAuthentication, validateSameUser, async functi
     }
 })
 
-router.get('/:user_id', requireAuthentication, validateSameUser, async function (req, res) {
+router.get('/', requireAuthentication, async function (req, res) {
     try {
         const text = "SELECT id, name, email, weight FROM users WHERE id = $1"
-        const values = [req.params.user_id]
+        const values = [req.user]
         const result = await pool.query(text, values)
+        console.log("get user id:", req.user)
         if (result.rowCount) {
             res.status(200).send(result.rows[0])
         } else {

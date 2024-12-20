@@ -54,7 +54,7 @@ def test_login():
     pytest.header = {'Authorization': 'Bearer ' + pytest.token}
 
 def test_user_get():
-    url = f"http://localhost:8000/users/{pytest.user_id}"
+    url = f"http://localhost:8000/users"
     response = requests.get(url, headers=pytest.header, timeout=10)
     assert response.status_code == 200
     assert response.json()["id"] == int(pytest.user_id)

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import Cookies from "js-cookie";
-import { ContentWindow } from "../components/contentwindow";
+import { ContentWindow } from "../components/ContentWindow";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
