@@ -26,7 +26,8 @@ const Grid = styled.div`
 const Main = styled.main`
     grid-area: main;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 `
 
 
