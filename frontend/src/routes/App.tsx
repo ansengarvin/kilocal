@@ -1,5 +1,16 @@
 import styled from "@emotion/styled";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import Cookies from "js-cookie";
+
+function formatDate(date: Date) {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+
+  return `${year}-${month}-${day}`
+}
 
 const AppPage = styled.div`
   display: flex;
@@ -41,6 +52,7 @@ const AppWindow = styled.div`
   div.content {
     background-color: #ffa4a4;
     grid-area: center;
+    width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -48,31 +60,62 @@ const AppWindow = styled.div`
   }
 `
 
-const AppContent = styled.div``
-
 function App() {
   const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
 
-  const currentDate = new Date();
-  const year = currentDate.getFullYear()
-  const month = currentDate.getMonth() + 1
-  const day = currentDate.getDate()
-  const formattedDate = `${year}-${month}-${day}`
+  const [dayDate, setDayDate] = useState(new Date())
+  const [formattedDate, setFormattedDate] = useState(formatDate(dayDate))
+  const [isCurrentDay, setIsCurrentDay] = useState(true)
+
+  const {isLoading, error, data} = useQuery({
+    enabled: (loggedIn ? true : false),
+    queryKey: ["day", formattedDate],
+    queryFn: async () => {
+      const url = `http://localhost:8000/days/${formattedDate}`
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + Cookies.get("auth")
+        }
+      })
+      return response.json()
+    }
+  })
 
   return (
     <AppPage>
       <AppWindow>
         <div className='left side'>
-          <button>LT</button>
+          <button onClick={(e) => {
+            e.preventDefault
+            const newDate = new Date()
+            newDate.setDate(dayDate.getDate() - 1)
+            setDayDate(newDate)
+            setFormattedDate(formatDate(newDate))
+          }}>LT</button>
         </div>
 
         <div className='content'>
           <h1>Kilocal App</h1>
           {loggedIn ? <>{formattedDate}</> : <>Not Logged In</>}
+          {isLoading ? <>Loading</> : <></>}
+          {error ? <>Error</> : <></>}
+          {data && Object.keys(data).map((key) => (
+            <p key={key}>
+              {data[key]}
+            </p>
+          ))}
+
         </div>    
         
         <div className='right side'>
-          <button>RT</button>
+          <button disabled={isCurrentDay} onClick={(e) => {
+            e.preventDefault
+            const newDate = new Date()
+            newDate.setDate(dayDate.getDate() + 1)
+            setDayDate(newDate)
+            setFormattedDate(formatDate(newDate))
+          }}>RT</button>
         </div>
       </AppWindow>  
     </AppPage>
