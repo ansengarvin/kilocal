@@ -7,14 +7,48 @@ const AppPage = styled.div`
 `
 
 const AppWindow = styled.div`
-  background-color: #ffa4a4;
   width: 750px;
   height: 750px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid black;
+
+  display: grid;
+  grid-template-areas: "left center right";
+  grid-template-columns: 50px 1fr 50px;
+
+  div.left {
+    grid-area: left;
+    
+  }
+
+  div.right{
+    grid-area: right;
+  }
+
+  div.side {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    button {
+      height: 45px;
+      width: 45px;
+    }
+  }
+
+  div.content {
+    background-color: #ffa4a4;
+    grid-area: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `
+
+const AppContent = styled.div``
 
 function App() {
   const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
@@ -28,8 +62,18 @@ function App() {
   return (
     <AppPage>
       <AppWindow>
-        <h1>Kilocal App</h1>
-        {loggedIn ? <>{formattedDate}</> : <>Not Logged In</>}
+        <div className='left side'>
+          <button>LT</button>
+        </div>
+
+        <div className='content'>
+          <h1>Kilocal App</h1>
+          {loggedIn ? <>{formattedDate}</> : <>Not Logged In</>}
+        </div>    
+        
+        <div className='right side'>
+          <button>RT</button>
+        </div>
       </AppWindow>  
     </AppPage>
   )
