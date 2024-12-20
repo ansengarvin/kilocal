@@ -99,6 +99,26 @@ router.delete('/:user_id', requireAuthentication, validateSameUser, async functi
             err: err
         })
     }
-}) 
+})
+
+router.get('/', requireAuthentication, async function (req, res) {
+    try {
+        const text = "SELECT id, name, email, weight FROM users WHERE id = $1"
+        const values = [req.user]
+        const result = await pool.query(text, values)
+        console.log("get user id:", req.user)
+        if (result.rowCount) {
+            res.status(200).send(result.rows[0])
+        } else {
+            res.status(404).send({
+                err: "User not found"
+            })
+        }
+    } catch (err) {
+        res.status(400).send({
+            err: err.message
+        })
+    }
+})
 
 module.exports = router

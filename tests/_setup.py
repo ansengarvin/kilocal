@@ -22,10 +22,10 @@ def pytest_configure():
 def test_create_user():
     url = "http://localhost:8000/users"
     data = {
-        "name": "John Doe",
+        "name": config["TEST_NAME"],
         "email": config["TEST_EMAIL"],
         "password": config["TEST_PASSWORD"],
-        "weight": 150
+        "weight": float(config["TEST_WEIGHT"])
     }
     response = requests.post(url, json=data, timeout=10)
     assert "id" in response.json()
@@ -52,3 +52,10 @@ def test_login():
     pytest.user_id = str(response.json()["id"])
     pytest.token = response.json()["token"]
     pytest.header = {'Authorization': 'Bearer ' + pytest.token}
+
+def test_user_get():
+    url = f"http://localhost:8000/users"
+    response = requests.get(url, headers=pytest.header, timeout=10)
+    assert response.status_code == 200
+    assert response.json()["id"] == int(pytest.user_id)
+

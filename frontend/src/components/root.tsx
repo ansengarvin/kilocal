@@ -25,6 +25,9 @@ const Grid = styled.div`
 
 const Main = styled.main`
     grid-area: main;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `
 
 
@@ -55,7 +58,7 @@ export function Root(props: RootProps) {
             <Grid>
                 <Header bgColor = "grey" height = "100px" />
                 <Main>
-                    {children || <Outlet context={{setLoggedIn}}/>}
+                    {children || <Outlet context={{loggedIn, setLoggedIn}}/>}
                 </Main>
             </Grid>
         </>
