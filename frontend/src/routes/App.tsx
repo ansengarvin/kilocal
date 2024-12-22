@@ -161,7 +161,7 @@ function App() {
       setPostReady(false)
       setCalories(1)
       setFoodName("")
-      window.location.reload()
+      foodGet.refetch()
       return response.json()
     }
   })
@@ -178,7 +178,8 @@ function App() {
         }
       })
       setDeleteReady(false)
-      window.location.reload()
+      foodGet.refetch()
+      return response
     }
   })
 
@@ -191,6 +192,12 @@ function App() {
       setIsCurrentDay(false)
     }
   }, [formattedDate])
+
+  useEffect(() => {
+    if (foodDelete.error) {
+      console.log(foodDelete.error)
+    }
+  })
 
   return (
     <ContentWindow>
