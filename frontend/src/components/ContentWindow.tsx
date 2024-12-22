@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 
 export const ContentWindow = styled.div`
   width: 750px;
-  height: 750px;
+  height: 700px;
 
   display: grid;
   grid-template-areas: "left center right";
@@ -32,9 +32,9 @@ export const ContentWindow = styled.div`
   }
 
   div.content {
-    background-color: #ffa4a4;
     grid-area: center;
     width: 100%;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
