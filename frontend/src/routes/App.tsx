@@ -124,6 +124,9 @@ function App() {
   const [calories, setCalories] = useState(1)
   const [foodName, setFoodName] = useState("")
 
+  const [deleteID, setDeleteID] = useState(0)
+  const [deleteReady, setDeleteReady] = useState(false)
+
   const foodGet = useQuery({
     enabled: (loggedIn ? true : false),
     queryKey: ["day", formattedDate],
@@ -160,6 +163,22 @@ function App() {
       setFoodName("")
       window.location.reload()
       return response.json()
+    }
+  })
+
+  const foodDelete = useQuery({
+    enabled: (deleteReady ? true : false),
+    queryKey: ["foodDelete", deleteID],
+    queryFn: async () => {
+      const url = `http://localhost:8000/days/${formattedDate}/food/${deleteID}`
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          "Authorization": "Bearer " + Cookies.get("auth")
+        }
+      })
+      setDeleteReady(false)
+      window.location.reload()
     }
   })
 
@@ -228,7 +247,10 @@ function App() {
                 </div>
               </div>
               <div className="item buttonSection">
-                <button className="delete">X</button>
+                <button className="delete" onClick={() => {
+                  setDeleteID(food.id)
+                  setDeleteReady(true)
+                }}>X</button>
               </div>
             </FoodEntry>
           ))}
