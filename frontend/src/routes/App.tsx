@@ -228,7 +228,7 @@ function App() {
                 </div>
               </div>
               <div className="item buttonSection">
-                D
+                <button className="delete">X</button>
               </div>
             </FoodEntry>
           ))}
