@@ -5,6 +5,8 @@ import Cookies from "js-cookie";
 import { ContentWindow } from "../components/ContentWindow";
 import styled from "@emotion/styled";
 
+const bgColor = '#adadad'
+
 function formatDate(date: Date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -14,9 +16,9 @@ function formatDate(date: Date) {
 }
 
 const PostSection = styled.div`
-  background-color: white;
+  background-color: ${bgColor};
   border-radius: 10px;
-  width: 80%;
+  width: 90%;
   height: 100px;
   margin-bottom: 10px;
 
@@ -54,10 +56,10 @@ const PostSection = styled.div`
 `
 
 const FoodSection = styled.div`
-  background-color: white;
+  background-color: ${bgColor};
   border-radius: 10px;
   height: 100%;
-  width: 80%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,8 +71,8 @@ const FoodEntry = styled.div`
 
   display: grid;
   grid-template-areas:
-    "foodname calories edit delete";
-  grid-template-columns: 6fr 3fr 1fr 1fr;
+    "foodname calories buttons";
+  grid-template-columns: 12fr 4fr 1fr;
   grid-template-rows: 1fr;
   grid-gap: 10px;
   margin-top: 10px;
@@ -83,8 +85,8 @@ const FoodEntry = styled.div`
     height: 100%;
   }
 
-  div.edit {
-    grid-area: edit;
+  div.buttonSection {
+    grid-area: buttons;
   }
 
   div.foodname {
@@ -95,12 +97,8 @@ const FoodEntry = styled.div`
     grid-area: calories;
   }
 
-  div.delete {
-    grid-area: delete;
-  }
-
   .textContent {
-    background-color: #bcbcff;
+    background-color: #ffffff;
     height: 90%;
     width: 100%;
     border-radius: 10px;
@@ -214,9 +212,6 @@ function App() {
           </p>}
           {foodGet.data?.food && foodGet.data?.food.length != 0 && foodGet.data.food.map((food: any) => (
             <FoodEntry key={food.id}>
-              <div className="item edit">
-                E
-              </div>
               <div className="item foodname">
                 <div className="textContent">
                   <div className="inner">
@@ -232,7 +227,7 @@ function App() {
                   </div>  
                 </div>
               </div>
-              <div className="item delete">
+              <div className="item buttonSection">
                 D
               </div>
             </FoodEntry>

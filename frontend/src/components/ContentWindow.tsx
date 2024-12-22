@@ -32,7 +32,6 @@ export const ContentWindow = styled.div`
   }
 
   div.content {
-    background-color: #ffa4a4;
     grid-area: center;
     width: 100%;
     height: 100%;
