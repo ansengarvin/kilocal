@@ -98,7 +98,7 @@ router.get('/:date', requireAuthentication, async function(req, res) {
         let result = await pool.query(text, values)
 
         // TODO: Implement recipe getting
-
+        console.log(result.rows)
         res.status(200).send({
             food: result.rows
         })

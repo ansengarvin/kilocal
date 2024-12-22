@@ -153,10 +153,12 @@ function App() {
           {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
         </PostSection>
         <FoodSection>
+          {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
+            No food for this day yet!
+          </p>}
           {foodGet.data?.food && foodGet.data?.food.length != 0 && foodGet.data.food.map((food: any) => (
             <p key={food.id}>
               {food.name} {food.calories} 
-              
             </p>
           ))}
         </FoodSection>
