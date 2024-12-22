@@ -58,6 +58,62 @@ const FoodSection = styled.div`
   border-radius: 10px;
   height: 100%;
   width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const FoodEntry = styled.div`
+  width: 95%;
+  height: 50px;
+
+  display: grid;
+  grid-template-areas:
+    "foodname calories edit delete";
+  grid-template-columns: 6fr 3fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: 10px;
+  margin-top: 10px;
+
+  div.item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  div.edit {
+    grid-area: edit;
+  }
+
+  div.foodname {
+    grid-area: foodname;
+  }
+
+  div.calories {
+    grid-area: calories;
+  }
+
+  div.delete {
+    grid-area: delete;
+  }
+
+  .textContent {
+    background-color: #bcbcff;
+    height: 90%;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    .inner {
+      margin-left: 10px;
+    }
+  }
+
+  
 `
 
 function App() {
@@ -157,9 +213,29 @@ function App() {
             No food for this day yet!
           </p>}
           {foodGet.data?.food && foodGet.data?.food.length != 0 && foodGet.data.food.map((food: any) => (
-            <p key={food.id}>
-              {food.name} {food.calories} 
-            </p>
+            <FoodEntry key={food.id}>
+              <div className="item edit">
+                E
+              </div>
+              <div className="item foodname">
+                <div className="textContent">
+                  <div className="inner">
+                    {food.name}
+                  </div>  
+                </div>
+                
+              </div>
+              <div className="item calories">
+              <div className="textContent">
+                  <div className="inner">
+                    {food.calories}
+                  </div>  
+                </div>
+              </div>
+              <div className="item delete">
+                D
+              </div>
+            </FoodEntry>
           ))}
         </FoodSection>
         
