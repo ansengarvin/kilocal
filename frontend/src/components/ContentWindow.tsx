@@ -22,7 +22,6 @@ export const ContentWindow = styled.div`
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     
     button {
@@ -39,8 +38,5 @@ export const ContentWindow = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    padding-top: 20px;
-    padding-bottom: 20px;
   }
 `

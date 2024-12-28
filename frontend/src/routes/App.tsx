@@ -7,6 +7,14 @@ import styled from "@emotion/styled";
 
 const bgColor = '#adadad'
 
+interface foodEntryProps {
+  name: string,
+  calories: number,
+  id?: number,
+  setDeleteID?: (id: number) => void,
+  setDeleteReady?: (ready: boolean) => void
+}
+
 function formatDate(date: Date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -14,6 +22,32 @@ function formatDate(date: Date) {
 
   return `${year}-${month}-${day}`
 }
+
+const DateSection = styled.div`
+  height: auto;
+  width: 90%;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: ${bgColor};
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    font-size: 24px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+`
 
 const PostSection = styled.div`
   background-color: ${bgColor};
@@ -58,16 +92,19 @@ const PostSection = styled.div`
 const FoodSection = styled.div`
   background-color: ${bgColor};
   border-radius: 10px;
-  height: 100%;
+  min-height: 500px;
   width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
 `
 
-const FoodEntry = styled.div`
+const FoodEntryDiv = styled.div`
   width: 95%;
   height: 50px;
+  flex-shrink: 0;
 
   display: grid;
   grid-template-areas:
@@ -110,9 +147,95 @@ const FoodEntry = styled.div`
       margin-left: 10px;
     }
   }
-
-  
 `
+
+function FoodEntry(props: foodEntryProps) {
+  const {name, calories, id, setDeleteID, setDeleteReady} = props
+  return (
+    <FoodEntryDiv>
+      <div className="item foodname">
+        <div className="textContent">
+          <div className="inner">
+            {name}
+          </div>  
+        </div>
+        
+      </div>
+      <div className="item calories">
+      <div className="textContent">
+          <div className="inner">
+            {calories}
+          </div>  
+        </div>
+      </div>
+      {
+        id != undefined && setDeleteID != undefined && setDeleteReady != undefined &&
+        <div className="item buttonSection">
+          <button className="delete" onClick={() => {
+            setDeleteID(id)
+            setDeleteReady(true)
+          }}>X</button>
+        </div>
+      }
+      
+    </FoodEntryDiv>
+  )
+}
+
+interface totalCalProps {
+  total: number
+}
+
+interface progressBarProps{
+  width: string
+}
+
+const TotalCalDiv = styled.div<progressBarProps>`
+  height: 30px;
+  margin-bottom: 10px;
+  width: 90%;
+  position: relative;
+
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+
+  font-size: 24px;
+
+  background-color: white;
+  border-radius: 25px;
+  
+  .number {
+    position: absolute;
+    color: #343434;
+  }
+
+  .progressBar {
+    width: ${props => props.width};
+    height: inherit;
+    background-color: #c3c3c3;
+    border-radius: 25px;
+    margin-right: auto;
+  }
+`
+
+function TotalCal(props: totalCalProps) {
+  const {total} = props
+
+  const progressWidth = (`${(total / 2000 * 100).toString()}%`)
+  console.log(progressWidth)
+
+  return (
+    <TotalCalDiv width={progressWidth}>
+      <div className="progressBar">
+
+      </div>
+      <div className="number total">
+        {total} / 2000
+      </div>
+    </TotalCalDiv>
+  )
+}
 
 function App() {
   const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
@@ -210,11 +333,11 @@ function App() {
           setFormattedDate(formatDate(newDate))
         }}>LT</button>
       </div>
-
       <div className='content'>
-        <h1>{loggedIn ? <>{formattedDate}</> : <>Not Logged In</>}</h1>  
-        {foodGet.isLoading ? <>Loading</> : <></>}
-        {foodGet.error ? <>Error</> : <></>}
+        <DateSection>
+          <h1>Calories for {dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDay()}, {dayDate.getFullYear()}</h1>
+          <TotalCal total={foodGet.data?.total}/>
+        </DateSection>
         <PostSection>
           <div className="interior">
             <form className="formGrid" onSubmit={(e) => {
@@ -228,8 +351,6 @@ function App() {
               <button className="button" type="submit">Add Food</button>
             </form>
           </div>
-          
-          
           {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
         </PostSection>
         <FoodSection>
@@ -237,32 +358,17 @@ function App() {
             No food for this day yet!
           </p>}
           {foodGet.data?.food && foodGet.data?.food.length != 0 && foodGet.data.food.map((food: any) => (
-            <FoodEntry key={food.id}>
-              <div className="item foodname">
-                <div className="textContent">
-                  <div className="inner">
-                    {food.name}
-                  </div>  
-                </div>
-                
-              </div>
-              <div className="item calories">
-              <div className="textContent">
-                  <div className="inner">
-                    {food.calories}
-                  </div>  
-                </div>
-              </div>
-              <div className="item buttonSection">
-                <button className="delete" onClick={() => {
-                  setDeleteID(food.id)
-                  setDeleteReady(true)
-                }}>X</button>
-              </div>
-            </FoodEntry>
+            <FoodEntry
+              name={food.name}
+              calories={food.calories}
+              id={food.id}
+              setDeleteID={setDeleteID}
+              setDeleteReady={setDeleteReady}
+            />
           ))}
         </FoodSection>
         
+
 
       </div>    
       
