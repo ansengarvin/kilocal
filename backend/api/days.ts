@@ -97,9 +97,16 @@ router.get('/:date', requireAuthentication, async function(req, res) {
         let values = [day_id]
         let result = await pool.query(text, values)
 
+        // Calculate total from food
+        let total = 0
+        for (let i = 0; i < result.rows.length; i++) {
+            total += result.rows[i].calories
+        }
+
         // TODO: Implement recipe getting
         console.log(result.rows)
         res.status(200).send({
+            total: total,
             food: result.rows
         })
 

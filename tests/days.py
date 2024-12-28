@@ -26,6 +26,9 @@ class Day:
                 ]
             }
         ]
+        self.food_total = 80
+        self.recipe_total = 270
+        self.total_total = 350
 
         url = "http://localhost:8000/days"
         data = {
@@ -58,6 +61,9 @@ def test_day():
     assert "food" in response.json(), "days food not present in return body"
     assert day.food[0]["name"] == response.json()["food"][0]["name"], "days food name does not match"
     assert day.food[0]["calories"] == response.json()["food"][0]["calories"], "days food calories does not match"
+
+    ## TODO: Total will eventually reflect both food and recipe totals. This test will need to be changed.
+    assert day.food_total == response.json()["total"], "days food total does not match"
     
     food_id = response.json()["food"][0]["id"]
     
@@ -134,31 +140,3 @@ def test_day_food_delete_unauthorized():
     url = "http://localhost:8000/days/" + day.date + "/food/" + str(food_id)
     response = requests.delete(url, headers = wrong_header)
     assert response.status_code == 404
-
-def test_setup_manual():
-    ## Re-post some day stuff for manual testing
-    url = "http://localhost:8000/days/" + "2024-12-19" + "/food"
-    data = {"name": "Cookie", "calories": 180}
-    response = requests.post(url, json=data, headers = pytest.header)
-    assert response.status_code == 201, "manual test days food POST returned wrong status code"
-    assert "id" in response.json(), "manual test days food ID not present in return body"
-
-    url = "http://localhost:8000/days/" + "2024-12-19" + "/food"
-    data = {"name": "Milk", "calories": 170}
-    response = requests.post(url, json=data, headers = pytest.header)
-    assert response.status_code == 201, "manual test days food POST returned wrong status code"
-    assert "id" in response.json(), "manual test days food ID not present in return body"
-
-    url = "http://localhost:8000/days/" + "2024-12-18" + "/food"
-    data = {"name": "Apple", "calories": 20}
-    response = requests.post(url, json=data, headers = pytest.header)
-    assert response.status_code == 201, "manual test days food POST returned wrong status code"
-    assert "id" in response.json(), "manual test days food ID not present in return body"
-
-    url = "http://localhost:8000/days/" + "2024-12-17" + "/food"
-    data = {"name": "Cake", "calories": 2000}
-    response = requests.post(url, json=data, headers = pytest.header)
-    assert response.status_code == 201, "manual test days food POST returned wrong status code"
-    assert "id" in response.json(), "manual test days food ID not present in return body"
-
-
