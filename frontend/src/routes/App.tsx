@@ -7,6 +7,14 @@ import styled from "@emotion/styled";
 
 const bgColor = '#adadad'
 
+interface foodEntryProps {
+  name: string,
+  calories: number,
+  id?: number,
+  setDeleteID?: (id: number) => void,
+  setDeleteReady?: (ready: boolean) => void
+}
+
 function formatDate(date: Date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -65,7 +73,7 @@ const FoodSection = styled.div`
   align-items: center;
 `
 
-const FoodEntry = styled.div`
+const FoodEntryDiv = styled.div`
   width: 95%;
   height: 50px;
 
@@ -110,9 +118,96 @@ const FoodEntry = styled.div`
       margin-left: 10px;
     }
   }
-
-  
 `
+
+function FoodEntry(props: foodEntryProps) {
+  const {name, calories, id, setDeleteID, setDeleteReady} = props
+  return (
+    <FoodEntryDiv>
+      <div className="item foodname">
+        <div className="textContent">
+          <div className="inner">
+            {name}
+          </div>  
+        </div>
+        
+      </div>
+      <div className="item calories">
+      <div className="textContent">
+          <div className="inner">
+            {calories}
+          </div>  
+        </div>
+      </div>
+      {
+        id != undefined && setDeleteID != undefined && setDeleteReady != undefined &&
+        <div className="item buttonSection">
+          <button className="delete" onClick={() => {
+            setDeleteID(id)
+            setDeleteReady(true)
+          }}>X</button>
+        </div>
+      }
+      
+    </FoodEntryDiv>
+  )
+}
+
+interface totalCalProps {
+  total: number
+}
+
+interface progressBarProps{
+  width: string
+}
+
+const TotalCalDiv = styled.div<progressBarProps>`
+  height: 30px;
+  margin-top: auto;
+  margin-bottom: 10px;
+  width: 90%;
+  position: relative;
+
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+
+  font-size: 24px;
+
+  background-color: white;
+  border-radius: 25px;
+  
+  .number {
+    position: absolute;
+    color: #343434;
+  }
+
+  .progressBar {
+    width: ${props => props.width};
+    height: inherit;
+    background-color: #c3c3c3;
+    border-radius: 25px;
+    margin-right: auto;
+  }
+`
+
+function TotalCal(props: totalCalProps) {
+  const {total} = props
+
+  const progressWidth = (`${(total / 2000 * 100).toString()}%`)
+  console.log(progressWidth)
+
+  return (
+    <TotalCalDiv width={progressWidth}>
+      <div className="progressBar">
+
+      </div>
+      <div className="number total">
+        {total} / 2000
+      </div>
+    </TotalCalDiv>
+  )
+}
 
 function App() {
   const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
@@ -237,32 +332,18 @@ function App() {
             No food for this day yet!
           </p>}
           {foodGet.data?.food && foodGet.data?.food.length != 0 && foodGet.data.food.map((food: any) => (
-            <FoodEntry key={food.id}>
-              <div className="item foodname">
-                <div className="textContent">
-                  <div className="inner">
-                    {food.name}
-                  </div>  
-                </div>
-                
-              </div>
-              <div className="item calories">
-              <div className="textContent">
-                  <div className="inner">
-                    {food.calories}
-                  </div>  
-                </div>
-              </div>
-              <div className="item buttonSection">
-                <button className="delete" onClick={() => {
-                  setDeleteID(food.id)
-                  setDeleteReady(true)
-                }}>X</button>
-              </div>
-            </FoodEntry>
+            <FoodEntry
+              name={food.name}
+              calories={food.calories}
+              id={food.id}
+              setDeleteID={setDeleteID}
+              setDeleteReady={setDeleteReady}
+            />
           ))}
+          <TotalCal total={foodGet.data?.total}/>
         </FoodSection>
         
+
 
       </div>    
       
