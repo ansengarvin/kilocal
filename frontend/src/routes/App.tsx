@@ -8,14 +8,6 @@ import { FoodEntries } from "../components/FoodEntries";
 
 const bgColor = '#adadad'
 
-interface foodEntryProps {
-  name: string,
-  calories: number,
-  id?: number,
-  setDeleteID?: (id: number) => void,
-  setDeleteReady?: (ready: boolean) => void
-}
-
 function formatDate(date: Date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1

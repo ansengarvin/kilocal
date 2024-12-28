@@ -1,7 +1,5 @@
 import styled from "@emotion/styled"
 
-const bgColor = '#adadad'
-
 interface foodEntriesProps {
   foodList: Array<Object>
   setDeleteID?: Function
