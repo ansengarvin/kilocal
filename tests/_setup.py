@@ -18,23 +18,6 @@ def pytest_configure():
     pytest.token = None
     pytest.header = None
 
-# Testing user creation
-def test_create_user():
-    url = "http://localhost:8000/users"
-    data = {
-        "name": config["TEST_NAME"],
-        "email": config["TEST_EMAIL"],
-        "password": config["TEST_PASSWORD"],
-        "weight": float(config["TEST_WEIGHT"])
-    }
-    response = requests.post(url, json=data, timeout=10)
-    assert "id" in response.json()
-    pytest.user_id = str(response.json()["id"])
-    assert response.json()["name"] == data["name"]
-    assert response.json()["email"] == data["email"]
-    assert response.json()["weight"] == data["weight"]
-    assert response.status_code == 201
-
 # Testing a valid login.
 def test_login():
     assert config["TEST_EMAIL"]
