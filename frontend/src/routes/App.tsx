@@ -23,6 +23,32 @@ function formatDate(date: Date) {
   return `${year}-${month}-${day}`
 }
 
+const DateSection = styled.div`
+  height: auto;
+  width: 90%;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: ${bgColor};
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    font-size: 24px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+`
+
 const PostSection = styled.div`
   background-color: ${bgColor};
   border-radius: 10px;
@@ -66,16 +92,19 @@ const PostSection = styled.div`
 const FoodSection = styled.div`
   background-color: ${bgColor};
   border-radius: 10px;
-  height: 100%;
+  min-height: 500px;
   width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
 `
 
 const FoodEntryDiv = styled.div`
   width: 95%;
   height: 50px;
+  flex-shrink: 0;
 
   display: grid;
   grid-template-areas:
@@ -163,7 +192,6 @@ interface progressBarProps{
 
 const TotalCalDiv = styled.div<progressBarProps>`
   height: 30px;
-  margin-top: auto;
   margin-bottom: 10px;
   width: 90%;
   position: relative;
@@ -305,11 +333,11 @@ function App() {
           setFormattedDate(formatDate(newDate))
         }}>LT</button>
       </div>
-
       <div className='content'>
-        <h1>{loggedIn ? <>{formattedDate}</> : <>Not Logged In</>}</h1>  
-        {foodGet.isLoading ? <>Loading</> : <></>}
-        {foodGet.error ? <>Error</> : <></>}
+        <DateSection>
+          <h1>Calories for {dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDay()}, {dayDate.getFullYear()}</h1>
+          <TotalCal total={foodGet.data?.total}/>
+        </DateSection>
         <PostSection>
           <div className="interior">
             <form className="formGrid" onSubmit={(e) => {
@@ -323,8 +351,6 @@ function App() {
               <button className="button" type="submit">Add Food</button>
             </form>
           </div>
-          
-          
           {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
         </PostSection>
         <FoodSection>
@@ -340,7 +366,6 @@ function App() {
               setDeleteReady={setDeleteReady}
             />
           ))}
-          <TotalCal total={foodGet.data?.total}/>
         </FoodSection>
         
 
