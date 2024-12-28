@@ -12,6 +12,9 @@ function destroy() {
 function rebuild () {
 	destroy
 	build
+	echo "Waiting 5 seconds for backend to set up."
+	sleep 5
+	py init.py
 }
 
 # Starts the database
@@ -41,6 +44,7 @@ function test() {
 	build
 	echo "Waiting 5 seconds for backend to set up."
 	sleep 5
+	py init.py
 	test_short
 }
 
