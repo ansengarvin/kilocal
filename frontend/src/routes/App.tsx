@@ -4,6 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ContentWindow } from "../components/ContentWindow";
 import styled from "@emotion/styled";
+import { FoodEntries } from "../components/FoodEntries";
 
 const bgColor = '#adadad'
 
@@ -101,87 +102,6 @@ const FoodSection = styled.div`
   padding-bottom: 10px;
 `
 
-const FoodEntryDiv = styled.div`
-  width: 95%;
-  height: 50px;
-  flex-shrink: 0;
-
-  display: grid;
-  grid-template-areas:
-    "foodname calories buttons";
-  grid-template-columns: 12fr 4fr 1fr;
-  grid-template-rows: 1fr;
-  grid-gap: 10px;
-  margin-top: 10px;
-
-  div.item {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-
-  div.buttonSection {
-    grid-area: buttons;
-  }
-
-  div.foodname {
-    grid-area: foodname;
-  }
-
-  div.calories {
-    grid-area: calories;
-  }
-
-  .textContent {
-    background-color: #ffffff;
-    height: 90%;
-    width: 100%;
-    border-radius: 10px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-
-    .inner {
-      margin-left: 10px;
-    }
-  }
-`
-
-function FoodEntry(props: foodEntryProps) {
-  const {name, calories, id, setDeleteID, setDeleteReady} = props
-  return (
-    <FoodEntryDiv>
-      <div className="item foodname">
-        <div className="textContent">
-          <div className="inner">
-            {name}
-          </div>  
-        </div>
-        
-      </div>
-      <div className="item calories">
-      <div className="textContent">
-          <div className="inner">
-            {calories}
-          </div>  
-        </div>
-      </div>
-      {
-        id != undefined && setDeleteID != undefined && setDeleteReady != undefined &&
-        <div className="item buttonSection">
-          <button className="delete" onClick={() => {
-            setDeleteID(id)
-            setDeleteReady(true)
-          }}>X</button>
-        </div>
-      }
-      
-    </FoodEntryDiv>
-  )
-}
-
 interface totalCalProps {
   total: number
 }
@@ -225,12 +145,14 @@ function TotalCal(props: totalCalProps) {
   const progressWidth = (`${(total / 2000 * 100).toString()}%`)
   console.log(progressWidth)
 
+  const labelText = `${total} out of 2000."`
+
   return (
     <TotalCalDiv width={progressWidth}>
       <div className="progressBar">
 
       </div>
-      <div className="number total">
+      <div className="number total" tabIndex={0} aria-label={labelText}>
         {total} / 2000
       </div>
     </TotalCalDiv>
@@ -333,9 +255,18 @@ function App() {
           setFormattedDate(formatDate(newDate))
         }}>LT</button>
       </div>
+      <div className='right side'>
+        <button disabled={isCurrentDay} onClick={(e) => {
+          e.preventDefault
+          const newDate = new Date()
+          newDate.setDate(dayDate.getDate() + 1)
+          setDayDate(newDate)
+          setFormattedDate(formatDate(newDate))
+        }}>RT</button>
+      </div>
       <div className='content'>
         <DateSection>
-          <h1>Calories for {dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDay()}, {dayDate.getFullYear()}</h1>
+          <h1 tabIndex={0}>Calories for {dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDay()}, {dayDate.getFullYear()}</h1>
           <TotalCal total={foodGet.data?.total}/>
         </DateSection>
         <PostSection>
@@ -357,30 +288,13 @@ function App() {
           {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
             No food for this day yet!
           </p>}
-          {foodGet.data?.food && foodGet.data?.food.length != 0 && foodGet.data.food.map((food: any) => (
-            <FoodEntry
-              name={food.name}
-              calories={food.calories}
-              id={food.id}
-              setDeleteID={setDeleteID}
-              setDeleteReady={setDeleteReady}
-            />
-          ))}
+          {foodGet.data?.food && foodGet.data?.food.length != 0 &&
+            <FoodEntries foodList={foodGet.data.food} setDeleteID={setDeleteID} setDeleteReady={setDeleteReady}/>
+          }
         </FoodSection>
-        
-
-
       </div>    
       
-      <div className='right side'>
-        <button disabled={isCurrentDay} onClick={(e) => {
-          e.preventDefault
-          const newDate = new Date()
-          newDate.setDate(dayDate.getDate() + 1)
-          setDayDate(newDate)
-          setFormattedDate(formatDate(newDate))
-        }}>RT</button>
-      </div>
+      
     </ContentWindow>  
   )
 }
