@@ -72,8 +72,21 @@ router.post('/:date/food', requireAuthentication, async function(req, res) {
             res.status(400).send({err: "entry must have request body with calories"})
         } else {
             let day_id = await get_day_id(req.user, req.params.date)
-            let text = "INSERT INTO Foods(day_id, name, calories, position) VALUES($1, $2, $3, $4) RETURNING id"
-            let values = [day_id, req.body.name, req.body.calories, 0] // TODO: Calculate position instead of 0
+            let text = `
+                INSERT INTO Foods(day_id, name, calories, amount, carbs, fat, protein, position)
+                VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+                RETURNING id
+            `
+            let values = [
+                day_id,
+                req.body.name,
+                req.body.calories,
+                req.body.amount || 1,
+                req.body.carbs || 0,
+                req.body.fat || 0,
+                req.body.protein || 0,
+                0 // TODO: Calculate position instead of 0
+            ] 
             let result = await pool.query(text, values)
 
             res.status(201).send({
@@ -93,20 +106,30 @@ router.get('/:date', requireAuthentication, async function(req, res) {
     try {
         let day_id = await get_day_id(req.user, req.params.date)
 
-        let text = "SELECT id, name, calories FROM foods WHERE day_id = $1"
+        let text = "SELECT id, name, calories, amount, carbs, fat, protein FROM foods WHERE day_id = $1"
         let values = [day_id]
         let result = await pool.query(text, values)
 
+        // Parse returned db numerics from string to floats
+        
+
         // Calculate total from food
-        let total = 0
+        let totalCalories = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0
         for (let i = 0; i < result.rows.length; i++) {
-            total += result.rows[i].calories
+            totalCalories += (result.rows[i].calories * result.rows[i].amount)
+            totalCarbs += (result.rows[i].carbs * result.rows[i].amount)
+            totalProtein += (result.rows[i].protein * result.rows[i].amount)
+            totalFat += (result.rows[i].fat * result.rows[i].amount)
         }
+
 
         // TODO: Implement recipe getting
         console.log(result.rows)
         res.status(200).send({
-            total: total,
+            totalCalories: totalCalories,
+            totalCarbs: totalCarbs,
+            totalProtein: totalProtein,
+            totalFat: totalFat,
             food: result.rows
         })
 

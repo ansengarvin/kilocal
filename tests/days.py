@@ -6,8 +6,12 @@ class Day:
         self.date = date
         self.food = [
             {
+                "name": "Banana",
+                "amount": 2,
                 "calories": 80,
-                "name": "Banana" 
+                "carbs": 27,
+                "protein": 1.3,
+                "fat": 0.4
             }
         ]
         self.recipes = [
@@ -17,18 +21,37 @@ class Day:
                 "food": [
                     {
                         "name": "PB",
-                        "calories": 90
+                        "amount": 1,
+                        "calories": 90,
+                        "carbs": 3,
+                        "protein": 4,
+                        "fat": 8
                     },
                     {
                         "name": "Bread",
-                        "calories": 180
+                        "amount": 2,
+                        "calories": 180,
+                        "carbs": 30,
+                        "protein": 6,
+                        "fat": 2
                     }
                 ]
             }
         ]
-        self.food_total = 80
-        self.recipe_total = 270
-        self.total_total = 350
+        self.food_calorie_total = 160
+        self.food_carb_total = 54
+        self.food_protein_total = 2.6
+        self.food_fat_total = 0.8
+
+        self.recipe_calorie_total = 450
+        self.recipe_carb_total = 66
+        self.recipe_protein_total = 14
+        self.recipe_fat_total = 10
+
+        self.total_calorie_total = 630
+        self.total_carb_total = 120
+        self.total_protein_total = 16.6
+        self.total_fat_total = 10.8
 
         url = "http://localhost:8000/days"
         data = {
@@ -60,10 +83,17 @@ def test_day():
     assert response.status_code == 200, "days food GET returned wrong status code:"
     assert "food" in response.json(), "days food not present in return body"
     assert day.food[0]["name"] == response.json()["food"][0]["name"], "days food name does not match"
+    assert day.food[0]["amount"] == response.json()["food"][0]["amount"], "days food amount does not match"
     assert day.food[0]["calories"] == response.json()["food"][0]["calories"], "days food calories does not match"
+    assert day.food[0]["carbs"] == response.json()["food"][0]["carbs"], "days food carbs does not match"
+    assert day.food[0]["protein"] == response.json()["food"][0]["protein"], "days food protein does not match"
+    assert day.food[0]["fat"] == response.json()["food"][0]["fat"], "days food fat does not match"
 
     ## TODO: Total will eventually reflect both food and recipe totals. This test will need to be changed.
-    assert day.food_total == response.json()["total"], "days food total does not match"
+    assert day.food_calorie_total == response.json()["totalCalories"], "days food total does not match"
+    assert day.food_carb_total == response.json()["totalCarbs"], "days food total does not match"
+    assert day.food_protein_total == response.json()["totalProtein"], "days food total does not match"
+    assert day.food_fat_total == response.json()["totalFat"], "days food total does not match"
     
     food_id = response.json()["food"][0]["id"]
     

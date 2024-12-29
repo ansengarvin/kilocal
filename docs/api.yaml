@@ -635,12 +635,12 @@ paths:
           description: Unauthorized
         '400':
           description: Invalid request
-  /days/{day_id}:
+  /days/{date}:
     get:
       summary: Get a day by id
       description: Get a single day
       parameters:
-        - name: day_id
+        - name: date
           in: path
           required: true
           description: The id of the day to get
@@ -661,6 +661,18 @@ paths:
                     type: string
                     format: date
                     description: The date of the day
+                  totalCalories:
+                    type: number
+                    description: Total number of calories for the day, in kcal
+                  totalCarbs:
+                    type: number
+                    description: Total amount of carbs for the day, in grams
+                  totalProtein:
+                    type: number
+                    description: Total amount of protein for the day, in grams
+                  totalFat:
+                    type: number
+                    description: Total amount of fat for the day, in grams
                   foods:
                     type: array
                     items:
@@ -673,8 +685,20 @@ paths:
                           type: string
                           description: The name of the food
                         calories:
-                          type: integer
+                          type: number
                           description: The calories of the food
+                        amount:
+                          type: integer
+                          description: The number of food items
+                        protein:
+                          type: number
+                          description: Amount of protein, in grams
+                        carbs:
+                          type: number
+                          description: Amount of carbs, in grams
+                        fat:
+                          type: number
+                          description: Amount of fat, in grams
                         position:
                           type: integer
                           description: The position of the food in the day
@@ -717,7 +741,7 @@ paths:
       summary: Update a day by id
       description: Edit a day
       parameters:
-        - name: day_id
+        - name: date
           in: path
           required: true
           description: The id of the day to update
@@ -759,7 +783,7 @@ paths:
       summary: Delete a day by id
       description: Delete a day's entry
       parameters:
-        - name: day_id
+        - name: date
           in: path
           required: true
           description: The id of the day to delete
@@ -773,12 +797,12 @@ paths:
         '404':
           description: Day does not exist
 
-  /days/{day_id}/recipes:
+  /days/{date}/recipes:
     post:
       summary: Add a user's recipe to a day
       description: Add a user's recipe to a day
       parameters:
-        - name: day_id
+        - name: date
           in: path
           required: true
           description: The id of the day to add the recipe to
@@ -815,12 +839,12 @@ paths:
         '404':
           description: Day or recipe does not exist
 
-  /days/{day_id}/recipes/{recipe_id}:
+  /days/{date}/recipes/{recipe_id}:
     delete:
       summary: Delete a recipe from a day
       description: Delete a user's recipe from a day
       parameters:
-        - name: day_id
+        - name: date
           in: path
           required: true
           description: The id of the day
@@ -845,7 +869,7 @@ paths:
       summary: Add a food to a day
       description: Add a food to a day
       parameters:
-        - name: day_id
+        - name: date
           in: path
           required: true
           description: The id of the day to add the food to
@@ -885,12 +909,12 @@ paths:
         '404':
           description: Day or food does not exist
 
-  /days/{day_id}/foods/{food_id}:
+  /days/{date}/foods/{food_id}:
     delete:
       summary: Delete a food from a day
       description: Delete a food from a day
       parameters:
-        - name: day_id
+        - name: date
           in: path
           required: true
           description: The id of the day
