@@ -34,7 +34,6 @@ const GoalSectionDiv = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: green;
 
         h3 {
             color: #2a2a2a;
