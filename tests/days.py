@@ -38,9 +38,9 @@ class Day:
                 ]
             }
         ]
-        self.food_total = 80
-        self.recipe_total = 270
-        self.total_total = 350
+        self.food_total = 180
+        self.recipe_total = 450
+        self.total_total = 630
 
         url = "http://localhost:8000/days"
         data = {
