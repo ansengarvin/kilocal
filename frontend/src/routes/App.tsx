@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { ContentWindow } from "../components/ContentWindow";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/FoodEntries";
+import { GoalSection } from "../components/GoalSection";
 
 const bgColor = '#adadad'
 
@@ -104,63 +105,6 @@ const FoodSection = styled.div`
   padding-top: 10px;
   padding-bottom: 10px;
 `
-
-interface totalCalProps {
-  total: number
-}
-
-interface progressBarProps{
-  width: string
-}
-
-const TotalCalDiv = styled.div<progressBarProps>`
-  height: 30px;
-  margin-bottom: 10px;
-  width: 90%;
-  position: relative;
-
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-
-  font-size: 24px;
-
-  background-color: white;
-  border-radius: 25px;
-  
-  .number {
-    position: absolute;
-    color: #343434;
-  }
-
-  .progressBar {
-    width: ${props => props.width};
-    height: inherit;
-    background-color: #c3c3c3;
-    border-radius: 25px;
-    margin-right: auto;
-  }
-`
-
-function TotalCal(props: totalCalProps) {
-  const {total} = props
-
-  const progressWidth = (`${(total / 2000 * 100).toString()}%`)
-  console.log(progressWidth)
-
-  const labelText = `${total} out of 2000."`
-
-  return (
-    <TotalCalDiv width={progressWidth}>
-      <div className="progressBar">
-
-      </div>
-      <div className="number total" tabIndex={0} aria-label={labelText}>
-        {total} / 2000
-      </div>
-    </TotalCalDiv>
-  )
-}
 
 function App() {
   const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
@@ -268,10 +212,8 @@ function App() {
               setDayDate(newDate)
               setFormattedDate(formatDate(newDate))
             }}>RT</button>
-          
-          
         </DateSection>
-        <TotalCal total={foodGet.data?.total}/>
+        <GoalSection calorieTotal={foodGet.data?.total} calorieGoal={2000}/>
         <PostSection>
           <div className="interior">
             <form className="formGrid" onSubmit={(e) => {
