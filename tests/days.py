@@ -38,7 +38,7 @@ class Day:
                 ]
             }
         ]
-        self.food_calorie_total = 180
+        self.food_calorie_total = 160
         self.food_carb_total = 54
         self.food_protein_total = 2.6
         self.food_fat_total = 0.8
@@ -90,7 +90,7 @@ def test_day():
     assert day.food[0]["fat"] == response.json()["food"][0]["fat"], "days food fat does not match"
 
     ## TODO: Total will eventually reflect both food and recipe totals. This test will need to be changed.
-    assert day.food_total == response.json()["total"], "days food total does not match"
+    assert day.food_calorie_total == response.json()["total_calories"], "days food total does not match"
     
     food_id = response.json()["food"][0]["id"]
     
