@@ -1,17 +1,15 @@
 import styled from "@emotion/styled";
-import { ProgressBar } from "./ProgressBar";
+import { ProgressCircle } from "./ProgressCircle";
 
 interface GoalSectionProps {
     calorieTotal: number,
     calorieGoal: number,
 }
 
-
-
 const GoalSectionDiv = styled.div`
     background-color: #adadad;
     width: 90%;
-    height: 100px;
+    height: 200px;
     margin-bottom: 10px;
     border-radius: 10px;
 
@@ -25,12 +23,13 @@ export function GoalSection(props: GoalSectionProps) {
     const {calorieTotal, calorieGoal} = props
     return (
         <GoalSectionDiv>
-            <ProgressBar
+            <ProgressCircle
                 value={calorieTotal}
                 goal={calorieGoal}
-                height="30px"
-                width="90%"
-                fontSize="24px"
+                strokeWidth={15}
+                radius={60}
+                fontSize="14pt"
+                color={"#777777"}
             />
         </GoalSectionDiv>
     )

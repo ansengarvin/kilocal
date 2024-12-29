@@ -203,7 +203,7 @@ function App() {
             setFormattedDate(formatDate(newDate))
           }}>LT</button>
           
-          <h1 tabIndex={0}>Calories for {dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDay()}, {dayDate.getFullYear()}</h1>
+          <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDay()}, {dayDate.getFullYear()}</h1>
 
           <button className="right" disabled={isCurrentDay} onClick={(e) => {
               e.preventDefault
