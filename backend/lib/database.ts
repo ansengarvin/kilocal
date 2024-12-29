@@ -1,6 +1,10 @@
 import pg from 'pg'
 
-const {Pool} = pg
+const {Pool, types} = pg
+
+types.setTypeParser(1700, function(val) {
+    return parseFloat(val)
+})
 
 export const pool = new Pool({
     user: process.env.DB_USER,

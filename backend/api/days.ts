@@ -110,6 +110,9 @@ router.get('/:date', requireAuthentication, async function(req, res) {
         let values = [day_id]
         let result = await pool.query(text, values)
 
+        // Parse returned db numerics from string to floats
+        
+
         // Calculate total from food
         let total_calories = 0, total_carbs = 0, total_protein = 0, total_fat = 0
         for (let i = 0; i < result.rows.length; i++) {
