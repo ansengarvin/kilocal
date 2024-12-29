@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { ProgressCircle } from "./ProgressCircle";
+import { PieChart } from "./PieChart";
 
 interface GoalSectionProps {
     calorieTotal: number,
@@ -33,6 +34,7 @@ const GoalSectionDiv = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        background-color: green;
 
         h3 {
             color: #2a2a2a;
@@ -57,6 +59,9 @@ export function GoalSection(props: GoalSectionProps) {
         <GoalSectionDiv>
             <div className="subsection">
                 <div className="metric">
+                    <h3>
+                        Calories
+                    </h3>
                     <ProgressCircle
                         value={calorieTotal}
                         goal={calorieGoal}
@@ -65,13 +70,21 @@ export function GoalSection(props: GoalSectionProps) {
                         fontSize="14pt"
                         color={"#777777"}
                     />
-                    <h3>
-                        Calories
-                    </h3>
+                </div>
+                <div className="metric">
+                    <h3>Macronutrients</h3>
+                    <PieChart
+                        radius={60}
+                        sections={[0.3, 0.6, 0.1]}
+                        colors={["#f98c8c", "#6ba8ff", "#f9e08c"]}
+                    />
                 </div>
             </div>
             <div className="subsection">
                 <div className="metric">
+                    <h3>
+                        Carbs
+                    </h3>
                     <ProgressCircle
                         value={props.carbTotal}
                         goal={props.carbGoal}
@@ -80,11 +93,12 @@ export function GoalSection(props: GoalSectionProps) {
                         fontSize="12pt"
                         color={"#777777"}
                     />
-                    <h3>
-                        Carbs
-                    </h3>
+                    
                 </div>
                 <div className="metric">
+                    <h3>
+                        Protein
+                    </h3>
                     <ProgressCircle
                         value={props.proteinTotal}
                         goal={props.proteinGoal}
@@ -93,11 +107,12 @@ export function GoalSection(props: GoalSectionProps) {
                         fontSize="12pt"
                         color={"#777777"}
                     />
-                    <h3>
-                        Protein
-                    </h3>
+                    
                 </div>
                 <div className="metric">
+                    <h3>
+                        Fat
+                    </h3>
                     <ProgressCircle
                         value={props.fatTotal}
                         goal={props.fatGoal}
@@ -105,10 +120,7 @@ export function GoalSection(props: GoalSectionProps) {
                         radius={40}
                         fontSize="12pt"
                         color={"#777777"}
-                    />
-                    <h3>
-                        Fat
-                    </h3>
+                    />  
                 </div>
             </div>
             
