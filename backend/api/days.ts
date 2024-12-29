@@ -93,20 +93,27 @@ router.get('/:date', requireAuthentication, async function(req, res) {
     try {
         let day_id = await get_day_id(req.user, req.params.date)
 
-        let text = "SELECT id, name, calories FROM foods WHERE day_id = $1"
+        let text = "SELECT id, name, calories, amount, carbs, fat, protein FROM foods WHERE day_id = $1"
         let values = [day_id]
         let result = await pool.query(text, values)
 
         // Calculate total from food
-        let total = 0
+        let total_calories = 0, total_carbs = 0, total_protein = 0, total_fat = 0
         for (let i = 0; i < result.rows.length; i++) {
-            total += result.rows[i].calories
+            total_calories += (result.rows[i].calories * result.rows[i].amount)
+            total_carbs += (result.rows[i].carbs * result.rows[i].amount)
+            total_protein += (result.rows[i].protein * result.rows[i].amount)
+            total_fat += (result.rows[i].fat * result.rows[i].amount)
         }
+
 
         // TODO: Implement recipe getting
         console.log(result.rows)
         res.status(200).send({
-            total: total,
+            total_calories: total_calories,
+            total_carbs: total_carbs,
+            total_protein: total_protein,
+            total_fat: total_fat,
             food: result.rows
         })
 

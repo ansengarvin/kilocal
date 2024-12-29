@@ -29,7 +29,7 @@ CREATE TABLE Foods (
     calories DECIMAL NOT NULL,
     amount INTEGER,
     carbs DECIMAL,
-    fats DECIMAL,
+    fat DECIMAL,
     proteins DECIMAL,
     position INTEGER,
     CONSTRAINT check_day_recipe check (
