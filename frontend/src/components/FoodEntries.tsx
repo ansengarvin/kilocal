@@ -39,6 +39,10 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
     width: 400px;
   }
 
+  .calories {
+    width: 200px;
+  }
+
   td.buttons {
     width: 30px;
 
