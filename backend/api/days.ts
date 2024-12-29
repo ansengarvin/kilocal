@@ -114,22 +114,22 @@ router.get('/:date', requireAuthentication, async function(req, res) {
         
 
         // Calculate total from food
-        let total_calories = 0, total_carbs = 0, total_protein = 0, total_fat = 0
+        let totalCalories = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0
         for (let i = 0; i < result.rows.length; i++) {
-            total_calories += (result.rows[i].calories * result.rows[i].amount)
-            total_carbs += (result.rows[i].carbs * result.rows[i].amount)
-            total_protein += (result.rows[i].protein * result.rows[i].amount)
-            total_fat += (result.rows[i].fat * result.rows[i].amount)
+            totalCalories += (result.rows[i].calories * result.rows[i].amount)
+            totalCarbs += (result.rows[i].carbs * result.rows[i].amount)
+            totalProtein += (result.rows[i].protein * result.rows[i].amount)
+            totalFat += (result.rows[i].fat * result.rows[i].amount)
         }
 
 
         // TODO: Implement recipe getting
         console.log(result.rows)
         res.status(200).send({
-            total_calories: total_calories,
-            total_carbs: total_carbs,
-            total_protein: total_protein,
-            total_fat: total_fat,
+            totalCalories: totalCalories,
+            totalCarbs: totalCarbs,
+            totalProtein: totalProtein,
+            totalFat: totalFat,
             food: result.rows
         })
 

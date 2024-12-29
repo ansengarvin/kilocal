@@ -661,16 +661,16 @@ paths:
                     type: string
                     format: date
                     description: The date of the day
-                  total_calories:
+                  totalCalories:
                     type: number
                     description: Total number of calories for the day, in kcal
-                  total_carbs:
+                  totalCarbs:
                     type: number
                     description: Total amount of carbs for the day, in grams
-                  total_protein:
+                  totalProtein:
                     type: number
                     description: Total amount of protein for the day, in grams
-                  total_fat:
+                  totalFat:
                     type: number
                     description: Total amount of fat for the day, in grams
                   foods:
