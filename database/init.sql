@@ -30,7 +30,7 @@ CREATE TABLE Foods (
     amount INTEGER,
     carbs DECIMAL,
     fat DECIMAL,
-    proteins DECIMAL,
+    protein DECIMAL,
     position INTEGER,
     CONSTRAINT check_day_recipe check (
         (day_id IS NOT NULL AND recipe_id IS NULL) OR
