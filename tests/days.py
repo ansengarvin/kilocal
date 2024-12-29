@@ -38,9 +38,20 @@ class Day:
                 ]
             }
         ]
-        self.food_total = 180
-        self.recipe_total = 450
-        self.total_total = 630
+        self.food_calorie_total = 180
+        self.food_carb_total = 54
+        self.food_protein_total = 2.6
+        self.food_fat_total = 0.8
+
+        self.recipe_calorie_total = 450
+        self.recipe_carb_total = 66
+        self.recipe_protein_total = 14
+        self.recipe_fat_total = 10
+
+        self.total_calorie_total = 630
+        self.total_carb_total = 120
+        self.total_protein_total = 16.6
+        self.total_fat_total = 10.8
 
         url = "http://localhost:8000/days"
         data = {
