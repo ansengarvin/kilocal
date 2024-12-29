@@ -81,10 +81,10 @@ router.post('/:date/food', requireAuthentication, async function(req, res) {
                 day_id,
                 req.body.name,
                 req.body.calories,
-                req.body.amount,
-                req.body.carbs,
-                req.body.fat,
-                req.body.protein,
+                req.body.amount || 1,
+                req.body.carbs || 0,
+                req.body.fat || 0,
+                req.body.protein || 0,
                 0 // TODO: Calculate position instead of 0
             ] 
             let result = await pool.query(text, values)
