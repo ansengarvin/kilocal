@@ -159,7 +159,11 @@ for i in range(len(entries)):
     url = "http://localhost:8000/days/" + entries[i]["date"] + "/food"
     data = {
         "name": entries[i]["name"],
-        "calories": entries[i]["calories"]
+        "calories": entries[i]["calories"],
+        "amount": entries[i]["amount"],
+        "carbs": entries[i]["carbs"],
+        "protein": entries[i]["protein"],
+        "fat": entries[i]["fat"]
     }
     headers = {'Authorization': 'Bearer ' + token}
     response = requests.post(url, json=data, headers=headers, timeout=10)
