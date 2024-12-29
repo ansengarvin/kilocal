@@ -26,8 +26,9 @@ const DateSection = styled.div`
   border-radius: 10px;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
 
   h1 {
     font-size: 24px;
@@ -39,6 +40,16 @@ const DateSection = styled.div`
     font-size: 18px;
     margin: 0;
     margin-bottom: 10px;
+  }
+
+  button.left {
+    margin-left: 10px;
+    margin-right: auto;
+    
+  }
+  button.right {
+    margin-left: auto;
+    margin-right: 10px;
   }
 `
 
@@ -238,29 +249,29 @@ function App() {
 
   return (
     <ContentWindow>
-      <div className='left side'>
-        <button onClick={(e) => {
-          e.preventDefault
-          const newDate = new Date()
-          newDate.setDate(dayDate.getDate() - 1)
-          setDayDate(newDate)
-          setFormattedDate(formatDate(newDate))
-        }}>LT</button>
-      </div>
-      <div className='right side'>
-        <button disabled={isCurrentDay} onClick={(e) => {
-          e.preventDefault
-          const newDate = new Date()
-          newDate.setDate(dayDate.getDate() + 1)
-          setDayDate(newDate)
-          setFormattedDate(formatDate(newDate))
-        }}>RT</button>
-      </div>
       <div className='content'>
         <DateSection>
+        <button className="left" onClick={(e) => {
+            e.preventDefault
+            const newDate = new Date()
+            newDate.setDate(dayDate.getDate() - 1)
+            setDayDate(newDate)
+            setFormattedDate(formatDate(newDate))
+          }}>LT</button>
+          
           <h1 tabIndex={0}>Calories for {dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDay()}, {dayDate.getFullYear()}</h1>
-          <TotalCal total={foodGet.data?.total}/>
+
+          <button className="right" disabled={isCurrentDay} onClick={(e) => {
+              e.preventDefault
+              const newDate = new Date()
+              newDate.setDate(dayDate.getDate() + 1)
+              setDayDate(newDate)
+              setFormattedDate(formatDate(newDate))
+            }}>RT</button>
+          
+          
         </DateSection>
+        <TotalCal total={foodGet.data?.total}/>
         <PostSection>
           <div className="interior">
             <form className="formGrid" onSubmit={(e) => {
