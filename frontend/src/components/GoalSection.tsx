@@ -16,6 +16,21 @@ const GoalSectionDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    div.metric {
+        margin-top: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        h3 {
+            color: #2a2a2a;
+            margin: 0;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+    }
 `
 
 
@@ -23,14 +38,21 @@ export function GoalSection(props: GoalSectionProps) {
     const {calorieTotal, calorieGoal} = props
     return (
         <GoalSectionDiv>
-            <ProgressCircle
-                value={calorieTotal}
-                goal={calorieGoal}
-                strokeWidth={15}
-                radius={60}
-                fontSize="14pt"
-                color={"#777777"}
-            />
+            <div className="metric">
+                <ProgressCircle
+                    value={calorieTotal}
+                    goal={calorieGoal}
+                    strokeWidth={15}
+                    radius={60}
+                    fontSize="14pt"
+                    color={"#777777"}
+                />
+                <h3>
+                    Calories
+                </h3>
+                
+            </div>
+            
         </GoalSectionDiv>
     )
 }
