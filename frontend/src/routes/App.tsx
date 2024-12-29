@@ -281,7 +281,13 @@ function App() {
             No food for this day yet!
           </p>}
           {foodGet.data?.food && foodGet.data?.food.length != 0 &&
-            <FoodEntries foodList={foodGet.data.food} setDeleteID={setDeleteID} setDeleteReady={setDeleteReady}/>
+            <FoodEntries
+              foodList={foodGet.data.food}
+              setDeleteID={setDeleteID}
+              setDeleteReady={setDeleteReady}
+              hasRecipes={true}
+              width={'95%'}
+            />
           }
         </FoodSection>
       </div>    
