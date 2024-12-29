@@ -213,7 +213,12 @@ function App() {
               setFormattedDate(formatDate(newDate))
             }}>RT</button>
         </DateSection>
-        <GoalSection calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}/>
+        <GoalSection
+          calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
+          carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
+          proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
+          fatTotal={foodGet.data?.totalFat} fatGoal={50}
+        />
         <PostSection>
           <div className="interior">
             <form className="formGrid" onSubmit={(e) => {
