@@ -27,7 +27,7 @@ CREATE TABLE Foods (
     recipe_id INTEGER,
     name VARCHAR(255),
     calories NUMERIC(5, 2) NOT NULL,
-    amount INTEGER,
+    amount INTEGER NOT NULL,
     carbs NUMERIC(5, 2),
     fat NUMERIC(5, 2),
     protein NUMERIC(5, 2),
