@@ -51,7 +51,7 @@ const DateSection = styled.div`
 `
 
 
-const FoodSection = styled.div`
+const FoodJournal = styled.div`
   background-color: ${bgColor};
   border-radius: 10px;
   height: min-content;
@@ -163,7 +163,6 @@ function App() {
           setCalories={setCalories}
         />
       }
-      
       <ContentWindow>
         <div className='content'>
           <DateSection>
@@ -191,7 +190,7 @@ function App() {
             proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
             fatTotal={foodGet.data?.totalFat} fatGoal={50}
           />
-          <FoodSection>
+          <FoodJournal>
             <h2>
               Food Journal
             </h2>
@@ -209,7 +208,7 @@ function App() {
                 width={'95%'}
               />
             }
-          </FoodSection>
+          </FoodJournal>
         </div>    
       </ContentWindow>  
     </>
