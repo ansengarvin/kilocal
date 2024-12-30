@@ -83,7 +83,6 @@ export function PieChartWithKey(props: pieChartWithKeyProps) {
                         )
                     })}
                 </ul>
-                
             </div>
         </ChartDiv>
     )

@@ -27,11 +27,13 @@ export function PieChart(props: pieChartProps) {
             <svg viewBox={`0 0 ${radius*2} ${radius*2}`}>
                 {/* Draw square encompassing entire viewbox */}
                 {sections.map((section, index) => {
+                    // Setting r as such prevents there from being an ugly hole in the middle when a section is 100% of the chart.
+                    const r = (section*100 == 100 ? (radius-borderWidth)/2 : radius/2)
                     return (
                         <circle
                             cx={radius}
                             cy={radius}
-                            r={radius/2}
+                            r={r}
                             fill={"none"}
                             stroke={colors[index]}
                             strokeWidth={radius-borderWidth}
@@ -80,16 +82,18 @@ export function PieChart(props: pieChartProps) {
                                 </text> :
                                 <></>
                             }
+                            {section*100 != 0 && section*100 != 100 &&
+                                <path
+                                    stroke={borderColor}
+                                    strokeWidth={borderWidth}
+                                    d={`
+                                        M ${radius} ${radius}
+                                        L ${2*radius-borderWidth} ${radius}
+                                    `}
+                                    transform={`rotate(${360*sections.slice(0, index).reduce((a, b) => a + b, 0)} ${radius} ${radius})`}
+                                />
+                            }
                             
-                            <path
-                                stroke={borderColor}
-                                strokeWidth={borderWidth}
-                                d={`
-                                    M ${radius} ${radius}
-                                    L ${2*radius-borderWidth} ${radius}
-                                `}
-                                transform={`rotate(${360*sections.slice(0, index).reduce((a, b) => a + b, 0)} ${radius} ${radius})`}
-                            />
                         </> 
                     )
                 })}
