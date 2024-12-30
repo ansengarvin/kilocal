@@ -70,7 +70,7 @@ function App() {
   const [formattedDate, setFormattedDate] = useState(formatDate(dayDate))
   const [isCurrentDay, setIsCurrentDay] = useState(true)
 
-  const [postWindowHidden, setPostWindowHidden] = useState(false)
+  const [postWindowHidden, setPostWindowHidden] = useState(true)
   const [postReady, setPostReady] = useState(false)
   const [calories, setCalories] = useState(1)
   const [foodName, setFoodName] = useState("")
@@ -194,6 +194,11 @@ function App() {
             <h2>
               Food Journal
             </h2>
+            <button onClick={() => {
+              setPostWindowHidden(false)
+            }}>
+              Add Food
+            </button>
             <br/>
             {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
               No food for this day yet!
