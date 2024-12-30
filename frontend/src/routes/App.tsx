@@ -6,6 +6,7 @@ import { ContentWindow } from "../components/ContentWindow";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/FoodEntries";
 import { GoalSection } from "../components/GoalSection";
+import { PostSection } from "../components/PostSection";
 
 const bgColor = '#adadad'
 
@@ -48,45 +49,6 @@ const DateSection = styled.div`
   }
 `
 
-const PostSection = styled.div`
-  background-color: ${bgColor};
-  border-radius: 10px;
-  width: 90%;
-  height: 100px;
-  margin-bottom: 10px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  
-  .interior {
-    margin: 10px;
-  }
-  .formGrid{
-    display: grid;
-    grid-template-areas:
-    "leftlabel rightlabel empty"
-    "leftinput rightinput button";
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-
-    .leftLabel {
-      grid-area: leftlabel;
-    }
-    .rightLabel {
-      grid-area: rightlabel;
-    }
-    .leftInput {
-      grid-area: leftinput;
-    }
-    .rightInput {
-      grid-area: rightinput;
-    }
-    .button {
-      grid-area: button
-    }
-  }
-`
 
 const FoodSection = styled.div`
   background-color: ${bgColor};
@@ -207,27 +169,18 @@ function App() {
               setFormattedDate(formatDate(newDate))
             }}>RT</button>
         </DateSection>
+        <PostSection
+          foodPost={foodPost}
+          setPostReady={setPostReady}
+          setFoodName={setFoodName}
+          setCalories={setCalories}
+        />
         <GoalSection
           calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
           carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
           proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
           fatTotal={foodGet.data?.totalFat} fatGoal={50}
         />
-        <PostSection>
-          <div className="interior">
-            <form className="formGrid" onSubmit={(e) => {
-              e.preventDefault()
-              setPostReady(true)
-            }}>
-              <label className="leftLabel" htmlFor="Food Name">Name</label>
-              <input className="leftInput" name="Food Name" type="text" onChange={e => setFoodName(e.target.value)}/>
-              <label className="rightLabel" htmlFor="calories">Calories</label>
-              <input className="rightInput" name="calories" type="number" min="1" defaultValue="1" onChange={e => setCalories(e.target.valueAsNumber)}/>
-              <button className="button" type="submit">Add Food</button>
-            </form>
-          </div>
-          {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
-        </PostSection>
         <FoodSection>
           {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
             No food for this day yet!
