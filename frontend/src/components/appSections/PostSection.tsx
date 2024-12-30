@@ -89,7 +89,7 @@ interface postSectionProps {
 
 export function PostSection(props: postSectionProps) {
     const {
-        foodPost, setPostReady,
+        foodPost, setPostReady, setPostWindowHidden,
         setFoodName, setCalories
     } = props
     
@@ -99,7 +99,9 @@ export function PostSection(props: postSectionProps) {
             <h2>
               Add a food
             </h2>
-            <button className="x">
+            <button className="x" onClick={() => {
+              setPostWindowHidden(true)
+            }}>
               X
             </button>
             
