@@ -65,10 +65,16 @@ export function FoodEntries(props: foodEntriesProps) {
   const {foodList, setDeleteID, setDeleteReady, hasRecipes, width} = props
   return (
     <FoodEntryTable tabIndex={0} width={width}>
+      <thead>
+        <tr>
+          <th className="foodName">Food</th>
+          <th className="calories">Calories</th>
+          <th className="buttons"> </th>
+        </tr>
+      </thead>
       <tbody>
         {foodList.map((food: any) => (
           <tr key={food.id}>
-
             <td className="foodName">
               <div className="info">
                 {food.name}

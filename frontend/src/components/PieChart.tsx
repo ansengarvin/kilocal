@@ -21,6 +21,7 @@ const PieChartDiv = styled.div<pieChartDivProps>`
 
 export function PieChart(props: pieChartProps) {
     const {radius, borderWidth, borderColor, sections, colors, hasText, textColor} = props
+
     return (
         <PieChartDiv dim={radius*2}>
             <svg viewBox={`0 0 ${radius*2} ${radius*2}`}>
