@@ -13,6 +13,11 @@ interface GoalSectionProps {
     fatGoal: number
 }
 
+const calorieColor = "#69995D"
+const carbColor = "#124E78"
+const proteinColor = "#8C271E"
+const fatColor = "#FFBA49"
+
 const GoalSectionDiv = styled.div`
     background-color: #adadad;
     width: 90%;
@@ -53,7 +58,22 @@ const GoalSectionDiv = styled.div`
 
 
 export function GoalSection(props: GoalSectionProps) {
-    const {calorieTotal, calorieGoal} = props
+    const {
+        calorieTotal,
+        calorieGoal,
+        carbTotal,
+        carbGoal,
+        proteinTotal,
+        proteinGoal,
+        fatTotal,
+        fatGoal
+    } = props
+
+    const macroTotals = carbTotal + proteinTotal + fatTotal
+    const carbPercentage = carbTotal / macroTotals
+    const proteinPercentage = proteinTotal / macroTotals
+    const fatPercentage = fatTotal / macroTotals
+
     return (
         <GoalSectionDiv>
             <div className="subsection">
@@ -67,7 +87,7 @@ export function GoalSection(props: GoalSectionProps) {
                         strokeWidth={15}
                         radius={60}
                         fontSize="14pt"
-                        color={"#777777"}
+                        color={calorieColor}
                     />
                 </div>
                 <div className="metric">
@@ -76,8 +96,8 @@ export function GoalSection(props: GoalSectionProps) {
                         radius={60}
                         borderWidth={3}
                         borderColor={"#ffffff"}
-                        sections={[0.6, 0.3, 0.1]}
-                        colors={["#777777", "#777777", "#777777"]}
+                        sections={[carbPercentage, proteinPercentage, fatPercentage]}
+                        colors={[carbColor, proteinColor, fatColor]}
                         titles={["Carbs", "Protein", "Fat"]}
                         textColor={"#ffffff"}
                     />
@@ -89,12 +109,12 @@ export function GoalSection(props: GoalSectionProps) {
                         Carbs
                     </h3>
                     <ProgressCircle
-                        value={props.carbTotal}
-                        goal={props.carbGoal}
+                        value={carbTotal}
+                        goal={carbGoal}
                         strokeWidth={10}
                         radius={40}
                         fontSize="12pt"
-                        color={"#777777"}
+                        color={carbColor}
                     />
                     
                 </div>
@@ -103,12 +123,12 @@ export function GoalSection(props: GoalSectionProps) {
                         Protein
                     </h3>
                     <ProgressCircle
-                        value={props.proteinTotal}
-                        goal={props.proteinGoal}
+                        value={proteinTotal}
+                        goal={proteinGoal}
                         strokeWidth={10}
                         radius={40}
                         fontSize="12pt"
-                        color={"#777777"}
+                        color={proteinColor}
                     />
                     
                 </div>
@@ -117,12 +137,12 @@ export function GoalSection(props: GoalSectionProps) {
                         Fat
                     </h3>
                     <ProgressCircle
-                        value={props.fatTotal}
-                        goal={props.fatGoal}
+                        value={fatTotal}
+                        goal={fatGoal}
                         strokeWidth={10}
                         radius={40}
                         fontSize="12pt"
-                        color={"#777777"}
+                        color={fatColor}
                     />  
                 </div>
             </div>
