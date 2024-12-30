@@ -2,11 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import Cookies from "js-cookie";
-import { ContentWindow } from "../components/ContentWindow";
+import { ContentWindow } from "../components/global/ContentWindow";
 import styled from "@emotion/styled";
-import { FoodEntries } from "../components/FoodEntries";
-import { GoalSection } from "../components/GoalSection";
-import { PostSection } from "../components/PostSection";
+import { FoodEntries } from "../components/data/FoodEntries";
+import { GoalSection } from "../components/appSections/GoalSection";
+import { PostSection } from "../components/appSections/PostSection";
 
 const bgColor = '#adadad'
 

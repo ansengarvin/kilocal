@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import { ProgressCircle } from "./ProgressCircle";
-import { PieChartWithKey } from "./PieChartWithKey";
+import { ProgressCircle } from "../data/ProgressCircle";
+import { PieChartWithKey } from "../data/PieChartWithKey";
 
 interface GoalSectionProps {
     calorieTotal: number,

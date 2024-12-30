@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import Cookies from "js-cookie"
 import { useNavigate, useOutletContext } from "react-router-dom"
-import { ContentWindow } from "../components/ContentWindow"
+import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 
 const SignOutButton = styled.button`
