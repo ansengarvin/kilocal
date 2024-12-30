@@ -111,6 +111,7 @@ export function PostSection(props: postSectionProps) {
             <form className="formGrid" onSubmit={(e) => {
                 e.preventDefault()
                 setPostReady(true)
+                setPostWindowHidden(true)
             }}>
                 <div className="inputSection">
                   <label htmlFor="name">
