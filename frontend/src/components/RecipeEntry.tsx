@@ -54,6 +54,7 @@ const testTotalCal = testFoods.reduce((acc, curr) => acc + curr.calories, 0)
 const testTotalCarbs = testFoods.reduce((acc, curr) => acc + curr.carbs, 0)
 const testTotalProtein = testFoods.reduce((acc, curr) => acc + curr.protein, 0)
 
+
 export function RecipeEntry() {
   return (
     <>

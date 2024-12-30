@@ -91,7 +91,7 @@ const PostSection = styled.div`
 const FoodSection = styled.div`
   background-color: ${bgColor};
   border-radius: 10px;
-  min-height: 500px;
+  height: min-content;
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -237,7 +237,7 @@ function App() {
               foodList={foodGet.data.food}
               setDeleteID={setDeleteID}
               setDeleteReady={setDeleteReady}
-              hasRecipes={true}
+              hasRecipes={false}
               hasTitles={true}
               width={'95%'}
             />
