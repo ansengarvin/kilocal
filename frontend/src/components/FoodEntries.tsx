@@ -6,6 +6,7 @@ interface foodEntriesProps {
   setDeleteID?: Function
   setDeleteReady?: Function
   hasRecipes: boolean
+  hasTitles: boolean
   width?: string
 }
 
@@ -21,12 +22,10 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
   }
 
   div.info {
-    background-color: white;
+    background-color: #ffffff;
     border-radius: 5px;
 
     margin-bottom: 10px;
-    margin-left: 5px;
-    margin-right: 10px;
 
     height: 30px;
 
@@ -36,15 +35,27 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
   }
 
   .foodName {
-    width: 400px;
+    width: 50%;
   }
 
   .calories {
-    width: 200px;
+    width: 15%;
+  }
+
+  .carbs {
+    width: 10%;
+  }
+
+  .protein {
+    width: 10%;
+  }
+
+  .fat {
+    width: 10%;
   }
 
   td.buttons {
-    width: 30px;
+    width: 5%;
 
     div.buttonContainer {
       width: 100%;
@@ -62,16 +73,24 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
 `
 
 export function FoodEntries(props: foodEntriesProps) {
-  const {foodList, setDeleteID, setDeleteReady, hasRecipes, width} = props
+  const {foodList, setDeleteID, setDeleteReady, hasRecipes, hasTitles, width} = props
   return (
     <FoodEntryTable tabIndex={0} width={width}>
-      <thead>
-        <tr>
-          <th className="foodName">Food</th>
-          <th className="calories">Calories</th>
-          <th className="buttons"> </th>
-        </tr>
-      </thead>
+      {
+        hasTitles ?
+          <thead>
+            <tr>
+              <th className="foodName">Food</th>
+              <th className="calories">Calories</th>
+              <th className="carbs">Carbs</th>
+              <th className="protein">Protein</th>
+              <th className="fat">Fat</th>
+              <th className="buttons"> </th>
+            </tr>
+        </thead> :
+        <></>
+      }
+      
       <tbody>
         {foodList.map((food: any) => (
           <tr key={food.id}>
@@ -84,6 +103,24 @@ export function FoodEntries(props: foodEntriesProps) {
             <td className="calories" aria-label={`${food.i} calories`}>
               <div className="info">
                 {food.calories}
+              </div>
+            </td>
+
+            <td className="carbs" aria-label={`${food.carbs} grams of carbs`}>
+              <div className="info">
+                {food.carbs}
+              </div>
+            </td>
+
+            <td className="protein" aria-label={`${food.protein} grams of protein`}>
+              <div className="info">
+                {food.protein}
+              </div>
+            </td>
+
+            <td className="fat" aria-label={`${food.fat} grams of fat`}>
+              <div className="info">
+                {food.fat}
               </div>
             </td>
 

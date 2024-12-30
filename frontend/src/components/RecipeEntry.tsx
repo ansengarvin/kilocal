@@ -1,35 +1,14 @@
 import styled from "@emotion/styled"
 import { FoodEntries } from "./FoodEntries"
 
-const RecipeEntryDiv = styled.div`
-  width: 100%;
-  height: 100px;
-
-  div.recipeTitleContainer {
-    display: flex;
-    flex-direction: row;
-
-    button {
-      margin-left: auto;
-      width: 30px;
-      height: 30px;
-    }
-  }
-
-  div.recipeName {
+const RecipeEntryRow = styled.tr`
+  .recipeInfo {
     background-color: #727272;
-
-    border-top-style: solid;
-    border-left-style: solid;
-    border-right-style: solid;
+    
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
 
     border-color: #727272;
-
-    width: 380px;
-    margin-left: 5px;
-    margin-right: 10px;
 
     height: 30px;
 
@@ -37,55 +16,87 @@ const RecipeEntryDiv = styled.div`
     justify-content: center;
     align-items: center;
   }
-
-  div.recipeTableDiv {
-    width: 100%;
-    min-height: 30px;
-    padding-top: 5px;
-
-    border-style: solid;
-    border-color: #727272;
-    border-radius: 5px;
-  }
 `
 
+const RecipeEntryFoods = styled.div `
+  width: 100%;
+  border-style: solid;
+  border-color: #727272;
+`
+
+const testFoods = [
+  {
+      name: "food1",
+      calories: 100,
+      carbs: 10,
+      protein: 10,
+      fat: 10,
+      id: 1,
+  },
+  {
+      name: "food2",
+      calories: 200,
+      carbs: 20,
+      protein: 20,
+      fat: 20,
+      id: 2,
+  },
+  {
+      name: "food3",
+      calories: 300,
+      carbs: 30,
+      protein: 30,
+      fat: 30,
+      id: 3,
+  }
+]
+const testTotalCal = testFoods.reduce((acc, curr) => acc + curr.calories, 0)
+const testTotalCarbs = testFoods.reduce((acc, curr) => acc + curr.carbs, 0)
+const testTotalProtein = testFoods.reduce((acc, curr) => acc + curr.protein, 0)
+
 export function RecipeEntry() {
-
-    const testFoods = [
-        {
-            name: "food1",
-            calories: 100,
-            id: 1,
-        },
-        {
-            name: "food2",
-            calories: 200,
-            id: 2,
-        },
-        {
-            name: "food3",
-            calories: 300,
-            id: 3,
-        }
-    ]
-
-
   return (
-    <tr>
-      <td colSpan={3}>
-        <RecipeEntryDiv>
-          <div className="recipeTitleContainer">
-            <div className="recipeName">
-              Recipe Name
-            </div>  
-            <button>x</button>
+    <>
+      <RecipeEntryRow>
+        <td className="foodName">
+          <div className = "recipeInfo">
+            Recipe Name
           </div>
-          
-          <div className="recipeTableDiv">
-            <FoodEntries foodList={testFoods} hasRecipes={false} width={'100%'}></FoodEntries>
+        </td>
+        <td  className="calories">
+          <div className = "recipeInfo">
+            {testTotalCal}
           </div>
-        </RecipeEntryDiv>
-      </td>
-    </tr>
+        </td>
+        <td className="carbs">
+          <div className = "recipeInfo">
+            {testTotalCarbs}
+          </div>
+        </td>
+        <td className="protein">
+          <div className = "recipeInfo">
+            {testTotalProtein}
+          </div>
+        </td>
+        <td className="fat">
+          <div className = "recipeInfo">
+            0
+          </div>
+        </td>
+        <td className="buttons">
+          <div>
+            <button>X</button>
+          </div>
+        </td>
+      </RecipeEntryRow>
+      <tr>
+        <td colSpan={6}>
+          <RecipeEntryFoods>
+            <FoodEntries foodList={testFoods} hasRecipes={false} hasTitles={false} width={'100%'}/>
+          </RecipeEntryFoods>
+        </td>
+      </tr>
+    </>
+    
   )
 }

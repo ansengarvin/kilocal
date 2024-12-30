@@ -238,6 +238,7 @@ function App() {
               setDeleteID={setDeleteID}
               setDeleteReady={setDeleteReady}
               hasRecipes={true}
+              hasTitles={true}
               width={'95%'}
             />
           }
