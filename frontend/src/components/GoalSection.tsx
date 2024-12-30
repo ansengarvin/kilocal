@@ -13,7 +13,7 @@ interface GoalSectionProps {
     fatGoal: number
 }
 
-const calorieColor = "#69995D"
+const calorieColor = "#33ab15"
 const carbColor = "#124E78"
 const proteinColor = "#8C271E"
 const fatColor = "#FFBA49"
