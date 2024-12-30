@@ -12,15 +12,6 @@ interface progressCircleProps {
 const CircleDiv = styled.div<progressCircleProps>`
     height: ${props => props.radius * 2}px;
     width: ${props => props.radius * 2}px;
-
-    display: grid;
-    grid-template-areas: 'circle';
-    grid-template-columns: 100%;
-    grid-template-rows: 100%;
-
-    svg {
-        grid-area: circle;
-    }
 `
 
 export function ProgressCircle(props: progressCircleProps) {
@@ -50,7 +41,7 @@ export function ProgressCircle(props: progressCircleProps) {
                         r={adjustedRadius}
                         fill={"none"}
                         stroke={"#ffffff"}
-                        strokeWidth={strokeWidth || 15}
+                        strokeWidth={strokeWidth-1}
                     />
                     <circle
                         cx={radius}
@@ -58,7 +49,7 @@ export function ProgressCircle(props: progressCircleProps) {
                         r={adjustedRadius}
                         fill={"none"}
                         stroke={color}
-                        strokeWidth={strokeWidth || 15}
+                        strokeWidth={strokeWidth}
                         strokeDasharray={`${2*Math.PI*adjustedRadius*value/goal} ${2*Math.PI*adjustedRadius*(1-value/goal)}`}
                         strokeDashoffset={2*Math.PI*adjustedRadius*flipped}
                         strokeLinecap={"round"}

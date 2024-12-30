@@ -9,6 +9,10 @@ const globalStyle = css`
   html, body {
     margin: 0;
   }
+
+  h1, h2, h3 {
+    margin: 0;
+  }
 `
 
 const queryClient = new QueryClient()

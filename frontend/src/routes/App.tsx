@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import Cookies from "js-cookie";
-import { ContentWindow } from "../components/ContentWindow";
+import { ContentWindow } from "../components/global/ContentWindow";
 import styled from "@emotion/styled";
-import { FoodEntries } from "../components/FoodEntries";
-import { GoalSection } from "../components/GoalSection";
+import { FoodEntries } from "../components/data/FoodEntries";
+import { GoalSection } from "../components/appSections/GoalSection";
+import { PostSection } from "../components/appSections/PostSection";
 
 const bgColor = '#adadad'
 
@@ -20,6 +21,7 @@ function formatDate(date: Date) {
 const DateSection = styled.div`
   height: auto;
   width: 90%;
+  height: 50px;
   margin-bottom: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -30,12 +32,6 @@ const DateSection = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-
-  h1 {
-    font-size: 24px;
-    margin: 0;
-    margin-bottom: 10px;
-  }
 
   h2 {
     font-size: 18px;
@@ -54,50 +50,11 @@ const DateSection = styled.div`
   }
 `
 
-const PostSection = styled.div`
+
+const FoodJournal = styled.div`
   background-color: ${bgColor};
   border-radius: 10px;
-  width: 90%;
-  height: 100px;
-  margin-bottom: 10px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  
-  .interior {
-    margin: 10px;
-  }
-  .formGrid{
-    display: grid;
-    grid-template-areas:
-    "leftlabel rightlabel empty"
-    "leftinput rightinput button";
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-
-    .leftLabel {
-      grid-area: leftlabel;
-    }
-    .rightLabel {
-      grid-area: rightlabel;
-    }
-    .leftInput {
-      grid-area: leftinput;
-    }
-    .rightInput {
-      grid-area: rightinput;
-    }
-    .button {
-      grid-area: button
-    }
-  }
-`
-
-const FoodSection = styled.div`
-  background-color: ${bgColor};
-  border-radius: 10px;
-  min-height: 500px;
+  height: min-content;
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -112,9 +69,15 @@ function App() {
   const [dayDate, setDayDate] = useState(new Date())
   const [formattedDate, setFormattedDate] = useState(formatDate(dayDate))
   const [isCurrentDay, setIsCurrentDay] = useState(true)
+
+  const [postWindowHidden, setPostWindowHidden] = useState(true)
   const [postReady, setPostReady] = useState(false)
-  const [calories, setCalories] = useState(1)
   const [foodName, setFoodName] = useState("")
+  const [calories, setCalories] = useState(1)
+  const [carbs, setCarbs] = useState(0)
+  const [protein, setProtein] = useState(0)
+  const [fat, setFat] = useState(0)
+  
 
   const [deleteID, setDeleteID] = useState(0)
   const [deleteReady, setDeleteReady] = useState(false)
@@ -146,12 +109,18 @@ function App() {
           "Authorization": "Bearer " + Cookies.get("auth")
         },
         body: JSON.stringify({
+          name: foodName,
           calories: calories,
-          name: foodName
+          carbs: carbs,
+          protein: protein,
+          fat: fat
         })
       })
       setPostReady(false)
-      setCalories(1)
+      setCalories(0)
+      setCarbs(0)
+      setProtein(0)
+      setFat(0)
       setFoodName("")
       foodGet.refetch()
       return response.json()
@@ -192,61 +161,76 @@ function App() {
   })
 
   return (
-    <ContentWindow>
-      <div className='content'>
-        <DateSection>
-        <button className="left" onClick={(e) => {
-            e.preventDefault
-            const newDate = new Date()
-            newDate.setDate(dayDate.getDate() - 1)
-            setDayDate(newDate)
-            setFormattedDate(formatDate(newDate))
-          }}>LT</button>
-          
-          <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
+    <>
+      {
+        postWindowHidden ?
+        <></> :
+        <PostSection
+          foodPost={foodPost}
+          setPostWindowHidden={setPostWindowHidden}
+          setPostReady={setPostReady}
+          setFoodName={setFoodName}
+          setCalories={setCalories}
+          setCarbs={setCarbs}
+          setProtein={setProtein}
+          setFat={setFat}
+        />
+      }
+      <ContentWindow>
+        <div className='content'>
+          <DateSection>
+            <button className="left" onClick={(e) => {
+                e.preventDefault
+                const newDate = new Date()
+                newDate.setDate(dayDate.getDate() - 1)
+                setDayDate(newDate)
+                setFormattedDate(formatDate(newDate))
+              }}>LT</button>
+            
+            <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
 
-          <button className="right" disabled={isCurrentDay} onClick={(e) => {
-              e.preventDefault
-              const newDate = new Date()
-              newDate.setDate(dayDate.getDate() + 1)
-              setDayDate(newDate)
-              setFormattedDate(formatDate(newDate))
-            }}>RT</button>
-        </DateSection>
-        <GoalSection calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}/>
-        <PostSection>
-          <div className="interior">
-            <form className="formGrid" onSubmit={(e) => {
-              e.preventDefault()
-              setPostReady(true)
+            <button className="right" disabled={isCurrentDay} onClick={(e) => {
+                e.preventDefault
+                const newDate = new Date()
+                newDate.setDate(dayDate.getDate() + 1)
+                setDayDate(newDate)
+                setFormattedDate(formatDate(newDate))
+              }}>RT</button>
+          </DateSection>
+          <GoalSection
+            calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
+            carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
+            proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
+            fatTotal={foodGet.data?.totalFat} fatGoal={50}
+          />
+          <FoodJournal>
+            <h2>
+              Food Journal
+            </h2>
+            <button onClick={() => {
+              setPostWindowHidden(false)
             }}>
-              <label className="leftLabel" htmlFor="Food Name">Name</label>
-              <input className="leftInput" name="Food Name" type="text" onChange={e => setFoodName(e.target.value)}/>
-              <label className="rightLabel" htmlFor="calories">Calories</label>
-              <input className="rightInput" name="calories" type="number" min="1" defaultValue="1" onChange={e => setCalories(e.target.valueAsNumber)}/>
-              <button className="button" type="submit">Add Food</button>
-            </form>
-          </div>
-          {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
-        </PostSection>
-        <FoodSection>
-          {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
-            No food for this day yet!
-          </p>}
-          {foodGet.data?.food && foodGet.data?.food.length != 0 &&
-            <FoodEntries
-              foodList={foodGet.data.food}
-              setDeleteID={setDeleteID}
-              setDeleteReady={setDeleteReady}
-              hasRecipes={true}
-              width={'95%'}
-            />
-          }
-        </FoodSection>
-      </div>    
-      
-      
-    </ContentWindow>  
+              Add Food
+            </button>
+            <br/>
+            {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
+              No food for this day yet!
+            </p>}
+            {foodGet.data?.food && foodGet.data?.food.length != 0 &&
+              <FoodEntries
+                foodList={foodGet.data.food}
+                setDeleteID={setDeleteID}
+                setDeleteReady={setDeleteReady}
+                hasRecipes={false}
+                hasTitles={true}
+                width={'95%'}
+              />
+            }
+          </FoodJournal>
+        </div>    
+      </ContentWindow>  
+    </>
+    
   )
 }
 
