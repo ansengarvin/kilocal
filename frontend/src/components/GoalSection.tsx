@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import { ProgressCircle } from "./ProgressCircle";
-import { PieChart } from "./PieChart";
 import { PieChartWithKey } from "./PieChartWithKey";
 
 interface GoalSectionProps {
