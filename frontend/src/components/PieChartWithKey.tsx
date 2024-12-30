@@ -9,11 +9,13 @@ interface pieChartWithKeyProps {
     colors: Array<string>
     titles: Array<string>
     textColor: string
+    ignoreKeyWidth?: boolean
 }
 
 interface chartDivProps {
     height: number
     color: string
+    keyWidth: string
 }
 
 const ChartDiv = styled.div<chartDivProps>`
@@ -23,7 +25,7 @@ const ChartDiv = styled.div<chartDivProps>`
 
     div.keys {
         height: 100%;
-        width: min-content;
+        width: ${props => props.keyWidth};
 
         display: flex;
         align-items: center;
@@ -37,12 +39,26 @@ const ChartDiv = styled.div<chartDivProps>`
     ul {
         padding-left: 0
     }
+
+    p {
+        margin: 0;
+        padding: 0;
+        white-space: nowrap
+    }
 `
 
 export function PieChartWithKey(props: pieChartWithKeyProps) {
-    const {radius, borderWidth, borderColor, sections, colors, titles, textColor} = props
+    const {
+        radius, borderWidth, borderColor,
+        sections, colors, titles, textColor,
+        ignoreKeyWidth
+    } = props
     return (
-        <ChartDiv height={radius} color={textColor}>
+        <ChartDiv
+            height={radius}
+            color={textColor}
+            keyWidth={ignoreKeyWidth ? '0' : 'min-content'}
+        >
             <PieChart
                 radius={radius}
                 borderWidth={borderWidth}
@@ -59,7 +75,9 @@ export function PieChartWithKey(props: pieChartWithKeyProps) {
                                     <svg height="20" width="20">
                                         <circle cx="10" cy="10" r="5" fill={colors[index]} />
                                     </svg>
-                                    {title}
+                                    <p>
+                                        {(sections[index] * 100).toPrecision(2)}% {title}
+                                    </p>    
                                 </div>
                             </div>
                         )

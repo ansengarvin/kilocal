@@ -91,7 +91,7 @@ export function GoalSection(props: GoalSectionProps) {
                     />
                 </div>
                 <div className="metric">
-                    <h3>Macronutrients</h3>
+                    <h3>Macros</h3>
                     <PieChartWithKey
                         radius={60}
                         borderWidth={3}
@@ -100,6 +100,7 @@ export function GoalSection(props: GoalSectionProps) {
                         colors={[carbColor, proteinColor, fatColor]}
                         titles={["Carbs", "Protein", "Fat"]}
                         textColor={"#ffffff"}
+                        ignoreKeyWidth={true}
                     />
                 </div>
             </div>
@@ -112,11 +113,10 @@ export function GoalSection(props: GoalSectionProps) {
                         value={carbTotal}
                         goal={carbGoal}
                         strokeWidth={10}
-                        radius={40}
+                        radius={50}
                         fontSize="12pt"
                         color={carbColor}
-                    />
-                    
+                    />   
                 </div>
                 <div className="metric">
                     <h3>
@@ -126,11 +126,10 @@ export function GoalSection(props: GoalSectionProps) {
                         value={proteinTotal}
                         goal={proteinGoal}
                         strokeWidth={10}
-                        radius={40}
+                        radius={50}
                         fontSize="12pt"
                         color={proteinColor}
-                    />
-                    
+                    /> 
                 </div>
                 <div className="metric">
                     <h3>
@@ -140,7 +139,7 @@ export function GoalSection(props: GoalSectionProps) {
                         value={fatTotal}
                         goal={fatGoal}
                         strokeWidth={10}
-                        radius={40}
+                        radius={50}
                         fontSize="12pt"
                         color={fatColor}
                     />  
