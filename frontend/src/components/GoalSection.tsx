@@ -70,12 +70,15 @@ export function GoalSection(props: GoalSectionProps) {
     } = props
 
     const macroTotals = carbTotal + proteinTotal + fatTotal
-    const carbPercentage = carbTotal / macroTotals
-    const proteinPercentage = proteinTotal / macroTotals
-    const fatPercentage = fatTotal / macroTotals
+    const carbPercentage = (carbTotal / macroTotals) || 0.333
+    const proteinPercentage = proteinTotal / macroTotals || 0.333
+    const fatPercentage = fatTotal / macroTotals || 0.333
 
     return (
         <GoalSectionDiv>
+            <h2>
+                Daily Goals
+            </h2>
             <div className="subsection">
                 <div className="metric">
                     <h3>

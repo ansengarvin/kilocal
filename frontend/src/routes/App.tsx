@@ -31,12 +31,6 @@ const DateSection = styled.div`
   align-items: center;
   justify-content: center;
 
-  h1 {
-    font-size: 24px;
-    margin: 0;
-    margin-bottom: 10px;
-  }
-
   h2 {
     font-size: 18px;
     margin: 0;
@@ -195,13 +189,13 @@ function App() {
     <ContentWindow>
       <div className='content'>
         <DateSection>
-        <button className="left" onClick={(e) => {
-            e.preventDefault
-            const newDate = new Date()
-            newDate.setDate(dayDate.getDate() - 1)
-            setDayDate(newDate)
-            setFormattedDate(formatDate(newDate))
-          }}>LT</button>
+          <button className="left" onClick={(e) => {
+              e.preventDefault
+              const newDate = new Date()
+              newDate.setDate(dayDate.getDate() - 1)
+              setDayDate(newDate)
+              setFormattedDate(formatDate(newDate))
+            }}>LT</button>
           
           <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
 
