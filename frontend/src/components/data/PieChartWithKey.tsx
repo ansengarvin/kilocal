@@ -76,7 +76,7 @@ export function PieChartWithKey(props: pieChartWithKeyProps) {
                                         <circle cx="10" cy="10" r="5" fill={colors[index]} />
                                     </svg>
                                     <p>
-                                        {(sections[index] * 100).toPrecision(2)}% {title}
+                                        {(sections[index] * 100).toFixed(1)}% {title}
                                     </p>    
                                 </div>
                             </div>
