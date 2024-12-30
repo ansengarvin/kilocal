@@ -1,52 +1,91 @@
 import { UseQueryResult } from "@tanstack/react-query"
 import styled from "@emotion/styled"
 
-interface postSectionProps {
-    foodPost: UseQueryResult<any, Error>
-    setPostReady: Function
-    setFoodName: Function
-    setCalories: Function
-}
+const ModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.553);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`
 
 const PostSectionDiv = styled.div`
+  position: relative;
+  padding-top: 10px;
   background-color: #adadad;
   border-radius: 10px;
-  width: 90%;
-  height: 100px;
-  margin-bottom: 10px;
+  width: 600px;
+  height: 650px;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   
-  .interior {
-    margin: 10px;
+  button.x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
   }
-  .formGrid{
-    display: grid;
-    grid-template-areas:
-    "leftlabel rightlabel empty"
-    "leftinput rightinput button";
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
 
-    .leftLabel {
-      grid-area: leftlabel;
-    }
-    .rightLabel {
-      grid-area: rightlabel;
-    }
-    .leftInput {
-      grid-area: leftinput;
-    }
-    .rightInput {
-      grid-area: rightinput;
-    }
-    .button {
-      grid-area: button
-    }
+  div.inputSection {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
   }
+
+  form {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  input {
+    all: unset;
+
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+
+    background-color: white;
+  }
+
+  button.submit {
+    width: 90%;
+    height: 50px;
+    border-radius: 5px;
+
+    background-color: #4CAF50;
+    color: white;
+    font-size: 20px;
+
+    border: none;
+  }
+
+  button.submit:hover {
+    background-color: #45a049;
+  }
+
+  input:hover {
+    background-color: #e6e6e6;
+  }
+
 `
+
+interface postSectionProps {
+  foodPost: UseQueryResult<any, Error>
+  setPostWindowHidden: Function
+  setPostReady: Function
+  setFoodName: Function
+  setCalories: Function
+}
 
 export function PostSection(props: postSectionProps) {
     const {
@@ -55,20 +94,51 @@ export function PostSection(props: postSectionProps) {
     } = props
     
     return (
-        <PostSectionDiv>
-            <div className="interior">
+        <ModalBackdrop>
+          <PostSectionDiv>
+            <h2>
+              Add a food
+            </h2>
+            <button className="x">
+              X
+            </button>
+            
             <form className="formGrid" onSubmit={(e) => {
                 e.preventDefault()
                 setPostReady(true)
             }}>
-                <label className="leftLabel" htmlFor="Food Name">Name</label>
-                <input className="leftInput" name="Food Name" type="text" onChange={e => setFoodName(e.target.value)}/>
-                <label className="rightLabel" htmlFor="calories">Calories</label>
-                <input className="rightInput" name="calories" type="number" min="1" defaultValue="1" onChange={e => setCalories(e.target.valueAsNumber)}/>
-                <button className="button" type="submit">Add Food</button>
+                <div className="inputSection">
+                  <label htmlFor="name">
+                    Food Name
+                  </label>
+                  <input
+                    className="leftInput"
+                    id="name"
+                    name="Food Name"
+                    type="text"
+                    onChange={e => setFoodName(e.target.value)}
+                  />
+                </div>
+                
+                <div className="inputSection">
+                  <label htmlFor="calories">
+                    Calories
+                  </label>
+                  <input
+                    id="calories"
+                    className="rightInput"
+                    name="calories"
+                    type="number"
+                    min="1"
+                    onChange={e => setCalories(e.target.valueAsNumber)}
+                  />
+                </div>
+                <button className="submit" type="submit">Add Food</button>
+                
             </form>
-            </div>
             {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
-        </PostSectionDiv>
+          </PostSectionDiv>
+        </ModalBackdrop>
+        
     ) 
 }
