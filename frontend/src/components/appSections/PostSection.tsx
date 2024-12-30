@@ -85,12 +85,15 @@ interface postSectionProps {
   setPostReady: Function
   setFoodName: Function
   setCalories: Function
+  setCarbs: Function
+  setProtein: Function
+  setFat: Function
 }
 
 export function PostSection(props: postSectionProps) {
     const {
         foodPost, setPostReady, setPostWindowHidden,
-        setFoodName, setCalories
+        setFoodName, setCalories, setCarbs, setProtein, setFat
     } = props
     
     return (
@@ -135,6 +138,49 @@ export function PostSection(props: postSectionProps) {
                     onChange={e => setCalories(e.target.valueAsNumber)}
                   />
                 </div>
+
+                <div className="inputSection">
+                  <label htmlFor="carbs">
+                    Carbs (Optional)
+                  </label>
+                  <input
+                    id="carbs"
+                    className="leftInput"
+                    name="carbs"
+                    type="number"
+                    min="0"
+                    onChange={e => setCarbs(e.target.valueAsNumber)}
+                  />
+                </div>
+
+                <div className="inputSection">
+                  <label htmlFor="protein">
+                    Protein (Optional)
+                  </label>
+                  <input
+                    id="protein"
+                    className="rightInput"
+                    name="protein"
+                    type="number"
+                    min="0"
+                    onChange={e => setProtein(e.target.valueAsNumber)}
+                  />
+                </div>
+
+                <div className="inputSection">
+                  <label htmlFor="fat">
+                    Fat (Optional)
+                  </label>
+                  <input
+                    id="fat"
+                    className="leftInput"
+                    name="fat"
+                    type="number"
+                    min="0"
+                    onChange={e => setFat(e.target.valueAsNumber)}
+                  />
+                </div>
+
                 <button className="submit" type="submit">Add Food</button>
                 
             </form>

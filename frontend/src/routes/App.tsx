@@ -72,8 +72,12 @@ function App() {
 
   const [postWindowHidden, setPostWindowHidden] = useState(true)
   const [postReady, setPostReady] = useState(false)
-  const [calories, setCalories] = useState(1)
   const [foodName, setFoodName] = useState("")
+  const [calories, setCalories] = useState(1)
+  const [carbs, setCarbs] = useState(0)
+  const [protein, setProtein] = useState(0)
+  const [fat, setFat] = useState(0)
+  
 
   const [deleteID, setDeleteID] = useState(0)
   const [deleteReady, setDeleteReady] = useState(false)
@@ -105,12 +109,18 @@ function App() {
           "Authorization": "Bearer " + Cookies.get("auth")
         },
         body: JSON.stringify({
+          name: foodName,
           calories: calories,
-          name: foodName
+          carbs: carbs,
+          protein: protein,
+          fat: fat
         })
       })
       setPostReady(false)
-      setCalories(1)
+      setCalories(0)
+      setCarbs(0)
+      setProtein(0)
+      setFat(0)
       setFoodName("")
       foodGet.refetch()
       return response.json()
@@ -161,6 +171,9 @@ function App() {
           setPostReady={setPostReady}
           setFoodName={setFoodName}
           setCalories={setCalories}
+          setCarbs={setCarbs}
+          setProtein={setProtein}
+          setFat={setFat}
         />
       }
       <ContentWindow>
