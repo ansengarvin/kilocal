@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ProgressCircle } from "./ProgressCircle";
 import { PieChart } from "./PieChart";
+import { PieChartWithKey } from "./PieChartWithKey";
 
 interface GoalSectionProps {
     calorieTotal: number,
@@ -77,9 +78,9 @@ export function GoalSection(props: GoalSectionProps) {
                         radius={60}
                         borderWidth={3}
                         borderColor={"#ffffff"}
-                        textColor={"#ffffff"}
                         sections={[0.6, 0.3, 0.1]}
                         colors={["#777777", "#777777", "#777777"]}
+                        titles={["Carbs", "Protein", "Fat"]}
                     />
                 </div>
             </div>

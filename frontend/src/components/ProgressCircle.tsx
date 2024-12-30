@@ -12,15 +12,6 @@ interface progressCircleProps {
 const CircleDiv = styled.div<progressCircleProps>`
     height: ${props => props.radius * 2}px;
     width: ${props => props.radius * 2}px;
-
-    display: grid;
-    grid-template-areas: 'circle';
-    grid-template-columns: 100%;
-    grid-template-rows: 100%;
-
-    svg {
-        grid-area: circle;
-    }
 `
 
 export function ProgressCircle(props: progressCircleProps) {
