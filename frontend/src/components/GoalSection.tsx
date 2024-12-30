@@ -31,7 +31,6 @@ const GoalSectionDiv = styled.div`
 
     div.metric {
         margin-top: 5px;
-        background-color: green;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -74,13 +73,14 @@ export function GoalSection(props: GoalSectionProps) {
                 </div>
                 <div className="metric">
                     <h3>Macronutrients</h3>
-                    <PieChart
+                    <PieChartWithKey
                         radius={60}
                         borderWidth={3}
                         borderColor={"#ffffff"}
                         sections={[0.6, 0.3, 0.1]}
                         colors={["#777777", "#777777", "#777777"]}
                         titles={["Carbs", "Protein", "Fat"]}
+                        textColor={"#ffffff"}
                     />
                 </div>
             </div>
