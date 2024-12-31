@@ -8,6 +8,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const globalStyle = css`
   html, body {
     margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #4464AD;
   }
 
   h1, h2, h3 {

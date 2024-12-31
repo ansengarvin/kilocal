@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
 import { RecipeEntry } from "./RecipeEntry"
+import { Icon } from "../icons/Icon"
 
 interface foodEntriesProps {
   foodList: Array<Object>
@@ -22,12 +23,12 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
   }
 
   div.info {
-    background-color: #ffffff;
+    background-color: #f0f0f0;
     border-radius: 5px;
 
     margin-bottom: 10px;
 
-    height: 30px;
+    height: 50px;
 
     display: flex;
     justify-content: center;
@@ -35,7 +36,7 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
   }
 
   .foodName {
-    width: 50%;
+    width: 45%;
   }
 
   .calories {
@@ -55,20 +56,48 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
   }
 
   td.buttons {
-    width: 5%;
-
+    width: 10%;
     div.buttonContainer {
+      height: 50px;
+      background-color: transparent;
       width: 100%;
       display: flex;
       justify-content: space-evenly;
       align-items: center;
       margin-bottom: 10px;
+      gap: 5px;
+      margin-left: 5px;
     }
+  }
 
-    button {
-      width: 30px;
-      aspect-ratio: 1;
-    }
+  button {
+    height: 35px;
+    width: 35px;
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  button.delete {
+    background-color: #db3e3e;
+    padding: 5px;
+  }
+
+  button.delete:hover {
+    background-color: #ff5050;
+  }
+
+  button.edit {
+    background-color: #474747;
+    padding: 5px;
+  }
+
+  button.edit:hover {
+    background-color: #626262;
   }
 `
 
@@ -127,11 +156,20 @@ export function FoodEntries(props: foodEntriesProps) {
             {setDeleteID && setDeleteReady && 
               <td className="buttons" aria-label="Buttons to edit food item ">
                 <div className="buttonContainer">
-                  <button tabIndex={-1} aria-label={`Button: Delete ${food.name} from day`} onClick={() => {
+                  <button className="delete" tabIndex={-1} aria-label={`Button: Delete ${food.name} from day`} onClick={() => {
                     setDeleteID(food.id)
                     setDeleteReady(true)
                   }}>
-                    x
+                    <Icon
+                      iconName="delete"
+                      color={'#ffffff'}
+                    />
+                  </button>
+                  <button className="edit">
+                    <Icon
+                      iconName="edit"
+                      color={'#ffffff'}
+                    />
                   </button>
                 </div>
               </td>
