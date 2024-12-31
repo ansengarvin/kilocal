@@ -27,7 +27,6 @@ const DateSection = styled.div`
   margin-bottom: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: ${bgColor};
   border-radius: 10px;
 
   display: flex;
@@ -79,7 +78,6 @@ const DateSection = styled.div`
 
 
 const FoodJournal = styled.div`
-  background-color: ${bgColor};
   border-radius: 10px;
   height: min-content;
   width: 90%;
@@ -205,7 +203,7 @@ function App() {
       }
       <ContentWindow>
         <div className='content'>
-          <DateSection>
+          <DateSection className="appElement">
             <button className="date left" onClick={(e) => {
                 e.preventDefault
                 const newDate = new Date()
@@ -234,7 +232,7 @@ function App() {
             proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
             fatTotal={foodGet.data?.totalFat} fatGoal={50}
           />
-          <FoodJournal>
+          <FoodJournal className="appElement">
             <h2>
               Food Journal
             </h2>

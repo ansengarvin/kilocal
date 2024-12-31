@@ -13,13 +13,17 @@ interface GoalSectionProps {
     fatGoal: number
 }
 
-const calorieColor = "#33ab15"
-const carbColor = "#124E78"
-const proteinColor = "#8C271E"
-const fatColor = "#FFBA49"
+
+// const carbColor = "#124E78"
+// const proteinColor = "#8C271E"
+// const fatColor = "#FFBA49"
+
+const calorieColor = "#417B5A"
+const carbColor = "#235789"
+const proteinColor = "#C1292E"
+const fatColor = "#ED9B40"
 
 const GoalSectionDiv = styled.div`
-    background-color: #adadad;
     width: 90%;
     height: min-content;
     margin-bottom: 10px;
@@ -41,7 +45,6 @@ const GoalSectionDiv = styled.div`
         align-items: center;
 
         h3 {
-            color: #2a2a2a;
             margin: 0;
             margin-top: 5px;
             font-weight: normal;
@@ -55,6 +58,9 @@ const GoalSectionDiv = styled.div`
         gap: 20px;
     }
 `
+
+const metricBackColor = "#cbcbcb"
+const metricTextColor = "#383838"
 
 
 export function GoalSection(props: GoalSectionProps) {
@@ -81,7 +87,7 @@ export function GoalSection(props: GoalSectionProps) {
    
 
     return (
-        <GoalSectionDiv>
+        <GoalSectionDiv className="appElement">
             <h2>
                 Daily Goals
             </h2>
@@ -96,6 +102,8 @@ export function GoalSection(props: GoalSectionProps) {
                         strokeWidth={15}
                         radius={60}
                         fontSize="14pt"
+                        textColor={metricTextColor}
+                        backColor={metricBackColor}
                         color={calorieColor}
                     />
                 </div>
@@ -103,12 +111,12 @@ export function GoalSection(props: GoalSectionProps) {
                     <h3>Macros</h3>
                     <PieChartWithKey
                         radius={60}
-                        borderWidth={3}
-                        borderColor={"#ffffff"}
+                        borderWidth={0}
+                        borderColor={"#000000"}
                         sections={[carbPercentage, proteinPercentage, fatPercentage]}
                         colors={[carbColor, proteinColor, fatColor]}
                         titles={["Carbs", "Protein", "Fat"]}
-                        textColor={"#ffffff"}
+                        textColor={metricTextColor}
                         ignoreKeyWidth={true}
                     />
                 </div>
@@ -124,6 +132,8 @@ export function GoalSection(props: GoalSectionProps) {
                         strokeWidth={10}
                         radius={50}
                         fontSize="12pt"
+                        textColor={metricTextColor}
+                        backColor={metricBackColor}
                         color={carbColor}
                     />   
                 </div>
@@ -137,6 +147,8 @@ export function GoalSection(props: GoalSectionProps) {
                         strokeWidth={10}
                         radius={50}
                         fontSize="12pt"
+                        textColor={metricTextColor}
+                        backColor={metricBackColor}
                         color={proteinColor}
                     /> 
                 </div>
@@ -150,6 +162,8 @@ export function GoalSection(props: GoalSectionProps) {
                         strokeWidth={10}
                         radius={50}
                         fontSize="12pt"
+                        textColor={metricTextColor}
+                        backColor={metricBackColor}
                         color={fatColor}
                     />  
                 </div>

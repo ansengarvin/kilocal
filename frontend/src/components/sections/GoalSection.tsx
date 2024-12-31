@@ -14,8 +14,8 @@ interface GoalSectionProps {
 }
 
 const calorieColor = "#33ab15"
-const carbColor = "#124E78"
-const proteinColor = "#8C271E"
+const carbColor = "#ffffff"
+const proteinColor = "#C1292E"
 const fatColor = "#FFBA49"
 
 const GoalSectionDiv = styled.div`

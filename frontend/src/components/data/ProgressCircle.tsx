@@ -6,16 +6,22 @@ interface progressCircleProps {
     radius: number
     strokeWidth: number
     fontSize: string
+    textColor: string
+    backColor: string
     color: string
 }
 
-const CircleDiv = styled.div<progressCircleProps>`
+interface circleDivProps {
+    radius: number
+}
+
+const CircleDiv = styled.div<circleDivProps>`
     height: ${props => props.radius * 2}px;
     width: ${props => props.radius * 2}px;
 `
 
 export function ProgressCircle(props: progressCircleProps) {
-    const {value, goal, radius, strokeWidth, fontSize, color} = props
+    const {value, goal, radius, strokeWidth, fontSize, textColor, backColor, color} = props
 
     console.log(value, " ", goal)
     console.log(value/goal)
@@ -27,12 +33,7 @@ export function ProgressCircle(props: progressCircleProps) {
     return (
         <>
             <CircleDiv
-                value={value}
-                goal={goal}
                 radius={radius}
-                strokeWidth={strokeWidth}
-                fontSize={fontSize}
-                color={color}
             >
                 <svg viewBox={`0 0 ${radius*2} ${radius*2}`}>
                     <circle
@@ -40,7 +41,7 @@ export function ProgressCircle(props: progressCircleProps) {
                         cy={radius}
                         r={adjustedRadius}
                         fill={"none"}
-                        stroke={"#ffffff"}
+                        stroke={backColor}
                         strokeWidth={strokeWidth-1}
                     />
                     <circle
@@ -58,7 +59,7 @@ export function ProgressCircle(props: progressCircleProps) {
                     <text
                         x={radius}
                         y={radius}
-                        fill={"#ffffff"}
+                        fill={textColor}
                         textAnchor={"middle"}
                         alignmentBaseline={"middle"}
                         fontSize={fontSize}

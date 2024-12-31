@@ -9,11 +9,19 @@ const globalStyle = css`
   html, body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #4464AD;
+    background-color: #ffffff;
+
+    color: #353535;
   }
 
   h1, h2, h3 {
     margin: 0;
+
+    color: #3d3d3d;
+  }
+
+  .appElement {
+    background-color: #e9e9e9;
   }
 `
 
