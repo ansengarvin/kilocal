@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
 import { PostSection } from "../components/appSections/PostSection";
+import { Icon } from "../components/icons/Icon";
 
 const bgColor = '#adadad'
 
@@ -19,6 +20,7 @@ function formatDate(date: Date) {
 }
 
 const DateSection = styled.div`
+  position: relative;
   height: auto;
   width: 90%;
   height: 50px;
@@ -40,13 +42,38 @@ const DateSection = styled.div`
   }
 
   button.left {
-    margin-left: 10px;
-    margin-right: auto;
-    
+    position: absolute;
+    left: 10px;
+
+    svg {
+      margin-right: 5px;
+    }
   }
   button.right {
-    margin-left: auto;
-    margin-right: 10px;
+    position: absolute;
+    right: 10px;
+
+    svg {
+      margin-left: 5px;
+    }
+  }
+  button.date {
+    // Remove all button styling
+    border: none;
+    outline: none;
+    margin: 0;
+    height: 50px;
+    width: 50px;
+
+    background-color: #626262;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    :hover {
+      background-color: #8a8a8a;
+    }
   }
 `
 
@@ -179,23 +206,27 @@ function App() {
       <ContentWindow>
         <div className='content'>
           <DateSection>
-            <button className="left" onClick={(e) => {
+            <button className="date left" onClick={(e) => {
                 e.preventDefault
                 const newDate = new Date()
                 newDate.setDate(dayDate.getDate() - 1)
                 setDayDate(newDate)
                 setFormattedDate(formatDate(newDate))
-              }}>LT</button>
+              }}>
+                <Icon iconName="backArrow" color={'#ffffff'}/>
+              </button>
             
             <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
 
-            <button className="right" disabled={isCurrentDay} onClick={(e) => {
+            <button className="date right" disabled={isCurrentDay} onClick={(e) => {
                 e.preventDefault
                 const newDate = new Date()
                 newDate.setDate(dayDate.getDate() + 1)
                 setDayDate(newDate)
                 setFormattedDate(formatDate(newDate))
-              }}>RT</button>
+              }}>
+                <Icon iconName="forwardArrow" color={'#ffffff'}/>
+              </button>
           </DateSection>
           <GoalSection
             calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
