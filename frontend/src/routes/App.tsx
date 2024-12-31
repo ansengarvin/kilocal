@@ -9,8 +9,6 @@ import { GoalSection } from "../components/appSections/GoalSection";
 import { PostSection } from "../components/appSections/PostSection";
 import { Icon } from "../components/icons/Icon";
 
-const bgColor = '#adadad'
-
 function formatDate(date: Date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
