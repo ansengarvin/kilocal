@@ -203,8 +203,8 @@ function App() {
         <div className='content'>
           <DateSection className="appElement">
             <button className="date left" onClick={(e) => {
-                e.preventDefault
-                const newDate = new Date()
+                e.preventDefault()
+                const newDate = new Date(dayDate)
                 newDate.setDate(dayDate.getDate() - 1)
                 setDayDate(newDate)
                 setFormattedDate(formatDate(newDate))
@@ -215,8 +215,8 @@ function App() {
             <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
 
             <button className="date right" disabled={isCurrentDay} onClick={(e) => {
-                e.preventDefault
-                const newDate = new Date()
+                e.preventDefault()
+                const newDate = new Date(dayDate)
                 newDate.setDate(dayDate.getDate() + 1)
                 setDayDate(newDate)
                 setFormattedDate(formatDate(newDate))
