@@ -71,6 +71,10 @@ const DateSection = styled.div`
     :hover {
       background-color: #8a8a8a;
     }
+
+    :disabled {
+      background-color: #c3c3c3;
+    }
   }
 `
 
