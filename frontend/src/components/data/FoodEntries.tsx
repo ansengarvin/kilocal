@@ -36,7 +36,7 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
   }
 
   .foodName {
-    width: 45%;
+    width: 50%;
   }
 
   .calories {
@@ -56,7 +56,7 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
   }
 
   td.buttons {
-    width: 10%;
+    width: 5%;
     div.buttonContainer {
       height: 50px;
       background-color: transparent;
@@ -162,12 +162,6 @@ export function FoodEntries(props: foodEntriesProps) {
                   }}>
                     <Icon
                       iconName="delete"
-                      color={'#ffffff'}
-                    />
-                  </button>
-                  <button className="edit">
-                    <Icon
-                      iconName="edit"
                       color={'#ffffff'}
                     />
                   </button>

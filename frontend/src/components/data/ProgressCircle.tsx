@@ -23,9 +23,6 @@ const CircleDiv = styled.div<circleDivProps>`
 export function ProgressCircle(props: progressCircleProps) {
     const {value, goal, radius, strokeWidth, fontSize, textColor, backColor, color} = props
 
-    console.log(value, " ", goal)
-    console.log(value/goal)
-
     const adjustedRadius = radius - strokeWidth/2
 
     // Path Flags

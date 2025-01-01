@@ -47,7 +47,6 @@ export function ProgressBar(props: progressBarProps) {
     const {value, goal, height, width, fontSize} = props
 
     const progressWidth = (`${(value / 2000 * 100).toString()}%`)
-    console.log(progressWidth)
 
     const labelText = `${value} out of 2000."`
 

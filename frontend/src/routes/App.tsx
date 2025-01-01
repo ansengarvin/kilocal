@@ -54,7 +54,7 @@ const DateSection = styled.div`
       margin-left: 5px;
     }
   }
-  button.date {
+  button {
     // Remove all button styling
     border: none;
     outline: none;
