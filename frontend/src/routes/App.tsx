@@ -224,12 +224,22 @@ function App() {
                 <Icon iconName="forwardArrow" color={'#ffffff'}/>
               </button>
           </DateSection>
-          <GoalSection
-            calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
-            carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
-            proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
-            fatTotal={foodGet.data?.totalFat} fatGoal={50}
-          />
+          {
+            foodGet.data ? 
+            <GoalSection
+              calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
+              carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
+              proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
+              fatTotal={foodGet.data?.totalFat} fatGoal={50}
+            /> :
+            <GoalSection
+              calorieTotal={0} calorieGoal={2000}
+              carbTotal={0} carbGoal={300}
+              proteinTotal={0} proteinGoal={100}
+              fatTotal={0} fatGoal={50}
+            />
+          }
+          
           <FoodJournal className="appElement">
             <h2>
               Food Journal
