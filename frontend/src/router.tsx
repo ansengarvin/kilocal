@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import { Root } from './components/global/root'
+import { Root } from './components/global/Root'
 import App from './routes/App'
 import Profile from './routes/Profile'
 

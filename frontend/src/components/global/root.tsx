@@ -1,6 +1,7 @@
 import {useState, ReactNode} from 'react'
 import styled from '@emotion/styled'
-import { Header } from "./header"
+import { Header } from './Header'
+import { Footer } from './Footer'
 import { Outlet, useNavigate } from "react-router-dom"
 import Cookies from 'js-cookie'
 import { useEffect } from 'react'
@@ -19,8 +20,6 @@ const Grid = styled.div`
     grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
     row-gap: 15px;
-    width: 100vw;
-    height: 100vh;
 `
 
 const Main = styled.main`
@@ -60,6 +59,7 @@ export function Root(props: RootProps) {
                 <Main>
                     {children || <Outlet context={{loggedIn, setLoggedIn}}/>}
                 </Main>
+                <Footer/>
             </Grid>
         </>
     )

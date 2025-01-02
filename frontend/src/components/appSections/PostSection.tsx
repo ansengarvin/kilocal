@@ -1,66 +1,108 @@
 import { UseQueryResult } from "@tanstack/react-query"
 import styled from "@emotion/styled"
+import { Icon } from "../icons/Icon"
 
-const ModalBackdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.553);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`
-
-const PostSectionDiv = styled.div`
-  position: relative;
-  padding-top: 10px;
-  background-color: #adadad;
-  border-radius: 10px;
-  width: 600px;
-  height: 650px;
+const PostSectionStyle = styled.div`
+  width: 95%;
+  height: min-content;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   
-  button.x {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 2px;
   }
 
   div.inputSection {
-    width: 90%;
     display: flex;
     flex-direction: column;
-  }
-
-  form {
-    width: 600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 20px;
+
+    input {
+      all: unset;
+
+      width: 100%;
+      height: 50px;
+      border-radius: 5px;
+
+      background-color: white;
+      color: #555555;
+
+      text-align: center;
+    } 
+
+    // Remove arrow buttons from number inputs across platforms
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    label {
+      height: 20px;
+    }
+
+    div.fakeLabel {
+      height: 20px;
+      width: 100%;
+    }
+
+    .buttonContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 50px;
+    }
   }
-  
-  input {
-    all: unset;
 
-    width: 100%;
-    height: 50px;
-    border-radius: 5px;
 
-    background-color: white;
+  .buttons {
+    width: 5%;
+    margin-left: 5px;
+  }
+
+  .foodName {
+    width: 50%;
+  }
+
+  .calories {
+    width: 15%;
+  }
+
+  .carbs {
+    width: 10%;
+  }
+
+  .protein {
+    width: 10%;
+  }
+
+  .fat {
+    width: 10%;
   }
 
   button.submit {
-    width: 90%;
+    width: 10px;
     height: 50px;
-    border-radius: 5px;
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     background-color: #4CAF50;
     color: white;
@@ -70,7 +112,7 @@ const PostSectionDiv = styled.div`
   }
 
   button.submit:hover {
-    background-color: #45a049;
+    background-color: #4abc50;
   }
 
   input:hover {
@@ -81,7 +123,11 @@ const PostSectionDiv = styled.div`
 
 interface postSectionProps {
   foodPost: UseQueryResult<any, Error>
-  setPostWindowHidden: Function
+  foodName: string
+  calories: number
+  carbs: number
+  protein: number
+  fat: number
   setPostReady: Function
   setFoodName: Function
   setCalories: Function
@@ -92,102 +138,103 @@ interface postSectionProps {
 
 export function PostSection(props: postSectionProps) {
     const {
-        foodPost, setPostReady, setPostWindowHidden,
+        foodPost, setPostReady,
+        foodName, calories, carbs, protein, fat,
         setFoodName, setCalories, setCarbs, setProtein, setFat
     } = props
     
     return (
-        <ModalBackdrop>
-          <PostSectionDiv>
-            <h2>
-              Add a food
-            </h2>
-            <button className="x" onClick={() => {
-              setPostWindowHidden(true)
-            }}>
-              X
-            </button>
+      <PostSectionStyle>
+        <form className="formGrid" onSubmit={(e) => {
+            e.preventDefault()
+            setPostReady(true)
+        }}>
+            <div className="inputSection foodName">
+              <label htmlFor="name">
+                Food Name
+              </label>
+              <input
+                id="name"
+                name="Food Name"
+                type="text"
+                autoComplete="off"
+                value={foodName}
+                onChange={e => setFoodName(e.target.value)}
+              />
+            </div>
             
-            <form className="formGrid" onSubmit={(e) => {
-                e.preventDefault()
-                setPostReady(true)
-                setPostWindowHidden(true)
-            }}>
-                <div className="inputSection">
-                  <label htmlFor="name">
-                    Food Name
-                  </label>
-                  <input
-                    className="leftInput"
-                    id="name"
-                    name="Food Name"
-                    type="text"
-                    onChange={e => setFoodName(e.target.value)}
-                  />
-                </div>
-                
-                <div className="inputSection">
-                  <label htmlFor="calories">
-                    Calories
-                  </label>
-                  <input
-                    id="calories"
-                    className="rightInput"
-                    name="calories"
-                    type="number"
-                    min="1"
-                    onChange={e => setCalories(e.target.valueAsNumber)}
-                  />
-                </div>
+            <div className="inputSection calories">
+              <label htmlFor="calories">
+                Calories
+              </label>
+              <input
+                id="calories"
+                name="calories"
+                type="number"
+                min="0"
+                value={calories}
+                onChange={e => setCalories(e.target.valueAsNumber)}
+              />
+            </div>
 
-                <div className="inputSection">
-                  <label htmlFor="carbs">
-                    Carbs (Optional)
-                  </label>
-                  <input
-                    id="carbs"
-                    className="leftInput"
-                    name="carbs"
-                    type="number"
-                    min="0"
-                    onChange={e => setCarbs(e.target.valueAsNumber)}
-                  />
-                </div>
+            <div className="inputSection carbs">
+              <label htmlFor="carbs">
+                Carbs
+              </label>
+              <input
+                id="carbs"
+                name="carbs"
+                type="number"
+                min="0"
+                value={carbs}
+                onChange={e => setCarbs(e.target.valueAsNumber)}
+              />
+            </div>
 
-                <div className="inputSection">
-                  <label htmlFor="protein">
-                    Protein (Optional)
-                  </label>
-                  <input
-                    id="protein"
-                    className="rightInput"
-                    name="protein"
-                    type="number"
-                    min="0"
-                    onChange={e => setProtein(e.target.valueAsNumber)}
-                  />
-                </div>
+            <div className="inputSection protein">
+              <label htmlFor="protein">
+                Protein
+              </label>
+              <input
+                id="protein"
+                name="protein"
+                type="number"
+                min="0"
+                value={protein}
+                onChange={e => setProtein(e.target.valueAsNumber)}
+              />
+            </div>
 
-                <div className="inputSection">
-                  <label htmlFor="fat">
-                    Fat (Optional)
-                  </label>
-                  <input
-                    id="fat"
-                    className="leftInput"
-                    name="fat"
-                    type="number"
-                    min="0"
-                    onChange={e => setFat(e.target.valueAsNumber)}
-                  />
-                </div>
+            <div className="inputSection fat">
+              <label htmlFor="fat">
+                Fat
+              </label>
+              <input
+                id="fat"
+                name="fat"
+                type="number"
+                min="0"
+                value={fat}
+                onChange={e => setFat(e.target.valueAsNumber)}
+              />
+            </div>
 
-                <button className="submit" type="submit">Add Food</button>
-                
-            </form>
-            {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
-          </PostSectionDiv>
-        </ModalBackdrop>
-        
+            <div className="inputSection buttons">
+              <div className="fakeLabel"/>
+              <div className="buttonContainer">
+                <button className="submit" type="submit">
+                  <Icon
+                    iconName="add"
+                    color={'#ffffff'}
+                  />
+                </button>
+              </div>
+              
+            </div>
+            
+            
+        </form>
+        {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
+      </PostSectionStyle>  
     ) 
 }

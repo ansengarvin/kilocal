@@ -35,6 +35,10 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
     align-items: center;
   }
 
+  th {
+    height: 20px;
+  }
+
   .foodName {
     width: 50%;
   }
@@ -121,7 +125,7 @@ export function FoodEntries(props: foodEntriesProps) {
       }
       
       <tbody>
-        {foodList.map((food: any) => (
+        {foodList.slice().reverse().map((food: any) => (
           <tr key={food.id}>
             <td className="foodName">
               <div className="info">
@@ -161,7 +165,7 @@ export function FoodEntries(props: foodEntriesProps) {
                     setDeleteReady(true)
                   }}>
                     <Icon
-                      iconName="delete"
+                      iconName="remove"
                       color={'#ffffff'}
                     />
                   </button>

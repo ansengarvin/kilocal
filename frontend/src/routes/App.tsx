@@ -6,8 +6,8 @@ import { ContentWindow } from "../components/global/ContentWindow";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
-import { PostSection } from "../components/appSections/PostSection";
 import { Icon } from "../components/icons/Icon";
+import { PostSection } from "../components/appSections/PostSection";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -88,6 +88,12 @@ const FoodJournal = styled.div`
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
+
+  div.postSection {
+    width: 95%;
+    height: 10px;
+    background-color: green;
+  }
 `
 
 function App() {
@@ -97,10 +103,9 @@ function App() {
   const [formattedDate, setFormattedDate] = useState(formatDate(dayDate))
   const [isCurrentDay, setIsCurrentDay] = useState(true)
 
-  const [postWindowHidden, setPostWindowHidden] = useState(true)
   const [postReady, setPostReady] = useState(false)
   const [foodName, setFoodName] = useState("")
-  const [calories, setCalories] = useState(1)
+  const [calories, setCalories] = useState(0)
   const [carbs, setCarbs] = useState(0)
   const [protein, setProtein] = useState(0)
   const [fat, setFat] = useState(0)
@@ -188,90 +193,85 @@ function App() {
   })
 
   return (
-    <>
-      {
-        postWindowHidden ?
-        <></> :
-        <PostSection
-          foodPost={foodPost}
-          setPostWindowHidden={setPostWindowHidden}
-          setPostReady={setPostReady}
-          setFoodName={setFoodName}
-          setCalories={setCalories}
-          setCarbs={setCarbs}
-          setProtein={setProtein}
-          setFat={setFat}
-        />
-      }
-      <ContentWindow>
-        <div className='content'>
-          <DateSection className="appElement">
-            <button className="date left" onClick={(e) => {
-                e.preventDefault()
-                const newDate = new Date(dayDate)
-                newDate.setDate(dayDate.getDate() - 1)
-                setDayDate(newDate)
-                setFormattedDate(formatDate(newDate))
-              }}>
-                <Icon iconName="backArrow" color={'#ffffff'}/>
-              </button>
-            
-            <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
+    <ContentWindow>
+      <div className='content'>
+        <DateSection className="appElement">
+          <button className="date left" onClick={(e) => {
+              e.preventDefault()
+              const newDate = new Date(dayDate)
+              newDate.setDate(dayDate.getDate() - 1)
+              setDayDate(newDate)
+              setFormattedDate(formatDate(newDate))
+            }}>
+              <Icon iconName="backArrow" color={'#ffffff'}/>
+            </button>
+          
+          <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
 
-            <button className="date right" disabled={isCurrentDay} onClick={(e) => {
-                e.preventDefault()
-                const newDate = new Date(dayDate)
-                newDate.setDate(dayDate.getDate() + 1)
-                setDayDate(newDate)
-                setFormattedDate(formatDate(newDate))
-              }}>
-                <Icon iconName="forwardArrow" color={'#ffffff'}/>
-              </button>
-          </DateSection>
-          {
-            foodGet.data ? 
-            <GoalSection
-              calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
-              carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
-              proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
-              fatTotal={foodGet.data?.totalFat} fatGoal={50}
-            /> :
-            <GoalSection
-              calorieTotal={0} calorieGoal={2000}
-              carbTotal={0} carbGoal={300}
-              proteinTotal={0} proteinGoal={100}
-              fatTotal={0} fatGoal={50}
+          <button className="date right" disabled={isCurrentDay} onClick={(e) => {
+              e.preventDefault()
+              const newDate = new Date(dayDate)
+              newDate.setDate(dayDate.getDate() + 1)
+              setDayDate(newDate)
+              setFormattedDate(formatDate(newDate))
+            }}>
+              <Icon iconName="forwardArrow" color={'#ffffff'}/>
+            </button>
+        </DateSection>
+        {
+          foodGet.data ? 
+          <GoalSection
+            calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
+            carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
+            proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
+            fatTotal={foodGet.data?.totalFat} fatGoal={50}
+          /> :
+          <GoalSection
+            calorieTotal={0} calorieGoal={2000}
+            carbTotal={0} carbGoal={300}
+            proteinTotal={0} proteinGoal={100}
+            fatTotal={0} fatGoal={50}
+          />
+        }
+        
+        <FoodJournal className="appElement">
+          <h2>
+            Add a Food
+          </h2>
+          <PostSection
+            foodPost={foodPost}
+            foodName={foodName}
+            calories={calories}
+            carbs={carbs}
+            protein={protein}
+            fat={fat}
+            setPostReady={setPostReady}
+            setFoodName={setFoodName}
+            setCalories={setCalories}
+            setCarbs={setCarbs}
+            setProtein={setProtein}
+            setFat={setFat}
+          />
+          <br/>
+          <h2>
+            Food Journal
+          </h2>
+          {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
+            No food for this day yet!
+          </p>}
+          {foodGet.data?.food && foodGet.data?.food.length != 0 &&
+            <FoodEntries
+              foodList={foodGet.data.food}
+              setDeleteID={setDeleteID}
+              setDeleteReady={setDeleteReady}
+              hasRecipes={false}
+              hasTitles={true}
+              width={'95%'}
             />
           }
-          
-          <FoodJournal className="appElement">
-            <h2>
-              Food Journal
-            </h2>
-            <button onClick={() => {
-              setPostWindowHidden(false)
-            }}>
-              Add Food
-            </button>
-            <br/>
-            {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
-              No food for this day yet!
-            </p>}
-            {foodGet.data?.food && foodGet.data?.food.length != 0 &&
-              <FoodEntries
-                foodList={foodGet.data.food}
-                setDeleteID={setDeleteID}
-                setDeleteReady={setDeleteReady}
-                hasRecipes={false}
-                hasTitles={true}
-                width={'95%'}
-              />
-            }
-          </FoodJournal>
-        </div>    
-      </ContentWindow>  
-    </>
-    
+        </FoodJournal>
+      </div>    
+    </ContentWindow>   
   )
 }
 
