@@ -37,6 +37,7 @@ const PostSectionStyle = styled.div`
       text-align: center;
     } 
 
+    // Remove arrow buttons from number inputs across platforms
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
