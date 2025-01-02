@@ -35,6 +35,10 @@ const FoodEntryTable = styled.table<foodEntryTableProps>`
     align-items: center;
   }
 
+  th {
+    height: 20px;
+  }
+
   .foodName {
     width: 50%;
   }
