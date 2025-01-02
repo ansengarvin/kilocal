@@ -37,6 +37,17 @@ const PostSectionStyle = styled.div`
       text-align: center;
     } 
 
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
     label {
       height: 20px;
     }
@@ -53,6 +64,7 @@ const PostSectionStyle = styled.div`
       height: 50px;
     }
   }
+
 
   .buttons {
     width: 5%;
@@ -139,6 +151,7 @@ export function PostSection(props: postSectionProps) {
                 id="name"
                 name="Food Name"
                 type="text"
+                autoComplete="off"
                 value={foodName}
                 onChange={e => setFoodName(e.target.value)}
               />
