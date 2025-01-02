@@ -32,6 +32,9 @@ const PostSectionStyle = styled.div`
       border-radius: 5px;
 
       background-color: white;
+      color: #555555;
+
+      text-align: center;
     } 
 
     label {
@@ -102,6 +105,11 @@ const PostSectionStyle = styled.div`
 
 interface postSectionProps {
   foodPost: UseQueryResult<any, Error>
+  foodName: string
+  calories: number
+  carbs: number
+  protein: number
+  fat: number
   setPostReady: Function
   setFoodName: Function
   setCalories: Function
@@ -113,6 +121,7 @@ interface postSectionProps {
 export function PostSection(props: postSectionProps) {
     const {
         foodPost, setPostReady,
+        foodName, calories, carbs, protein, fat,
         setFoodName, setCalories, setCarbs, setProtein, setFat
     } = props
     
@@ -130,6 +139,7 @@ export function PostSection(props: postSectionProps) {
                 id="name"
                 name="Food Name"
                 type="text"
+                value={foodName}
                 onChange={e => setFoodName(e.target.value)}
               />
             </div>
@@ -142,7 +152,8 @@ export function PostSection(props: postSectionProps) {
                 id="calories"
                 name="calories"
                 type="number"
-                min="1"
+                min="0"
+                value={calories}
                 onChange={e => setCalories(e.target.valueAsNumber)}
               />
             </div>
@@ -156,6 +167,7 @@ export function PostSection(props: postSectionProps) {
                 name="carbs"
                 type="number"
                 min="0"
+                value={carbs}
                 onChange={e => setCarbs(e.target.valueAsNumber)}
               />
             </div>
@@ -169,6 +181,7 @@ export function PostSection(props: postSectionProps) {
                 name="protein"
                 type="number"
                 min="0"
+                value={protein}
                 onChange={e => setProtein(e.target.valueAsNumber)}
               />
             </div>
@@ -182,6 +195,7 @@ export function PostSection(props: postSectionProps) {
                 name="fat"
                 type="number"
                 min="0"
+                value={fat}
                 onChange={e => setFat(e.target.valueAsNumber)}
               />
             </div>

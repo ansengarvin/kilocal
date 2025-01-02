@@ -105,7 +105,7 @@ function App() {
 
   const [postReady, setPostReady] = useState(false)
   const [foodName, setFoodName] = useState("")
-  const [calories, setCalories] = useState(1)
+  const [calories, setCalories] = useState(0)
   const [carbs, setCarbs] = useState(0)
   const [protein, setProtein] = useState(0)
   const [fat, setFat] = useState(0)
@@ -240,6 +240,11 @@ function App() {
           </h2>
           <PostSection
             foodPost={foodPost}
+            foodName={foodName}
+            calories={calories}
+            carbs={carbs}
+            protein={protein}
+            fat={fat}
             setPostReady={setPostReady}
             setFoodName={setFoodName}
             setCalories={setCalories}
