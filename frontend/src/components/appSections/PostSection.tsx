@@ -1,5 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query"
 import styled from "@emotion/styled"
+import { Icon } from "../icons/Icon"
 
 const PostSectionStyle = styled.div`
   width: 95%;
@@ -99,6 +100,10 @@ const PostSectionStyle = styled.div`
     height: 35px;
     width: 35px;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     background-color: #4CAF50;
     color: white;
     font-size: 20px;
@@ -107,7 +112,7 @@ const PostSectionStyle = styled.div`
   }
 
   button.submit:hover {
-    background-color: #45a049;
+    background-color: #4abc50;
   }
 
   input:hover {
@@ -217,7 +222,12 @@ export function PostSection(props: postSectionProps) {
             <div className="inputSection buttons">
               <div className="fakeLabel"/>
               <div className="buttonContainer">
-                <button className="submit" type="submit">+</button>
+                <button className="submit" type="submit">
+                  <Icon
+                    iconName="add"
+                    color={'#ffffff'}
+                  />
+                </button>
               </div>
               
             </div>

@@ -165,7 +165,7 @@ export function FoodEntries(props: foodEntriesProps) {
                     setDeleteReady(true)
                   }}>
                     <Icon
-                      iconName="delete"
+                      iconName="remove"
                       color={'#ffffff'}
                     />
                   </button>
