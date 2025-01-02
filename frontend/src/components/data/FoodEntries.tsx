@@ -125,7 +125,7 @@ export function FoodEntries(props: foodEntriesProps) {
       }
       
       <tbody>
-        {foodList.map((food: any) => (
+        {foodList.slice().reverse().map((food: any) => (
           <tr key={food.id}>
             <td className="foodName">
               <div className="info">
