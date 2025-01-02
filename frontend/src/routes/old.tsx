@@ -3,41 +3,24 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import Cookies from "js-cookie"
 
-interface loginProps {
-  setLoggedIn: Function 
-}
-
-const LoginWindow = styled.div `
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background-color: #0000005a;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  div {
+const LoginStyle = styled.div `
     height: 500px;
     width: 400px;
-    background-color: white;
+    background-color: #dadada;
     border-radius: 10px;
     padding-top: 10px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
 `
 
-function LoginModal(props: loginProps) {
+export function Login() {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const [loginButtonPressed, setLoginButtonPressed] = useState(false)
-
-  const {setLoggedIn} = props
 
   const {isLoading, error, data} = useQuery({
     enabled: (loginButtonPressed ? true : false),
@@ -60,7 +43,6 @@ function LoginModal(props: loginProps) {
       // Set authentication token into cookie and set logged in to true
       if (body["token"]) {
         Cookies.set("auth", body["token"])
-        setLoggedIn(true)
         return {"token": "recieved"}
       }
       
@@ -72,9 +54,9 @@ function LoginModal(props: loginProps) {
   })
 
     return (
-      <LoginWindow>
+      <LoginStyle>
         <div>
-          Login<br/>
+          <h1>Login</h1>
           
           <form onSubmit={e => {
             e.preventDefault()
@@ -94,9 +76,7 @@ function LoginModal(props: loginProps) {
             </p>
           ))}
         </div>
-      </LoginWindow>
+      </LoginStyle>
     )
-  }
-  
-export default LoginModal
+}
   
