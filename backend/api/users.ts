@@ -38,7 +38,6 @@ router.post('/login', requireAuthentication, async function(req, res) {
     try {
         res.status(200).send({})
     } catch(err) {
-        console.log("error:", err)
         res.status(400).send({
             err: err.message
         })
@@ -47,13 +46,11 @@ router.post('/login', requireAuthentication, async function(req, res) {
 
 router.delete('/:user_id', requireAuthentication, async function (req, res) {
     try {
-        console.log("Deleting user", req.params.user_id)
         const text = "DELETE FROM users WHERE id = $1"
         const values = [req.params.user_id]
         await pool.query(text, values)
         res.status(204).send()
     } catch (err) {
-        console.log(err)
         res.status(400).send({
             err: err
         })
@@ -65,7 +62,6 @@ router.get('/', requireAuthentication, async function (req, res) {
         const text = "SELECT id, name, email, weight FROM users WHERE id = $1"
         const values = [req.user]
         const result = await pool.query(text, values)
-        console.log("get user id:", req.user)
         if (result.rowCount) {
             res.status(200).send(result.rows[0])
         } else {

@@ -42,7 +42,6 @@ router.post('/', requireAuthentication, async function(req, res) {
 
             } else {
                 // Adds the day into the database
-                console.log("Date:", req.body.date)
                 text = "INSERT INTO days(user_id, date) VALUES($1, $2) RETURNING id, user_id, date"
                 values = [req.user, req.body.date]
                 result = await pool.query(text, values)
@@ -58,7 +57,6 @@ router.post('/', requireAuthentication, async function(req, res) {
 
         
     } catch( err ) {
-        console.log(err)
         res.status(500).send({
             error: err
         })
@@ -68,7 +66,6 @@ router.post('/', requireAuthentication, async function(req, res) {
 // Add a food to a day
 router.post('/:date/food', requireAuthentication, async function(req, res) {
     try {
-        console.log(req.body)
         if (!req.body || req.body.calories===null) {
             res.status(400).send({err: "entry must have request body with calories"})
         } else {
@@ -95,7 +92,6 @@ router.post('/:date/food', requireAuthentication, async function(req, res) {
             })
         }
     } catch (err) { 
-        console.log(err)
         res.status(500).send({
             err: err
         })
@@ -112,9 +108,7 @@ router.get('/:date', requireAuthentication, async function(req, res) {
         let values = [day_id]
         let result = await pool.query(text, values)
 
-        // Parse returned db numerics from string to floats
-        console.log("Getting contents for user", req.user, "on day", req.params.date)
-        
+        // Parse returned db numerics from string to floats       
 
         // Calculate total from food
         let totalCalories = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0
@@ -127,7 +121,6 @@ router.get('/:date', requireAuthentication, async function(req, res) {
 
 
         // TODO: Implement recipe getting
-        console.log(result.rows)
         res.status(200).send({
             totalCalories: totalCalories,
             totalCarbs: totalCarbs,
@@ -138,7 +131,6 @@ router.get('/:date', requireAuthentication, async function(req, res) {
 
 
     } catch(err) {
-        console.log(err)
         res.status(500).send({
             err: err
         })
@@ -165,7 +157,6 @@ router.delete('/:date/food/:food_id', requireAuthentication, async function(req,
             res.status(204).send()
         }
     } catch(err){
-        console.log(err)
         res.status(500).send({
             err: err
         })
