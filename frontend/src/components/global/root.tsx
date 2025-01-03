@@ -33,7 +33,7 @@ export function Root(props: RootProps) {
     const {children} = props
 
     const [loggedIn, setLoggedIn] = useState(firebaseAuth.currentUser !== null)
-    
+
     useEffect(() => onAuthStateChanged(
         firebaseAuth, 
         (user) => {
