@@ -18,13 +18,13 @@ function rebuild () {
 
 # Starts the database
 function start() {
-    echo "Starting DB"
+    echo "Starting App"
     docker-compose up -d
 }
 
 # Stops the database
 function stop() {
-    echo "Stopping DB"
+    echo "Stopping App"
     docker-compose down
 }
 

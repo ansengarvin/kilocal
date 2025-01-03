@@ -9,7 +9,6 @@ admin.initializeApp({
 export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get("Authorization") || ""
     console.log("IN REQUIRES AUTHENTICATION")
-    console.log("authHeader:", authHeader)
 
     if (!authHeader) {
         req.user = ""
@@ -25,11 +24,11 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
             res.status(401).send({
                 err: "missing auth token"
             })
-            console.log("missing token:", token, ", whole header=", authHeader)
-            console.log()
         } else {
+            console.log("Verifying token")
             admin.auth().verifyIdToken(token)
                 .then((user) => {
+                    console.log("User verified")
                     req.user = user.uid
                     req.email = user.email
                     next()
@@ -46,6 +45,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
 }
 
 export async function createUserIfNoneExists(req: Request, res: Response) {
+    console.log("Checking if user exists")
     const uid = req.user
     const email = req.email
 
@@ -55,8 +55,10 @@ export async function createUserIfNoneExists(req: Request, res: Response) {
     await pool.query(text, values)
         .then((result) => {
             if (result.rowCount) {
+                console.log("User exists. Returning.")
                 return;
             } else {
+                ("User does not exist in our DB. Creating user.")
                 const text = "INSERT INTO users(id, name, email, weight) VALUES($1, $2, $3, $4) RETURNING id, name, email, weight"
                 const values = [uid, "test", email, 0]
                 pool.query(text, values)
