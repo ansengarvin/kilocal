@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { firebaseAuth } from "../lib/firebase"
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword } from "firebase/auth"
 import { useQuery } from "@tanstack/react-query"
 
 const LoginStyle = styled.div `
@@ -14,15 +14,13 @@ const LoginStyle = styled.div `
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    text-align: center;
 `
 
 export function Login() {
-
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
-  const [firebaseUserInfo, setFireBaseUserInfo] = useState(firebaseAuth.currentUser)
-  useEffect(() => onAuthStateChanged(firebaseAuth, setFireBaseUserInfo), [])
 
   const [loginButtonPressed, setLoginButtonPressed] = useState(false)
 
@@ -47,7 +45,13 @@ export function Login() {
         })
       })
       setLoginButtonPressed(false)
-      return response
+
+      // If the response is good, redirect to main page
+      if (response.ok) {
+        window.location.href = "/"
+      } else {
+        console.log("Login failed")
+      }
     }
   })
 
@@ -55,21 +59,19 @@ export function Login() {
     <LoginStyle>
       <div>
         <h1>Login</h1>
-        
         <form onSubmit={e => {
           e.preventDefault()
           setLoginButtonPressed(true)
         }}>
           Email <input value={email} onChange={e=>setEmail(e.target.value)}/><br/>
           Password <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/><br/>
-          
           <button type="submit">Login</button>
         </form>
-        Information<br/>
-        {firebaseUserInfo?.uid || <>No UID yet</>}<br/>
-        {isLoading && <>Loading.</>}
-        {error && <>Error: {error.message}</> }
+        Don't have an account?<br/>
+        <a href="/signup">Sign Up</a>
       </div>
+      {isLoading ? <>Loading</> : <></>}
+      {error ? <>Error</> : <></>}
     </LoginStyle>
   )
 }

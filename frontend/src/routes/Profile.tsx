@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { useNavigate, useOutletContext } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
@@ -11,9 +11,9 @@ const SignOutButton = styled.button`
 `
 
 function Profile() {
-  const {setLoggedIn} = useOutletContext<{setLoggedIn: Function}>()
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
+
+  const navigate = useNavigate()
 
   const {isLoading, error, data} = useQuery({
     queryKey: ["user"],
@@ -50,8 +50,10 @@ function Profile() {
         <SignOutButton onClick={(e) => {
           e.preventDefault
           queryClient.clear()
-          setLoggedIn(false)
-          navigate('/')
+          // Sign user out of firebase
+          firebaseAuth.signOut()
+          // Navigate to login page
+          navigate("/login")
         }}>
           Sign Out
         </SignOutButton>
