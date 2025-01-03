@@ -22,7 +22,8 @@ declare global {
     namespace Express {
       interface Request {
         user?: String,
-        admin?: boolean
+        admin?: boolean,
+        email?: String
       }
     }
   }

@@ -29,6 +29,8 @@ services:
       - apiserver
     volumes:
       - ./backend:/home/node/app
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
     command: "npm start"
   frontend:
     image: node:latest

@@ -3,7 +3,7 @@ var bcrypt = require('bcryptjs')
 
 
 const router = Router()
-import { requireAuthentication} from '../lib/authentication'
+import { createUserIfNoneExists, requireAuthentication} from '../lib/authentication'
 import {pool} from '../lib/database'
 
 router.put('/', requireAuthentication, async function (req, res) {
@@ -34,39 +34,11 @@ router.put('/', requireAuthentication, async function (req, res) {
 })
 
 router.post('/login', requireAuthentication, async function(req, res) {
+    createUserIfNoneExists(req, res);
     try {
-        // Grab firebase user id
-        const uid = req.user
-
-        // Check if user exists in database
-        const text = "SELECT id, name, email, weight FROM users WHERE id = $1"
-        const values = [uid]
-
-        await pool.query(text, values)
-            .then((result) => {
-                if (result.rowCount) {
-                    res.status(200).send(result.rows[0])
-                } else {
-                    // Create user in database if user not found
-                    const text = "INSERT INTO users(id) VALUES($1) RETURNING id, name, email, weight"
-                    const values = [uid]
-                    pool.query(text, values)
-                        .then((result: any) => {
-                            res.status(201).send(result.rows[0])
-                        })
-                        .catch((err: any) => {
-                            res.status(400).send({
-                                err: err.message
-                            })
-                        })
-                }
-            })
-            .catch((err) => {
-                res.status(400).send({
-                    err: err.message
-                })
-            })
+        res.status(200).send({})
     } catch(err) {
+        console.log("error:", err)
         res.status(400).send({
             err: err.message
         })

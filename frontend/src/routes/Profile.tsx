@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import Cookies from "js-cookie"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
+import { firebaseAuth } from "../lib/firebase"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -18,11 +18,12 @@ function Profile() {
   const {isLoading, error, data} = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
+      const token = await firebaseAuth.currentUser?.getIdToken()
       const url = "http://localhost:8000/users/"
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          'Authorization': 'Bearer ' + Cookies.get("auth")
+          'Authorization': 'Bearer ' + token
         } 
       })
       return response.json()
@@ -48,7 +49,6 @@ function Profile() {
         }
         <SignOutButton onClick={(e) => {
           e.preventDefault
-          Cookies.remove("auth")
           queryClient.clear()
           setLoggedIn(false)
           navigate('/')

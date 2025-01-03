@@ -21,7 +21,7 @@ const PieChartDiv = styled.div<pieChartDivProps>`
 `
 
 export function PieChart(props: pieChartProps) {
-    const {radius, borderWidth, borderColor, sections, colors, hasText, textColor} = props
+    const {radius, borderWidth, borderColor, sections, colors} = props
 
     return (
         <PieChartDiv dim={radius*2}>
@@ -44,24 +44,6 @@ export function PieChart(props: pieChartProps) {
                     )
                 })}
                 {sections.map((section, index) => {
-                    const isOnLeftSide = (
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 > 90 &&
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 < 270
-                    )
-                    const isInMiddle = (
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 > 45 &&
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 < 135
-                    )
-
-                    let anchor = "middle"
-                    if (!isInMiddle) {
-                        if (isOnLeftSide && !isInMiddle) {
-                            anchor = "end"
-                        } else {
-                            anchor = "start"
-                        }
-                    }
-                    
                     return (
                         <Fragment key={index}>
                             {section*100 != 0 && section*100 != 100 &&
