@@ -6,41 +6,26 @@ const router = Router()
 import { requireAuthentication} from '../lib/authentication'
 import {pool} from '../lib/database'
 
-router.post('/', async function (req, res) {
+router.put('/', requireAuthentication, async function (req, res) {
+    // Update a user's information. Requires user firebase token to accomplish.
     try {
-        if (!req.body.name || !req.body.email || !req.body.password) {
-            res.status(400).send({
-                err: "Missing name, email, and/or password."
+        // If user does not exist in DB, create them
+        const text = `
+            INSERT INTO users(id, name, email, weight) VALUES($1, $2, $3, $4)
+            ON CONFLICT (id) DO UPDATE SET name = $2, email = $3, weight = $4
+            RETURNING id, name, email, weight
+        `
+        const values = [req.user, req.body.name, req.body.email, req.body.weight]
+        await pool.query(text, values)
+            .then((result: any) => {
+                res.status(200).send(result.rows[0])
             })
-        }
-        bcrypt.hash(req.body.password, 8, async function(err, hash){
-            try {
-                if (err) {
-                    res.status(400).send({
-                        err: err
-                    })
-                } else {
-                    // TODO: Check if email is in database first.
-    
-                    // Adds the user into the database.
-                    const text = "INSERT INTO users(name, email, password, weight) VALUES($1, $2, $3, $4) RETURNING id, name, email, weight"
-                    const values = [req.body.name, req.body.email, hash, req.body.weight]
-                    const result = await pool.query(text, values)
-    
-                    // Returns user information.
-                    res.status(201).send({
-                        id: result.rows[0].id,
-                        name: result.rows[0].name,
-                        email: result.rows[0].email,
-                        weight: result.rows[0].weight
-                    })
-                }
-            } catch (err) {
+            .catch((err: any) => {
                 res.status(400).send({
                     err: err.message
                 })
-            }
-        })
+            })
+
     } catch(err) {
         res.status(400).send({
             err: err.message
@@ -74,7 +59,6 @@ router.post('/login', requireAuthentication, async function(req, res) {
                                 err: err.message
                             })
                         })
-
                 }
             })
             .catch((err) => {

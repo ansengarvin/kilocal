@@ -1,10 +1,8 @@
 import express, {Request, Response, NextFunction} from 'express'
-import { initializeApp } from 'firebase-admin'
-import { applicationDefault } from 'firebase-admin/app'
-import { getAuth } from 'firebase-admin/auth'
+import admin from 'firebase-admin'
 
-initializeApp({
-    credential: applicationDefault()
+admin.initializeApp({
+    credential: admin.credential.applicationDefault()
 })
 
 
@@ -25,7 +23,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                 err: "missing auth token"
             })
         } else {
-            getAuth().verifyIdToken(token)
+            admin.auth().verifyIdToken(token)
                 .then((user) => {
                     req.user = user.uid
                     next()

@@ -14,7 +14,6 @@ function rebuild () {
 	build
 	echo "Waiting 8 seconds for database to set up."
 	sleep 8
-	py init.py
 }
 
 # Starts the database
@@ -44,7 +43,6 @@ function test() {
 	build
 	echo "Waiting 8 seconds for database to set up."
 	sleep 8
-	py init.py
 	test_short
 }
 
