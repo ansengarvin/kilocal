@@ -48,7 +48,7 @@ export function Login() {
         })
       })
       setLoginButtonPressed(false)
-      const body = await response.json()
+      return response
     }
   })
 

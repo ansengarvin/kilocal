@@ -1,8 +1,9 @@
 import {Router} from 'express'
 var bcrypt = require('bcryptjs')
 
+
 const router = Router()
-import { generateAuthToken, requireAuthentication, validateSameUser } from '../lib/authentication'
+import { requireAuthentication} from '../lib/authentication'
 import {pool} from '../lib/database'
 
 router.post('/', async function (req, res) {
@@ -47,38 +48,40 @@ router.post('/', async function (req, res) {
     }
 })
 
-router.post('/login', async function(req, res) {
+router.post('/login', requireAuthentication, async function(req, res) {
     try {
+        // Grab firebase user id
+        const uid = req.user
 
-        console.log("Login called")
-        // Ensure username and password provided
-        if (!req.body.email || !req.body.password) {
-            console.log(req.body)
-            console.log(req.body.email)
-            console.log(req.body.password)
-            res.status(400).send({err: "Missing email or password"})
-        } else {
-            // Grabs user in the database
-            const text = "SELECT * FROM users WHERE email = $1"
-            const values = [req.body.email]
-            const result = await pool.query(text, values)
+        // Check if user exists in database
+        const text = "SELECT id, name, email, weight FROM users WHERE id = $1"
+        const values = [uid]
 
-            // If no user or password incorrect, send error
-            
-            if (!(result.rowCount && await bcrypt.compare(req.body.password, result.rows[0].password))) {
-                res.status(401).send({
-                    err: "Invalid Credentials"
+        await pool.query(text, values)
+            .then((result) => {
+                if (result.rowCount) {
+                    res.status(200).send(result.rows[0])
+                } else {
+                    // Create user in database if user not found
+                    const text = "INSERT INTO users(id) VALUES($1) RETURNING id, name, email, weight"
+                    const values = [uid]
+                    pool.query(text, values)
+                        .then((result: any) => {
+                            res.status(201).send(result.rows[0])
+                        })
+                        .catch((err: any) => {
+                            res.status(400).send({
+                                err: err.message
+                            })
+                        })
+
+                }
+            })
+            .catch((err) => {
+                res.status(400).send({
+                    err: err.message
                 })
-            } else {
-                const token = generateAuthToken(result.rows[0].id)
-                res.status(200).send ({
-                    id: result.rows[0].id,
-                    token: token
-                })
-            }
-        }
-
-        
+            })
     } catch(err) {
         res.status(400).send({
             err: err.message
@@ -86,7 +89,7 @@ router.post('/login', async function(req, res) {
     }
 })
 
-router.delete('/:user_id', requireAuthentication, validateSameUser, async function (req, res) {
+router.delete('/:user_id', requireAuthentication, async function (req, res) {
     try {
         console.log("Deleting user", req.params.user_id)
         const text = "DELETE FROM users WHERE id = $1"
