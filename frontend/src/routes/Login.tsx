@@ -22,7 +22,6 @@ export function Login() {
   const [password, setPassword] = useState("")
 
   const [firebaseUserInfo, setFireBaseUserInfo] = useState(firebaseAuth.currentUser)
-
   useEffect(() => onAuthStateChanged(firebaseAuth, setFireBaseUserInfo), [])
 
   const [loginButtonPressed, setLoginButtonPressed] = useState(false)
