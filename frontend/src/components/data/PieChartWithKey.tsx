@@ -70,7 +70,7 @@ export function PieChartWithKey(props: pieChartWithKeyProps) {
                 <ul>
                     {titles.map((title, index) => {
                         return (
-                            <div>
+                            <div  key={index}>
                                 <div className="item">
                                     <svg height="20" width="20">
                                         <circle cx="10" cy="10" r="5" fill={colors[index]} />

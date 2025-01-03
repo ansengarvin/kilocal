@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import Cookies from "js-cookie";
 import { ContentWindow } from "../components/global/ContentWindow";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
 import { Icon } from "../components/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
+import { firebaseAuth } from "../lib/firebase";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -118,11 +118,13 @@ function App() {
     enabled: (loggedIn ? true : false),
     queryKey: ["day", formattedDate],
     queryFn: async () => {
+      const token = await firebaseAuth.currentUser?.getIdToken()
+      console.log("token:", token)
       const url = `http://localhost:8000/days/${formattedDate}`
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          "Authorization": "Bearer " + Cookies.get("auth")
+          "Authorization": "Bearer " + token
         }
       })
       return response.json()
@@ -133,12 +135,13 @@ function App() {
     enabled: (postReady ? true: false),
     queryKey: ["foodPost", formattedDate, calories, foodName],
     queryFn: async () => {
+      const token = await firebaseAuth.currentUser?.getIdToken()
       const url = `http://localhost:8000/days/${formattedDate}/food`
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          "Authorization": "Bearer " + Cookies.get("auth")
+          "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
           name: foodName,
@@ -163,11 +166,12 @@ function App() {
     enabled: (deleteReady ? true : false),
     queryKey: ["foodDelete", deleteID],
     queryFn: async () => {
+      const token = await firebaseAuth.currentUser?.getIdToken()
       const url = `http://localhost:8000/days/${formattedDate}/food/${deleteID}`
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-          "Authorization": "Bearer " + Cookies.get("auth")
+          "Authorization": "Bearer " + token
         }
       })
       setDeleteReady(false)
