@@ -1,14 +1,12 @@
-import 'dotenv/config'
 import express, {Request, Response, NextFunction} from 'express'
-var jwt = require('jsonwebtoken')
+import { initializeApp } from 'firebase-admin'
+import { applicationDefault } from 'firebase-admin/app'
+import { getAuth } from 'firebase-admin/auth'
 
-export function generateAuthToken(userId: number, admin: boolean = false) {
-    const payload = {
-        sub: userId.toString(),
-        admin: admin
-    }
-    return jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: "24h"})
-}
+initializeApp({
+    credential: applicationDefault()
+})
+
 
 export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get("Authorization") || ""
@@ -19,28 +17,26 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
             err: "missing auth token"
         })
     } else {
-        const authHeaderSplit = authHeader.split(" ")
-        const token = authHeaderSplit[0] === "Bearer" ? authHeaderSplit[1] : null
+        const token = authHeader.split("Bearer ")[1]
 
-        try {
-            const payload = jwt.verify(token, process.env.SECRET_KEY)
-            req.user = payload.sub
-            req.admin = payload.admin
-            next()
-        } catch (err) {
+        if (!token) {
+            req.user = ""
             res.status(401).send({
-                error: "Invalid authentication token"
+                err: "missing auth token"
             })
+        } else {
+            getAuth().verifyIdToken(token)
+                .then((user) => {
+                    req.user = user.uid
+                    next()
+                })
+                .catch((err) => {
+                    req.user = ""
+                    res.status(401).send({
+                        err: "invalid auth token"
+                    })
+                })
         }
-    }
-}
 
-export function validateSameUser(req: Request, res: Response, next: NextFunction) {
-    if (req.user !== req.params.user_id) {
-        res.status(403).send({
-            err: "Unauthorized"
-        })
-    } else {
-        next()
     }
 }

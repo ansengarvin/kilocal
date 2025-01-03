@@ -27,18 +27,20 @@ export function Login() {
 
   const [loginButtonPressed, setLoginButtonPressed] = useState(false)
 
-  const {isLoading, error, data} = useQuery({
+  const {isLoading, error} = useQuery({
     enabled: (loginButtonPressed ? true : false),
     queryKey: ["login", email, password],
     queryFn: async () => {
-
       const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
+      // Get token
+      const token = await userCredential.user.getIdToken()
 
       const url = "http://localhost:8000/users/login"
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer: ${token}`
         },
         body: JSON.stringify({
           email: email,

@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { requireAuthentication, validateSameUser } from '../lib/authentication'
+import { requireAuthentication } from '../lib/authentication'
 import {pool} from '../lib/database'
 
 const router = Router()
