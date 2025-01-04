@@ -1,41 +1,26 @@
 import {Router} from 'express'
 var bcrypt = require('bcryptjs')
 
-
 const router = Router()
 import { createUserIfNoneExists, requireAuthentication} from '../lib/authentication'
 import {pool} from '../lib/database'
+import { create } from 'ts-node'
 
-router.put('/', requireAuthentication, async function (req, res) {
-    // Update a user's information. Requires user firebase token to accomplish.
+router.post('/', requireAuthentication, async function (req, res) {
     try {
-        // If user does not exist in DB, create them
-        const text = `
-            INSERT INTO users(id, name, email, weight) VALUES($1, $2, $3, $4)
-            ON CONFLICT (id) DO UPDATE SET name = $2, email = $3, weight = $4
-            RETURNING id, name, email, weight
-        `
-        const values = [req.user, req.body.name, req.body.email, req.body.weight]
-        await pool.query(text, values)
-            .then((result: any) => {
-                res.status(200).send(result.rows[0])
-            })
-            .catch((err: any) => {
-                res.status(400).send({
-                    err: err.message
-                })
-            })
-
+        await createUserIfNoneExists(req, res)
+        res.status(201).send()
     } catch(err) {
         res.status(400).send({
             err: err.message
         })
     }
+    
 })
 
 router.post('/login', requireAuthentication, async function(req, res) {
-    createUserIfNoneExists(req, res);
     try {
+        await createUserIfNoneExists(req, res)
         res.status(200).send({})
     } catch(err) {
         res.status(400).send({

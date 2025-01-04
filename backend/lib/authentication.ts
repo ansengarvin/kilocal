@@ -41,7 +41,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
 
 /*
     This function exists to account for edge cases where the user has created a firebase account, but for some reason the 
-    database failed to process the user's information.
+    database failed to process the user's information on account posting.
 */
 export async function createUserIfNoneExists(req: Request, res: Response) {
     const uid = req.user
