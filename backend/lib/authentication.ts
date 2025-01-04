@@ -39,35 +39,35 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
     }
 }
 
+/*
+    This function exists to account for edge cases where the user has created a firebase account, but for some reason the 
+    database failed to process the user's information.
+*/
 export async function createUserIfNoneExists(req: Request, res: Response) {
     const uid = req.user
     const email = req.email
 
-    const text = "SELECT id, name, email, weight FROM users WHERE id = $1"
-    const values = [uid]
+    const text = `
+        INSERT INTO users(id, name, email, weight)
+        VALUES($1, $2, $3, $4)
+        ON CONFLICT (id) DO NOTHING
+        RETURNING id, name, email, weight
+    `;
+    const values = [uid, "test", email, 0];
 
     await pool.query(text, values)
-        .then((result) => {
+        .then((result: any) => {
             if (result.rowCount) {
                 return;
             } else {
-                ("User does not exist in our DB. Creating user.")
-                const text = "INSERT INTO users(id, name, email, weight) VALUES($1, $2, $3, $4) RETURNING id, name, email, weight"
-                const values = [uid, "test", email, 0]
-                pool.query(text, values)
-                    .then((result: any) => {
-                        return;
-                    })
-                    .catch((err: any) => {
-                        res.status(400).send({
-                            err: err.message
-                        })
-                    })
+                res.status(400).send({
+                    err: "User does not exist and could not be created."
+                });
             }
         })
         .catch((err: any) => {
             res.status(400).send({
                 err: err.message
-            })
-        })
+            });
+        });
 }
