@@ -8,7 +8,7 @@ import { GoalSection } from "../components/appSections/GoalSection";
 import { Icon } from "../components/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
 import { firebaseAuth } from "../lib/firebase";
-import { Landing } from "./Landing";
+import { Landing } from "../components/global/Landing";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -136,6 +136,22 @@ function App() {
     enabled: (postReady ? true: false),
     queryKey: ["foodPost", formattedDate, calories, foodName],
     queryFn: async () => {
+
+      const queryBody = JSON.stringify({
+        name: foodName,
+        calories: calories,
+        carbs: carbs,
+        protein: protein,
+        fat: fat
+      })
+      
+      setPostReady(false)
+      setCalories(0)
+      setCarbs(0)
+      setProtein(0)
+      setFat(0)
+      setFoodName("")
+
       const token = await firebaseAuth.currentUser?.getIdToken()
       const url = `http://localhost:8000/days/${formattedDate}/food`
       const response = await fetch(url, {
@@ -144,20 +160,9 @@ function App() {
           'Content-Type': 'application/json',
           "Authorization": "Bearer " + token
         },
-        body: JSON.stringify({
-          name: foodName,
-          calories: calories,
-          carbs: carbs,
-          protein: protein,
-          fat: fat
-        })
+        body: queryBody
       })
-      setPostReady(false)
-      setCalories(0)
-      setCarbs(0)
-      setProtein(0)
-      setFat(0)
-      setFoodName("")
+
       foodGet.refetch()
       return response.json()
     }
