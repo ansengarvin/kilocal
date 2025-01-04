@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createUserIfNoneExists, requireAuthentication } from '../lib/authentication'
+import { requireAuthentication } from '../lib/authentication'
 import {pool} from '../lib/database'
 
 const router = Router()
@@ -23,7 +23,6 @@ async function get_day_id(user_id, date: String) {
 
 // Make a new day
 router.post('/', requireAuthentication, async function(req, res) {
-    createUserIfNoneExists(req, res)
     try {
         // Ensure user_id and date provided
         if (! req.body || !req.body.date) {
@@ -100,7 +99,6 @@ router.post('/:date/food', requireAuthentication, async function(req, res) {
 
 // Gets the contents of a day
 router.get('/:date', requireAuthentication, async function(req, res) {
-    createUserIfNoneExists(req, res);
     try {
         let day_id = await get_day_id(req.user, req.params.date)
 

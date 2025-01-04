@@ -14,8 +14,7 @@ router.post('/', requireAuthentication, async function (req, res) {
         res.status(400).send({
             err: err.message
         })
-    }
-    
+    } 
 })
 
 router.post('/login', requireAuthentication, async function(req, res) {

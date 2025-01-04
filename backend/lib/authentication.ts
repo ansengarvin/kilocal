@@ -53,7 +53,7 @@ export async function createUserIfNoneExists(req: Request, res: Response) {
         ON CONFLICT (id) DO NOTHING
         RETURNING id, name, email, weight
     `;
-    const values = [uid, "test", email, 0];
+    const values = [uid, req.body.name, email, req.body.weight];
 
     await pool.query(text, values)
         .then((result: any) => {

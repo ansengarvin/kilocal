@@ -31,10 +31,22 @@ export function Signup() {
             const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, inputEmail, inputPassword)
             const user = userCredentials.user
 
-            return({
-                id: user.uid,
-                email: user.email
+            const token = await user.getIdToken()
+            const url = `http://localhost:8000/users/`
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    name: "Test Name",
+                    weight: 100
+                })
             })
+
+            return response.json()
         }
     })
     return (
