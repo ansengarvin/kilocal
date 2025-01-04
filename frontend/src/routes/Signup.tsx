@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+//import { useNavigate } from "react-router-dom";
 
 const SignupStyle = styled.div`
     display: flex;
@@ -11,49 +12,102 @@ const SignupStyle = styled.div`
     justify-content: center;
 `
 
+interface UserInfo {
+    email: string,
+    password: string,
+    name: string
+}
+
 export function Signup() {
-    const [buttonPressed, setButtonPressed] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [name, setName] = useState('')
+    const [weight, setWeight] = useState(0)
 
-    const signUpQuery = useQuery({
-        enabled: buttonPressed,
-        queryKey: ['signUpQuery'],
-        queryFn: async () => {
-            const inputEmail = email
-            const inputPassword = password
+    const [isSuccess, setIsSuccess] = useState(false)
 
-            // Clear fields in case of failure
-            setEmail('')
-            setPassword('')
-            setButtonPressed(false)
+    const [isError, setIsError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
-            const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, inputEmail, inputPassword)
+    //const navigate = useNavigate()
+
+    const signUpMutation = useMutation({
+        mutationFn: async (userInfo: UserInfo) => {
+            const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, userInfo.email, userInfo.password)
             const user = userCredentials.user
-
             const token = await user.getIdToken()
-            const url = `http://localhost:8000/users/`
-
+            const url = 'http://localhost:8000/users'
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: "Test Name",
-                    weight: 100
+                    name: userInfo.name,
+                    weight: weight
                 })
             })
-
             return response.json()
+        },
+        onSuccess: () => {
+            setIsSuccess(true)
+            //navigate('/welcome')
+        },
+        onError: (error) => {
+            setIsError(true)
+            setErrorMessage(error.message)
+        },
+        onSettled: () => {
+            // Clear the form fields
+            setEmail('')
+            setPassword('')
+            setName('')
+            setWeight(0)
         }
     })
+    // const signUpQuery = useQuery({
+    //     enabled: (queryEnabled && queryEmail && queryPassword && queryName ? true : false),
+    //     queryKey: ['signUpQuery', queryEmail, queryPassword, queryName],
+    //     queryFn: async () => {
+    //         // Store user info in request body and clear all fields
+    //         // Sign user in and await email verification
+    //         console.log("Creating user with email and password")
+    //         const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, queryEmail, queryPassword)
+    //         const user = userCredentials.user
+    //         console.log("Sending email verification")
+    //         await sendEmailVerification(user)
+
+    //         // Get token
+    //         const token = await user.getIdToken()
+            
+    //         // Insert user into database
+    //         console.log("Posting user to DB")
+    //         const url = 'http://localhost:8000/users'
+    //         const response = await fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Authorization': 'Bearer ' + token,
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({
+    //                 name: queryName,
+    //                 weight: weight
+    //             })
+    //         })
+    //         console.log("Done!")
+    //         setQueryEnabled(false)
+    //         return response.json()
+    //     }
+    // })
     return (
         <SignupStyle>
             <form onSubmit={(e) => {
                 e.preventDefault()
-                setButtonPressed(true)
+                signUpMutation.reset()
+                setIsSuccess(false)
+                setIsError(false)
+                signUpMutation.mutate({email, password, name})
             }}>
                 <label htmlFor="email">Email</label>
                 <input
@@ -73,13 +127,21 @@ export function Signup() {
                     required
                 />
                 <br/>
+                <label htmlFor="name">Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                />
+                <br/>
                 <button type="submit">
                     Submit
                 </button>
             </form>
-            {signUpQuery.isLoading && <p>Loading...</p>}
-            {signUpQuery.data?.id && <p>Signed up!</p>}
-            {signUpQuery.error && <p>Error: {signUpQuery.error.message}</p>}
+            {isSuccess && <p>Success!</p>}
+            {isError && <p>{errorMessage}</p>}
         </SignupStyle>      
     )
 }

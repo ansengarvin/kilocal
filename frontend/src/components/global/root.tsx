@@ -5,6 +5,7 @@ import { Footer } from './Footer'
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { firebaseAuth } from '../../lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+//import { useQuery } from '@tanstack/react-query'
 
 interface RootProps {
     children?: ReactNode
@@ -33,6 +34,7 @@ export function Root(props: RootProps) {
     const {children} = props
 
     const [loggedIn, setLoggedIn] = useState(firebaseAuth.currentUser !== null)
+    //const [isVerified, setIsVerified] = useState(firebaseAuth.currentUser?.emailVerified)
 
     useEffect(() => onAuthStateChanged(
         firebaseAuth, 
@@ -60,6 +62,26 @@ export function Root(props: RootProps) {
         })
         return () => unsubscribe()
     }, [firebaseAuth])
+
+    useEffect(() => {
+        console.log("Location changed?")
+    }, [location])
+
+    // const createUserIfNoneExists = useQuery({
+    //     enabled: loggedIn,
+    //     queryKey: ['createUserIfNoneExists'],
+    //     queryFn: async () => {
+    //         const token = await firebaseAuth.currentUser?.getIdToken()
+    //         const url = "http://localhost:8000/users/"
+    //         const response = await fetch(url, {
+    //             method: "POST",
+    //             headers: {
+    //                 'Authorization': 'Bearer ' + token
+    //             }
+    //         })
+    //         return response.json()
+    //     }
+    // })
 
     // Set current logged in status based on firebase auth
 

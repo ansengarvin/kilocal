@@ -39,35 +39,50 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
     }
 }
 
+export function requireVerification(req: Request, res: Response, next: NextFunction) {
+    const uid = req.user
+
+    admin.auth().getUser(uid.valueOf())
+        .then((user) => {
+            if (user.emailVerified) {
+                next()
+            } else {
+                res.status(403).send({
+                    err: "email not verified"
+                })
+            }
+        })
+        .catch((err) => {
+            res.status(400).send({
+                err: err.message
+            })
+        })
+}
+
 /*
     This function exists to account for edge cases where the user has created a firebase account, but for some reason the 
     database failed to process the user's information on account posting.
+    Probably deprecated at this point.
 */
 export async function createUserIfNoneExists(req: Request, res: Response) {
-    const uid = req.user
-    const email = req.email
+    try {
+        const uid = req.user
+        const email = req.email
 
-    const text = `
-        INSERT INTO users(id, name, email, weight)
-        VALUES($1, $2, $3, $4)
-        ON CONFLICT (id) DO NOTHING
-        RETURNING id, name, email, weight
-    `;
-    const values = [uid, req.body.name, email, req.body.weight];
-
-    await pool.query(text, values)
-        .then((result: any) => {
-            if (result.rowCount) {
-                return;
-            } else {
-                res.status(400).send({
-                    err: "User does not exist and could not be created."
-                });
-            }
-        })
-        .catch((err: any) => {
-            res.status(400).send({
-                err: err.message
-            });
+        const text = `
+            INSERT INTO users(id, name, email, weight)
+            VALUES($1, $2, $3, $4)
+            ON CONFLICT (id) DO NOTHING
+            RETURNING id, name, email, weight
+        `;
+        const values = [uid, req.body.name, email, req.body.weight];
+    
+        // This returning sucessfully means either the user has been created, or it already exists.
+        await pool.query(text, values);
+    } catch (err: any) {
+        console.log(err.message);
+        res.status(400).send({
+            err: err.message
         });
+    }
 }

@@ -9,7 +9,9 @@ import { create } from 'ts-node'
 router.post('/', requireAuthentication, async function (req, res) {
     try {
         await createUserIfNoneExists(req, res)
-        res.status(201).send()
+        res.status(201).send({
+            id: req.user
+        })
     } catch(err) {
         res.status(400).send({
             err: err.message
@@ -20,7 +22,9 @@ router.post('/', requireAuthentication, async function (req, res) {
 router.post('/login', requireAuthentication, async function(req, res) {
     try {
         await createUserIfNoneExists(req, res)
-        res.status(200).send({})
+        res.status(200).send({
+            message: "User logged in"
+        })
     } catch(err) {
         res.status(400).send({
             err: err.message

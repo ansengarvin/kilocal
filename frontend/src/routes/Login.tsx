@@ -71,7 +71,7 @@ export function Login() {
         <a href="/signup">Sign Up</a>
       </div>
       {isLoading ? <>Loading</> : <></>}
-      {error ? <>Error</> : <></>}
+      {error ? <>Error: {error.message}</> : <></>}
     </LoginStyle>
   )
 }
