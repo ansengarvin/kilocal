@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
 const SignupStyle = styled.div`
@@ -128,6 +129,8 @@ export function Signup() {
                     Submit
                 </button>
             </form>
+            Already have an account?<br/>
+            <NavLink to="/login">Go to Login</NavLink>
             {isSuccess && <p>Success!</p>}
             {isError && <p>{errorMessage}</p>}
         </SignupStyle>      

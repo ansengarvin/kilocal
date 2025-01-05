@@ -4,7 +4,6 @@ import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
 import { useEffect, useState } from "react"
-import { onAuthStateChanged } from "firebase/auth"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -31,17 +30,6 @@ function Profile() {
         navigate('/login')
       }
   }, [verified, loggedIn])
-
-  // Redirects when user is signed out
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-        if (!user) {
-          console.log("User auth state change")
-          setLoggedIn(false)
-        }
-    })
-    return () => unsubscribe()
-  }, [firebaseAuth])
 
   const {isLoading, error, data} = useQuery({
     queryKey: ["user"],

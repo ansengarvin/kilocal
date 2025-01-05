@@ -42,19 +42,22 @@ export function Root(props: RootProps) {
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-            setIsLoading(false)
+            console.log("Root-level subscription change")
             if (user) {
                 if (user.emailVerified) {
                     setVerified(true)
                 }
                 setLoggedIn(true)
+            } else {
+                setLoggedIn(false)
             }
+            setIsLoading(false)
         })
         return () => unsubscribe()
-    }, [])
+    }, [firebaseAuth])
 
     useEffect(() => {
-
+        console.log("Location change alert")
     }, [location])
     
     if (isLoading) {

@@ -2,8 +2,9 @@ import styled from "@emotion/styled"
 import { useEffect, useState } from "react"
 import { firebaseAuth } from "../lib/firebase"
 import { signInWithEmailAndPassword } from "firebase/auth"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 const LoginStyle = styled.div `
     height: 500px;
@@ -19,11 +20,17 @@ const LoginStyle = styled.div `
     text-align: center;
 `
 
+interface LoginInfo {
+  email: string,
+  password: string
+}
+
 export function Login() {
   const navigate = useNavigate()
-  const {loggedIn, verified} = useOutletContext<{
+  const {loggedIn, verified, setLoggedIn} = useOutletContext<{
     loggedIn: boolean,
-    verified: boolean
+    verified: boolean,
+    setLoggedIn: Function
   }>()
 
   // Redirects
@@ -40,36 +47,21 @@ export function Login() {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [loginButtonPressed, setLoginButtonPressed] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(true)
+  const [errorMessage, setErrorMessage] = useState("")
 
-  const {isLoading, error} = useQuery({
-    enabled: (loginButtonPressed ? true : false),
-    queryKey: ["login", email, password],
-    queryFn: async () => {
-      const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
-      // Get token
-      const token = await userCredential.user.getIdToken()
-
-      const url = "http://localhost:8000/users/login"
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
-      })
-      setLoginButtonPressed(false)
-
-      // If the response is good, redirect to main page
-      if (response.ok) {
-        window.location.href = "/"
-      } else {
-        console.log("Login failed")
-      }
+  const loginMutation = useMutation({
+    mutationFn: async (loginInfo: LoginInfo) => {
+      setIsLoading(true)
+      await signInWithEmailAndPassword(firebaseAuth, loginInfo.email, loginInfo.password)
+    },
+    onSuccess() {
+      console.log("User signed in")
+    },
+    onError(error) {
+      setIsError(true)
+      setErrorMessage(error.message)
     }
   })
 
@@ -79,17 +71,17 @@ export function Login() {
         <h1>Login</h1>
         <form onSubmit={e => {
           e.preventDefault()
-          setLoginButtonPressed(true)
+          loginMutation.mutate({email, password})
         }}>
           Email <input value={email} onChange={e=>setEmail(e.target.value)}/><br/>
           Password <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/><br/>
           <button type="submit">Login</button>
         </form>
         Don't have an account?<br/>
-        <a href="/signup">Sign Up</a>
+        <NavLink to="/signup">Sign up</NavLink>
       </div>
       {isLoading ? <>Loading</> : <></>}
-      {error ? <>Error: {error.message}</> : <></>}
+      {isError ? <p>{errorMessage}</p> : <></>}
     </LoginStyle>
   )
 }

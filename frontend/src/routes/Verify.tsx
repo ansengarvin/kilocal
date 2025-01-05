@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
-import { onAuthStateChanged, sendEmailVerification } from "firebase/auth"
+import { sendEmailVerification } from "firebase/auth"
 import { useEffect, useState } from "react"
 
 const SignOutButton = styled.button`
@@ -15,10 +15,9 @@ const SignOutButton = styled.button`
 function Verify() {
     const navigate = useNavigate()
 
-    const {loggedIn, setLoggedIn, verified} = useOutletContext<{
+    const {loggedIn, verified} = useOutletContext<{
         loggedIn: boolean,
-        verified: boolean,
-        setLoggedIn: Function
+        verified: boolean
     }>()
     const [resent, setResent] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -81,17 +80,6 @@ function Verify() {
         setSignoutErrorMessage(error.message)
     }
     })
-
-    // Redirects when user is signed out
-    useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-        if (!user) {
-        console.log("User auth state change")
-            setLoggedIn(false)
-        }
-    })
-    return () => unsubscribe()
-    }, [firebaseAuth])
 
   return (
     <ContentWindow>
