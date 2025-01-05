@@ -1,4 +1,5 @@
 import styled from "@emotion/styled"
+import { Fragment } from "react/jsx-runtime"
 
 interface pieChartProps {
     radius: number
@@ -20,7 +21,7 @@ const PieChartDiv = styled.div<pieChartDivProps>`
 `
 
 export function PieChart(props: pieChartProps) {
-    const {radius, borderWidth, borderColor, sections, colors, hasText, textColor} = props
+    const {radius, borderWidth, borderColor, sections, colors} = props
 
     return (
         <PieChartDiv dim={radius*2}>
@@ -30,7 +31,7 @@ export function PieChart(props: pieChartProps) {
                     // Setting r as such prevents there from being an ugly hole in the middle when a section is 100% of the chart.
                     const r = (section*100 == 100 ? (radius-borderWidth)/2 : radius/2)
                     return (
-                        <circle
+                        <circle key={index}
                             cx={radius}
                             cy={radius}
                             r={r}
@@ -43,47 +44,10 @@ export function PieChart(props: pieChartProps) {
                     )
                 })}
                 {sections.map((section, index) => {
-                    const isOnLeftSide = (
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 > 90 &&
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 < 270
-                    )
-                    const isInMiddle = (
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 > 45 &&
-                        360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2 < 135
-                    )
-
-                    let anchor = "middle"
-                    if (!isInMiddle) {
-                        if (isOnLeftSide && !isInMiddle) {
-                            anchor = "end"
-                        } else {
-                            anchor = "start"
-                        }
-                    }
-                    
                     return (
-                        <>
-                            {
-                                hasText ?
-                                <text
-                                    x={radius}
-                                    y={radius}
-                                    fill={textColor}
-                                    textAnchor={anchor}
-                                    alignmentBaseline={"middle"}
-                                    fontSize={"10pt"}
-                                    transform={`
-                                        rotate(${360*sections.slice(0, index).reduce((a, b) => a + b, 0)+360*section/2} ${radius} ${radius})
-                                        translate(${radius/2} ${0})
-                                        rotate(${(-360*(sections.slice(0, index).reduce((a, b) => a + b, 0)+section/2))} ${radius} ${radius})
-                                    `}
-                                >
-                                    {section*100}%
-                                </text> :
-                                <></>
-                            }
+                        <Fragment key={index}>
                             {section*100 != 0 && section*100 != 100 &&
-                                <path
+                                <path 
                                     stroke={borderColor}
                                     strokeWidth={borderWidth}
                                     d={`
@@ -94,7 +58,7 @@ export function PieChart(props: pieChartProps) {
                                 />
                             }
                             
-                        </> 
+                        </Fragment> 
                     )
                 })}
                 <circle

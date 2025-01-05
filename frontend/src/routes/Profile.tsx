@@ -1,8 +1,9 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import Cookies from "js-cookie"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
+import { firebaseAuth } from "../lib/firebase"
+import { useEffect, useState } from "react"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -11,21 +12,52 @@ const SignOutButton = styled.button`
 `
 
 function Profile() {
-  const {setLoggedIn} = useOutletContext<{setLoggedIn: Function}>()
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
+  const {loggedIn, verified} = useOutletContext<{
+    loggedIn: boolean,
+    verified: boolean,
+    setLoggedIn: Function
+  }>()
+
+  // General Redirects
+  useEffect(() => {
+      if (loggedIn) {
+          if (!verified) {
+            navigate('/verify')
+          }
+      } else {
+        navigate('/login')
+      }
+  }, [verified, loggedIn])
 
   const {isLoading, error, data} = useQuery({
     queryKey: ["user"],
+    enabled: (loggedIn ? true : false),
     queryFn: async () => {
+      const token = await firebaseAuth.currentUser?.getIdToken()
       const url = "http://localhost:8000/users/"
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          'Authorization': 'Bearer ' + Cookies.get("auth")
+          'Authorization': 'Bearer ' + token
         } 
       })
       return response.json()
+    }
+  })
+
+  const [signoutError, setSignoutError] = useState(false)
+  const [signoutErrorMessage, setSignoutErrorMessage] = useState('')
+  const signOut = useMutation({
+    mutationFn: async () => {
+      await firebaseAuth.signOut()
+    },
+    onSuccess() {
+      console.log("User signed out")
+    },
+    onError(error) {
+      setSignoutError(true)
+      setSignoutErrorMessage(error.message)
     }
   })
 
@@ -48,13 +80,11 @@ function Profile() {
         }
         <SignOutButton onClick={(e) => {
           e.preventDefault
-          Cookies.remove("auth")
-          queryClient.clear()
-          setLoggedIn(false)
-          navigate('/')
+          signOut.mutate()
         }}>
           Sign Out
         </SignOutButton>
+        {signoutError ? <>{signoutErrorMessage}</> : <></>}
       </div>  
     </ContentWindow>
   )

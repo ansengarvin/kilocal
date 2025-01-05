@@ -1,11 +1,11 @@
-import {useState, ReactNode} from 'react'
+import {useState, ReactNode, useEffect} from 'react'
 import styled from '@emotion/styled'
 import { Header } from './Header'
 import { Footer } from './Footer'
-import { Outlet, useNavigate } from "react-router-dom"
-import Cookies from 'js-cookie'
-import { useEffect } from 'react'
-import LoginModal from './Login'
+import { Outlet, useLocation } from "react-router-dom"
+import { firebaseAuth } from '../../lib/firebase'
+import { onAuthStateChanged } from 'firebase/auth'
+//import { useQuery } from '@tanstack/react-query'
 
 interface RootProps {
     children?: ReactNode
@@ -32,35 +32,68 @@ const Main = styled.main`
 
 export function Root(props: RootProps) {
     const {children} = props
+
+    const [isLoading, setIsLoading] = useState(true)
     const [loggedIn, setLoggedIn] = useState(false)
-    const navigate = useNavigate()
+    const [verified, setVerified] = useState(false)
+    
+    const location = useLocation()
 
-    // On first render, check if the user is logged in.
-    // TODO: Deal with refresh tokens
+    // Sets status to loggedIn if user is logged in
     useEffect(() => {
-        if (!Cookies.get("auth")) {
-            navigate('/')
-            setLoggedIn(false)
-        } else {
-            setLoggedIn(true)
-        }
-    }, [])
-
-
-    return (
-        <>
-            {
-                loggedIn ?
-                <></> :
-                <LoginModal setLoggedIn= {setLoggedIn}/>
+        const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+            console.log("Root-level subscription change")
+            if (user) {
+                if (user.emailVerified) {
+                    setVerified(true)
+                } else {
+                    setVerified(false)
+                }
+                setLoggedIn(true)
+            } else {
+                setLoggedIn(false)
             }
-            <Grid>
-                <Header bgColor = "grey" height = "100px" />
-                <Main>
-                    {children || <Outlet context={{loggedIn, setLoggedIn}}/>}
-                </Main>
-                <Footer/>
-            </Grid>
-        </>
-    )
+            setIsLoading(false)
+        })
+        return () => unsubscribe()
+    }, [firebaseAuth])
+
+    useEffect(() => {
+        console.log("Location change alert")
+    }, [location])
+
+    useEffect(() => {
+
+    }, [])
+    
+    if (isLoading) {
+        return (
+            <>
+                <Grid>
+                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
+                        <Main>
+                            LOADING
+                        </Main>
+                    <Footer/>
+                </Grid>
+            </>
+        )
+    } else {
+        return (
+            <>
+                <Grid>
+                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
+                    <Main>
+                        {children || <Outlet context={{
+                            loggedIn, setLoggedIn,
+                            verified, setVerified,
+                            isLoading, setIsLoading
+                        }}/>}
+                    </Main>
+                    <Footer/>
+                </Grid>
+            </>
+        )
+    }
+    
 }

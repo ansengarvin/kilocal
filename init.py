@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 from dotenv import dotenv_values
+import firebase_admin
 
 today = datetime.today()
 config = dotenv_values(".env")
@@ -126,31 +127,8 @@ entries = [
     }
 ]
 
-print("Creating test user")
-url = "http://localhost:8000/users"
-data = {
-    "name": config["TEST_NAME"],
-    "email": config["TEST_EMAIL"],
-    "password": config["TEST_PASSWORD"],
-    "weight": float(config["TEST_WEIGHT"])
-}
-response = requests.post(url, json=data, timeout=10)
-assert "id" in response.json()
-assert response.json()["name"] == data["name"]
-assert response.json()["email"] == data["email"]
-assert response.json()["weight"] == data["weight"]
-assert response.status_code == 201
-
-# Logging in with test user
-print("Logging in with test user")
-url = "http://localhost:8000/users/login"
-data = {
-    "email": config["TEST_EMAIL"],
-    "password": config["TEST_PASSWORD"]
-}
-response = requests.post(url, json=data, timeout=10)
-assert "token" in response.json(), "No token in response"
-token = response.json()["token"]
+credential = firebase_admin.credentials.Certificate('./backend/lib/keys/service.json')
+default_app = firebase_admin.initialize_app()
 
 # Creating entries for manual testing
 print("Creating entries:")

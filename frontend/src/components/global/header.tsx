@@ -6,6 +6,7 @@ interface HeaderProps {
     bgColor: string
     height: string
     children?: ReactNode
+    loggedIn: boolean
 }
 
 const Headerbar = styled.nav<{color: string, height: string}>`
@@ -14,6 +15,7 @@ const Headerbar = styled.nav<{color: string, height: string}>`
     display: flex;
     align-items: center;
     justify-content: right;
+    gap: 20px;
     height: ${(props)=> props.height};
     padding-left: 100px;
     padding-right: 100px;
@@ -26,16 +28,30 @@ const Headerbar = styled.nav<{color: string, height: string}>`
     a.title {
         margin-right: auto;
     }
+    a.active {
+        text-decoration: underline;
+    }
 
     a.navItem{}
 `
 
 export function Header(props: HeaderProps) {
-    const {bgColor, height} = props
+    const {bgColor, height, loggedIn} = props
+
     return (
         <Headerbar color={bgColor} height={height}>
-            <NavLink className="title" to="/" aria-label="Home">KiloCal</NavLink>
-            <NavLink className="navitem" to="/profile" aria-label="Login">Profile</NavLink>
+            {
+                loggedIn ?
+                <>
+                    <NavLink className="title" to="/" aria-label="Home">KiloCal</NavLink>
+                    <NavLink className="navitem" to="/profile" aria-label="Profile">Profile</NavLink>
+                </> :
+                <>
+                    <NavLink className="title" to="/" aria-label="Home">KiloCal</NavLink>
+                    <NavLink className="navitem" to="/login" aria-label="Login">Login</NavLink>
+                </>
+                
+            }
         </Headerbar>
     )
 }

@@ -14,18 +14,17 @@ function rebuild () {
 	build
 	echo "Waiting 8 seconds for database to set up."
 	sleep 8
-	py init.py
 }
 
 # Starts the database
 function start() {
-    echo "Starting DB"
+    echo "Starting App"
     docker-compose up -d
 }
 
 # Stops the database
 function stop() {
-    echo "Stopping DB"
+    echo "Stopping App"
     docker-compose down
 }
 
@@ -44,7 +43,6 @@ function test() {
 	build
 	echo "Waiting 8 seconds for database to set up."
 	sleep 8
-	py init.py
 	test_short
 }
 

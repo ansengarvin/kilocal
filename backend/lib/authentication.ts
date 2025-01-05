@@ -1,14 +1,10 @@
-import 'dotenv/config'
 import express, {Request, Response, NextFunction} from 'express'
-var jwt = require('jsonwebtoken')
+import admin from 'firebase-admin'
+import { pool } from './database'
 
-export function generateAuthToken(userId: number, admin: boolean = false) {
-    const payload = {
-        sub: userId.toString(),
-        admin: admin
-    }
-    return jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: "24h"})
-}
+admin.initializeApp({
+    credential: admin.credential.cert("./lib/keys/service.json")
+})
 
 export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get("Authorization") || ""
@@ -16,31 +12,77 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
     if (!authHeader) {
         req.user = ""
         res.status(401).send({
-            err: "missing auth token"
+            err: "no authorization header"
         })
     } else {
-        const authHeaderSplit = authHeader.split(" ")
-        const token = authHeaderSplit[0] === "Bearer" ? authHeaderSplit[1] : null
+        const token = authHeader.split("Bearer ")[1]
 
-        try {
-            const payload = jwt.verify(token, process.env.SECRET_KEY)
-            req.user = payload.sub
-            req.admin = payload.admin
-            next()
-        } catch (err) {
+        if (!token) {
+            req.user = ""
             res.status(401).send({
-                error: "Invalid authentication token"
+                err: "missing auth token"
             })
+        } else {
+            admin.auth().verifyIdToken(token)
+                .then((user) => {
+                    req.user = user.uid
+                    req.email = user.email
+                    next()
+                })
+                .catch((err) => {
+                    req.user = ""
+                    res.status(401).send({
+                        err: "invalid auth token"
+                    })
+                })
         }
     }
 }
 
-export function validateSameUser(req: Request, res: Response, next: NextFunction) {
-    if (req.user !== req.params.user_id) {
-        res.status(403).send({
-            err: "Unauthorized"
+export function requireVerification(req: Request, res: Response, next: NextFunction) {
+    const uid = req.user
+
+    admin.auth().getUser(uid.valueOf())
+        .then((user) => {
+            if (user.emailVerified) {
+                next()
+            } else {
+                res.status(403).send({
+                    err: "email not verified"
+                })
+            }
         })
-    } else {
-        next()
+        .catch((err) => {
+            res.status(400).send({
+                err: err.message
+            })
+        })
+}
+
+/*
+    This function exists to account for edge cases where the user has created a firebase account, but for some reason the 
+    database failed to process the user's information on account posting.
+    Probably deprecated at this point.
+*/
+export async function createUserIfNoneExists(req: Request, res: Response) {
+    try {
+        const uid = req.user
+        const email = req.email
+
+        const text = `
+            INSERT INTO users(id, name, email, weight)
+            VALUES($1, $2, $3, $4)
+            ON CONFLICT (id) DO NOTHING
+            RETURNING id, name, email, weight
+        `;
+        const values = [uid, req.body.name, email, req.body.weight];
+    
+        // This returning sucessfully means either the user has been created, or it already exists.
+        await pool.query(text, values);
+    } catch (err: any) {
+        console.log(err.message);
+        res.status(400).send({
+            err: err.message
+        });
     }
 }
