@@ -98,12 +98,12 @@ const FoodJournal = styled.div`
 `
 
 function App() {
+  const navigate = useNavigate()
+
   const {loggedIn, verified} = useOutletContext<{
     loggedIn: boolean,
     verified: boolean
   }>()
-
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (loggedIn) {
