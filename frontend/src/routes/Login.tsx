@@ -39,7 +39,7 @@ export function Login() {
           navigate('/verify')
         } else {
           console.log("User is signed in, navigating to profile")
-          navigate('/profile')
+          navigate('/')
         }
     }
   }, [verified, loggedIn])
