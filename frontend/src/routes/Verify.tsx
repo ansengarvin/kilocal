@@ -5,6 +5,7 @@ import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
 import { sendEmailVerification } from "firebase/auth"
 import { useEffect, useState } from "react"
+import { NavLink } from "react-router-dom"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -112,6 +113,7 @@ function Verify() {
         {isError ? <p>Error sending verification email</p> : <></>}
         {resent ? <p>Verification email resent</p> : <></>}
         {signoutError ? <p>Error signing out: {signoutErrorMessage}</p> : <></>}
+        <NavLink to="/verify">Refresh</NavLink>
       </div>  
     </ContentWindow>
   )

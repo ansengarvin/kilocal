@@ -46,6 +46,8 @@ export function Root(props: RootProps) {
             if (user) {
                 if (user.emailVerified) {
                     setVerified(true)
+                } else {
+                    setVerified(false)
                 }
                 setLoggedIn(true)
             } else {
@@ -59,6 +61,10 @@ export function Root(props: RootProps) {
     useEffect(() => {
         console.log("Location change alert")
     }, [location])
+
+    useEffect(() => {
+
+    }, [])
     
     if (isLoading) {
         return (
