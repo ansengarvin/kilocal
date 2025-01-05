@@ -29,7 +29,7 @@ export function Login() {
   const navigate = useNavigate()
   const {loggedIn, verified} = useOutletContext<{
     loggedIn: boolean,
-    verified: boolean
+    verified: boolean,
   }>()
 
   // Redirects

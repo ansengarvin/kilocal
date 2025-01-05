@@ -33,7 +33,7 @@ const Main = styled.main`
 export function Root(props: RootProps) {
     const {children} = props
 
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoadingInitial, setIsLoadingInitial] = useState(true)
     const [loggedIn, setLoggedIn] = useState(false)
     const [verified, setVerified] = useState(false)
     
@@ -52,7 +52,7 @@ export function Root(props: RootProps) {
             } else {
                 setLoggedIn(false)
             }
-            setIsLoading(false)
+            setIsLoadingInitial(false)
         })
         return () => unsubscribe()
     }, [firebaseAuth])
@@ -65,7 +65,7 @@ export function Root(props: RootProps) {
 
     }, [])
     
-    if (isLoading) {
+    if (isLoadingInitial) {
         return (
             <>
                 <Grid>
@@ -86,7 +86,7 @@ export function Root(props: RootProps) {
                         {children || <Outlet context={{
                             loggedIn, setLoggedIn,
                             verified, setVerified,
-                            isLoading, setIsLoading
+                            isLoadingInitial, setIsLoadingInitial
                         }}/>}
                     </Main>
                     <Footer/>
