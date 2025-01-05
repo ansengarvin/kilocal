@@ -36,7 +36,7 @@ export function Login() {
           navigate('/profile')
         }
     }
-}, [verified, loggedIn])
+  }, [verified, loggedIn])
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")

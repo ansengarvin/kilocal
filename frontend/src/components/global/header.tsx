@@ -37,6 +37,7 @@ const Headerbar = styled.nav<{color: string, height: string}>`
 
 export function Header(props: HeaderProps) {
     const {bgColor, height, loggedIn} = props
+
     return (
         <Headerbar color={bgColor} height={height}>
             {
@@ -51,7 +52,6 @@ export function Header(props: HeaderProps) {
                 </>
                 
             }
-            
         </Headerbar>
     )
 }

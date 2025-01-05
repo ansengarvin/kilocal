@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
-import { sendEmailVerification } from "firebase/auth"
-import { useState } from "react"
+import { onAuthStateChanged, sendEmailVerification } from "firebase/auth"
+import { useEffect, useState } from "react"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -13,31 +13,47 @@ const SignOutButton = styled.button`
 `
 
 function Verify() {
-  const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
-  const navigate = useNavigate()
+    const {loggedIn, setLoggedIn, verified} = useOutletContext<{
+        loggedIn: boolean,
+        verified: boolean,
+        setLoggedIn: Function
+    }>()
+    const [resent, setResent] = useState(false)
+    const [isError, setIsError] = useState(false)
 
-  const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
-  const [resent, setResent] = useState(false)
-  const [isError, setIsError] = useState(false)
+    useEffect(() => {
+        if (loggedIn) {
+            if (!verified) {
+              navigate('/verify')
+            } else {
+              console.log("User is signed in, navigating to profile")
+              navigate('/profile')
+            }
+        } else {
+            navigate('/')
+        }
+    }, [verified, loggedIn])
 
-  const {isLoading, error, data} = useQuery({
+    const {isLoading, error, data} = useQuery({
     queryKey: ["user"],
     enabled: (loggedIn ? true : false),
     queryFn: async () => {
-      const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = "http://localhost:8000/users/"
-      const response = await fetch(url, {
+        const token = await firebaseAuth.currentUser?.getIdToken()
+        const url = "http://localhost:8000/users/"
+        const response = await fetch(url, {
         method: "GET",
         headers: {
-          'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token
         } 
-      })
-      return response.json()
+        })
+        return response.json()
     }
-  })
+    })
 
-  const resendMutation = useMutation({
+    // Resends email verification
+    const resendMutation = useMutation({
     mutationFn: async () => {
         const user = firebaseAuth.currentUser
         user && await sendEmailVerification(user)
@@ -48,7 +64,34 @@ function Verify() {
     onError() {
         setIsError(true)
     }
-  })
+    })
+
+    // Signs user out
+    const [signoutError, setSignoutError] = useState(false)
+    const [signoutErrorMessage, setSignoutErrorMessage] = useState('')
+    const signOut = useMutation({
+    mutationFn: async () => {
+        await firebaseAuth.signOut()
+    },
+    onSuccess() {
+        console.log("User signed out")
+    },
+    onError(error) {
+        setSignoutError(true)
+        setSignoutErrorMessage(error.message)
+    }
+    })
+
+    // Redirects when user is signed out
+    useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+        if (!user) {
+        console.log("User auth state change")
+            setLoggedIn(false)
+        }
+    })
+    return () => unsubscribe()
+    }, [firebaseAuth])
 
   return (
     <ContentWindow>
@@ -74,16 +117,13 @@ function Verify() {
         </SignOutButton>
         <SignOutButton onClick={(e) => {
           e.preventDefault
-          queryClient.clear()
-          // Sign user out of firebase
-          firebaseAuth.signOut()
-          // Navigate to login page
-          navigate("/login")
+          signOut.mutate()
         }}>
           Sign Out
         </SignOutButton>
         {isError ? <p>Error sending verification email</p> : <></>}
         {resent ? <p>Verification email resent</p> : <></>}
+        {signoutError ? <p>Error signing out: {signoutErrorMessage}</p> : <></>}
       </div>  
     </ContentWindow>
   )

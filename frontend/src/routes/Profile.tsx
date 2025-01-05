@@ -41,7 +41,7 @@ function Profile() {
         }
     })
     return () => unsubscribe()
-  }, [firebaseAuth, location])
+  }, [firebaseAuth])
 
   const {isLoading, error, data} = useQuery({
     queryKey: ["user"],
@@ -59,9 +59,8 @@ function Profile() {
     }
   })
 
-  const [signoutError, setSignoutError] = useState(true)
+  const [signoutError, setSignoutError] = useState(false)
   const [signoutErrorMessage, setSignoutErrorMessage] = useState('')
-
   const signOut = useMutation({
     mutationFn: async () => {
       await firebaseAuth.signOut()
