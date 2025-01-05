@@ -105,6 +105,7 @@ function App() {
     verified: boolean
   }>()
 
+  // Redirects
   useEffect(() => {
     if (loggedIn) {
         if (!verified) {

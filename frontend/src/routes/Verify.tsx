@@ -23,6 +23,7 @@ function Verify() {
     const [resent, setResent] = useState(false)
     const [isError, setIsError] = useState(false)
 
+    // Redirects
     useEffect(() => {
         if (loggedIn) {
             if (!verified) {

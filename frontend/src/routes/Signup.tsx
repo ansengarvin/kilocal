@@ -38,6 +38,7 @@ export function Signup() {
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
 
+    // Redirects
     useEffect(() => {
         if (!isPosting) {
             if (loggedIn) {

@@ -19,7 +19,7 @@ function Profile() {
     setLoggedIn: Function
   }>()
 
-  // General Redirects
+  // Redirects
   useEffect(() => {
       if (loggedIn) {
           if (!verified) {
