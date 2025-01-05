@@ -33,6 +33,7 @@ const Main = styled.main`
 export function Root(props: RootProps) {
     const {children} = props
 
+    const [isLoading, setIsLoading] = useState(true)
     const [loggedIn, setLoggedIn] = useState(false)
     const [verified, setVerified] = useState(false)
     
@@ -41,6 +42,7 @@ export function Root(props: RootProps) {
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+            setIsLoading(false)
             if (user) {
                 if (user.emailVerified) {
                     setVerified(true)
@@ -49,24 +51,40 @@ export function Root(props: RootProps) {
             }
         })
         return () => unsubscribe()
-    }, [firebaseAuth, location])
+    }, [])
 
     useEffect(() => {
 
     }, [location])
-
-    return (
-        <>
-            <Grid>
-                <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
-                <Main>
-                    {children || <Outlet context={{
-                        loggedIn, setLoggedIn,
-                        verified, setVerified
-                    }}/>}
-                </Main>
-                <Footer/>
-            </Grid>
-        </>
-    )
+    
+    if (isLoading) {
+        return (
+            <>
+                <Grid>
+                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
+                        <Main>
+                            LOADING
+                        </Main>
+                    <Footer/>
+                </Grid>
+            </>
+        )
+    } else {
+        return (
+            <>
+                <Grid>
+                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
+                    <Main>
+                        {children || <Outlet context={{
+                            loggedIn, setLoggedIn,
+                            verified, setVerified,
+                            isLoading, setIsLoading
+                        }}/>}
+                    </Main>
+                    <Footer/>
+                </Grid>
+            </>
+        )
+    }
+    
 }

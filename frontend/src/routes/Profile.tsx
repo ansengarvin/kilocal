@@ -1,9 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { onAuthStateChanged } from "firebase/auth"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -14,19 +15,33 @@ const SignOutButton = styled.button`
 function Profile() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const {loggedIn, verified} = useOutletContext<{
+  const {loggedIn, verified, setLoggedIn} = useOutletContext<{
     loggedIn: boolean,
-    verified: boolean
+    verified: boolean,
+    setLoggedIn: Function
   }>()
 
-  // Redirects
+  // General Redirects
   useEffect(() => {
       if (loggedIn) {
           if (!verified) {
             navigate('/verify')
           }
+      } else {
+        navigate('/login')
       }
   }, [verified, loggedIn])
+
+  // Redirects when user is signed out
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+        if (!user) {
+          console.log("User auth state change")
+          setLoggedIn(false)
+        }
+    })
+    return () => unsubscribe()
+  }, [firebaseAuth, location])
 
   const {isLoading, error, data} = useQuery({
     queryKey: ["user"],
@@ -41,6 +56,22 @@ function Profile() {
         } 
       })
       return response.json()
+    }
+  })
+
+  const [signoutError, setSignoutError] = useState(true)
+  const [signoutErrorMessage, setSignoutErrorMessage] = useState('')
+
+  const signOut = useMutation({
+    mutationFn: async () => {
+      await firebaseAuth.signOut()
+    },
+    onSuccess() {
+      console.log("User signed out")
+    },
+    onError(error) {
+      setSignoutError(true)
+      setSignoutErrorMessage(error.message)
     }
   })
 
@@ -63,14 +94,11 @@ function Profile() {
         }
         <SignOutButton onClick={(e) => {
           e.preventDefault
-          queryClient.clear()
-          // Sign user out of firebase
-          firebaseAuth.signOut()
-          // Navigate to login page
-          navigate("/login")
+          signOut.mutate()
         }}>
           Sign Out
         </SignOutButton>
+        {signoutError ? <>{signoutErrorMessage}</> : <></>}
       </div>  
     </ContentWindow>
   )

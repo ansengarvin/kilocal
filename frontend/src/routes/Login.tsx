@@ -32,6 +32,7 @@ export function Login() {
         if (!verified) {
           navigate('/verify')
         } else {
+          console.log("User is signed in, navigating to profile")
           navigate('/profile')
         }
     }
