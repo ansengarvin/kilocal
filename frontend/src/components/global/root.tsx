@@ -35,16 +35,11 @@ export function Root(props: RootProps) {
 
     const [loggedIn, setLoggedIn] = useState(firebaseAuth.currentUser !== null)
     //const [isVerified, setIsVerified] = useState(firebaseAuth.currentUser?.emailVerified)
-
-    useEffect(() => onAuthStateChanged(
-        firebaseAuth, 
-        (user) => {
-            setLoggedIn(user !== null)
-        }
-    ), [])
     
     const navigate = useNavigate()
     const location = useLocation()
+
+    // Sets status to loggedIn if user is logged in
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
             if (!user) {  
@@ -57,36 +52,18 @@ export function Root(props: RootProps) {
                     navigate('/')
                 }
             } else {
+                if (!user.emailVerified && location.pathname !== '/profile') {
+                    navigate('/profile')
+                }
                 setLoggedIn(true)
             }
         })
         return () => unsubscribe()
-    }, [firebaseAuth])
+    }, [firebaseAuth, location])
 
     useEffect(() => {
-        console.log("Location changed?")
+
     }, [location])
-
-    // const createUserIfNoneExists = useQuery({
-    //     enabled: loggedIn,
-    //     queryKey: ['createUserIfNoneExists'],
-    //     queryFn: async () => {
-    //         const token = await firebaseAuth.currentUser?.getIdToken()
-    //         const url = "http://localhost:8000/users/"
-    //         const response = await fetch(url, {
-    //             method: "POST",
-    //             headers: {
-    //                 'Authorization': 'Bearer ' + token
-    //             }
-    //         })
-    //         return response.json()
-    //     }
-    // })
-
-    // Set current logged in status based on firebase auth
-
-    // On first render, check if the user is logged in.
-    // TODO: Deal with refresh tokens
 
     return (
         <>

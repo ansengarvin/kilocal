@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useOutletContext } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
 const SignupStyle = styled.div`
@@ -28,8 +29,6 @@ export function Signup() {
 
     const [isError, setIsError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
-
-    //const navigate = useNavigate()
 
     const signUpMutation = useMutation({
         mutationFn: async (userInfo: UserInfo) => {
