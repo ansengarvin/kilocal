@@ -22,9 +22,10 @@ interface UserInfo {
 
 export function Signup() {
 
-    const {verified, loggedIn} = useOutletContext<{
+    const {verified, loggedIn, isLoadingInitial} = useOutletContext<{
         loggedIn: boolean,
-        verified: boolean
+        verified: boolean,
+        isLoadingInitial: boolean
     }>()
 
     const [email, setEmail] = useState('')
@@ -40,7 +41,7 @@ export function Signup() {
 
     // Redirects
     useEffect(() => {
-        if (!isPosting) {
+        if (!isPosting && !isLoadingInitial) {
             if (loggedIn) {
                 if (verified) {
                     navigate('/profile')

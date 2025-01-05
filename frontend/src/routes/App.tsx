@@ -100,18 +100,22 @@ const FoodJournal = styled.div`
 function App() {
   const navigate = useNavigate()
 
-  const {loggedIn, verified} = useOutletContext<{
+  const {loggedIn, verified, isLoadingInitial} = useOutletContext<{
     loggedIn: boolean,
-    verified: boolean
+    verified: boolean,
+    isLoadingInitial: boolean
   }>()
 
   // Redirects
   useEffect(() => {
-    if (loggedIn) {
+    if (!isLoadingInitial) {
+      if (loggedIn) {
         if (!verified) {
           navigate('/verify')
         }
+      }
     }
+    
 }, [verified, loggedIn])
 
   const [dayDate, setDayDate] = useState(new Date())

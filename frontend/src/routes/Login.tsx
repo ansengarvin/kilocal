@@ -27,20 +27,24 @@ interface LoginInfo {
 
 export function Login() {
   const navigate = useNavigate()
-  const {loggedIn, verified} = useOutletContext<{
+  const {loggedIn, verified, isLoadingInitial} = useOutletContext<{
     loggedIn: boolean,
     verified: boolean,
+    isLoadingInitial: boolean
   }>()
 
   // Redirects
   useEffect(() => {
-    if (loggedIn) {
+    if (!isLoadingInitial) {
+      if (loggedIn) {
         if (!verified) {
           navigate('/verify')
         } else {
           navigate('/')
         }
+      }
     }
+    
   }, [verified, loggedIn])
 
   const [email, setEmail] = useState("")

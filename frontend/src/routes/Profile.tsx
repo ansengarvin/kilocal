@@ -13,21 +13,24 @@ const SignOutButton = styled.button`
 
 function Profile() {
   const navigate = useNavigate()
-  const {loggedIn, verified} = useOutletContext<{
+  const {loggedIn, verified, isLoadingInitial} = useOutletContext<{
     loggedIn: boolean,
     verified: boolean,
-    setLoggedIn: Function
+    isLoadingInitial: boolean
   }>()
 
   // Redirects
   useEffect(() => {
+    if (!isLoadingInitial) {
       if (loggedIn) {
-          if (!verified) {
-            navigate('/verify')
-          }
+        if (!verified) {
+          navigate('/verify')
+        }
       } else {
         navigate('/login')
       }
+    }
+      
   }, [verified, loggedIn])
 
   const {isLoading, error, data} = useQuery({

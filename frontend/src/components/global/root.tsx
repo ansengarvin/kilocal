@@ -58,7 +58,7 @@ export function Root(props: RootProps) {
     }, [firebaseAuth])
 
     useEffect(() => {
-        console.log("Location change alert")
+        console.log("Location change alert: ", location.pathname)
     }, [location])
 
     useEffect(() => {
