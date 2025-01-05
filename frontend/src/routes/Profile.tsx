@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
+import { useEffect } from "react"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -12,10 +13,20 @@ const SignOutButton = styled.button`
 
 function Profile() {
   const queryClient = useQueryClient()
-
   const navigate = useNavigate()
+  const {loggedIn, verified} = useOutletContext<{
+    loggedIn: boolean,
+    verified: boolean
+  }>()
 
-  const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
+  // Redirects
+  useEffect(() => {
+      if (loggedIn) {
+          if (!verified) {
+            navigate('/verify')
+          }
+      }
+  }, [verified, loggedIn])
 
   const {isLoading, error, data} = useQuery({
     queryKey: ["user"],

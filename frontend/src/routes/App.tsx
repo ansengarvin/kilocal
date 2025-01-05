@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { ContentWindow } from "../components/global/ContentWindow";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
@@ -98,7 +98,20 @@ const FoodJournal = styled.div`
 `
 
 function App() {
-  const {loggedIn} = useOutletContext<{loggedIn: boolean}>()
+  const {loggedIn, verified} = useOutletContext<{
+    loggedIn: boolean,
+    verified: boolean
+  }>()
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (loggedIn) {
+        if (!verified) {
+          navigate('/verify')
+        }
+    }
+}, [verified, loggedIn])
 
   const [dayDate, setDayDate] = useState(new Date())
   const [formattedDate, setFormattedDate] = useState(formatDate(dayDate))
@@ -111,9 +124,10 @@ function App() {
   const [protein, setProtein] = useState(0)
   const [fat, setFat] = useState(0)
   
-
   const [deleteID, setDeleteID] = useState(0)
   const [deleteReady, setDeleteReady] = useState(false)
+
+  
 
   const foodGet = useQuery({
     enabled: (loggedIn ? true : false),

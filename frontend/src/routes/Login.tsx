@@ -1,8 +1,9 @@
 import styled from "@emotion/styled"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { firebaseAuth } from "../lib/firebase"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { useQuery } from "@tanstack/react-query"
+import { useNavigate, useOutletContext } from "react-router-dom"
 
 const LoginStyle = styled.div `
     height: 500px;
@@ -19,9 +20,25 @@ const LoginStyle = styled.div `
 `
 
 export function Login() {
+  const navigate = useNavigate()
+  const {loggedIn, verified} = useOutletContext<{
+    loggedIn: boolean,
+    verified: boolean
+  }>()
+
+  // Redirects
+  useEffect(() => {
+    if (loggedIn) {
+        if (!verified) {
+          navigate('/verify')
+        } else {
+          navigate('/profile')
+        }
+    }
+}, [verified, loggedIn])
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
   const [loginButtonPressed, setLoginButtonPressed] = useState(false)
 
   const {isLoading, error} = useQuery({
