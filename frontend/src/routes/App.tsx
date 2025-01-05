@@ -134,7 +134,6 @@ function App() {
     queryKey: ["day", formattedDate],
     queryFn: async () => {
       const token = await firebaseAuth.currentUser?.getIdToken()
-      console.log("token:", token)
       const url = `http://localhost:8000/days/${formattedDate}`
       const response = await fetch(url, {
         method: 'GET',

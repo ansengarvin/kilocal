@@ -28,7 +28,6 @@ function Verify() {
             if (!verified) {
               navigate('/verify')
             } else {
-              console.log("User is signed in, navigating to profile")
               navigate('/profile')
             }
         } else {
@@ -71,14 +70,14 @@ function Verify() {
     const [signoutErrorMessage, setSignoutErrorMessage] = useState('')
     const signOut = useMutation({
     mutationFn: async () => {
-        await firebaseAuth.signOut()
+      await firebaseAuth.signOut()
     },
     onSuccess() {
-        console.log("User signed out")
+      console.log("User signed out")
     },
     onError(error) {
-        setSignoutError(true)
-        setSignoutErrorMessage(error.message)
+      setSignoutError(true)
+      setSignoutErrorMessage(error.message)
     }
     })
 

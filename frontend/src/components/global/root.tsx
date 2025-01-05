@@ -42,7 +42,6 @@ export function Root(props: RootProps) {
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-            console.log("Root-level subscription change")
             if (user) {
                 if (user.emailVerified) {
                     setVerified(true)
