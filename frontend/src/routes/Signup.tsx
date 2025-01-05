@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useOutletContext } from "react-router-dom";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { useNavigate, useOutletContext } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
 const SignupStyle = styled.div`
@@ -20,20 +20,41 @@ interface UserInfo {
 }
 
 export function Signup() {
+
+    const {verified, loggedIn} = useOutletContext<{
+        loggedIn: boolean,
+        verified: boolean
+    }>()
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
     const [weight, setWeight] = useState(0)
 
     const [isSuccess, setIsSuccess] = useState(false)
-
     const [isError, setIsError] = useState(false)
+    const [isPosting, setIsPosting] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!isPosting) {
+            if (loggedIn) {
+                if (verified) {
+                    navigate('/profile')
+                } else {
+                    navigate('/verify')
+                }
+            }
+        }
+    }, [verified, loggedIn, isPosting])
 
     const signUpMutation = useMutation({
         mutationFn: async (userInfo: UserInfo) => {
+            setIsPosting(true)
             const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, userInfo.email, userInfo.password)
             const user = userCredentials.user
+            await sendEmailVerification(user)
             const token = await user.getIdToken()
             const url = 'http://localhost:8000/users'
             const response = await fetch(url, {
@@ -47,11 +68,12 @@ export function Signup() {
                     weight: weight
                 })
             })
+            setIsPosting(false)
             return response.json()
         },
         onSuccess: () => {
             setIsSuccess(true)
-            //navigate('/welcome')
+            navigate('/verify')
         },
         onError: (error) => {
             setIsError(true)
@@ -65,40 +87,7 @@ export function Signup() {
             setWeight(0)
         }
     })
-    // const signUpQuery = useQuery({
-    //     enabled: (queryEnabled && queryEmail && queryPassword && queryName ? true : false),
-    //     queryKey: ['signUpQuery', queryEmail, queryPassword, queryName],
-    //     queryFn: async () => {
-    //         // Store user info in request body and clear all fields
-    //         // Sign user in and await email verification
-    //         console.log("Creating user with email and password")
-    //         const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, queryEmail, queryPassword)
-    //         const user = userCredentials.user
-    //         console.log("Sending email verification")
-    //         await sendEmailVerification(user)
 
-    //         // Get token
-    //         const token = await user.getIdToken()
-            
-    //         // Insert user into database
-    //         console.log("Posting user to DB")
-    //         const url = 'http://localhost:8000/users'
-    //         const response = await fetch(url, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Authorization': 'Bearer ' + token,
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify({
-    //                 name: queryName,
-    //                 weight: weight
-    //             })
-    //         })
-    //         console.log("Done!")
-    //         setQueryEnabled(false)
-    //         return response.json()
-    //     }
-    // })
     return (
         <SignupStyle>
             <form onSubmit={(e) => {

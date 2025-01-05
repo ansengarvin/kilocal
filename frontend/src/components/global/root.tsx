@@ -2,7 +2,7 @@ import {useState, ReactNode, useEffect} from 'react'
 import styled from '@emotion/styled'
 import { Header } from './Header'
 import { Footer } from './Footer'
-import { Outlet, useLocation, useNavigate } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 import { firebaseAuth } from '../../lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 //import { useQuery } from '@tanstack/react-query'
@@ -33,27 +33,17 @@ const Main = styled.main`
 export function Root(props: RootProps) {
     const {children} = props
 
-    const [loggedIn, setLoggedIn] = useState(firebaseAuth.currentUser !== null)
-    //const [isVerified, setIsVerified] = useState(firebaseAuth.currentUser?.emailVerified)
+    const [loggedIn, setLoggedIn] = useState(false)
+    const [verified, setVerified] = useState(false)
     
-    const navigate = useNavigate()
     const location = useLocation()
 
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-            if (!user) {  
-                setLoggedIn(false)
-                if (
-                    location.pathname !== '/' &&
-                    location.pathname !== '/login' &&
-                    location.pathname !== '/signup'
-                ) {
-                    navigate('/')
-                }
-            } else {
-                if (!user.emailVerified && location.pathname !== '/profile') {
-                    navigate('/profile')
+            if (user) {
+                if (user.emailVerified) {
+                    setVerified(true)
                 }
                 setLoggedIn(true)
             }
@@ -70,7 +60,10 @@ export function Root(props: RootProps) {
             <Grid>
                 <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
                 <Main>
-                    {children || <Outlet context={{loggedIn, setLoggedIn}}/>}
+                    {children || <Outlet context={{
+                        loggedIn, setLoggedIn,
+                        verified, setVerified
+                    }}/>}
                 </Main>
                 <Footer/>
             </Grid>
