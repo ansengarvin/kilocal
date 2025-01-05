@@ -27,10 +27,9 @@ interface LoginInfo {
 
 export function Login() {
   const navigate = useNavigate()
-  const {loggedIn, verified, setLoggedIn} = useOutletContext<{
+  const {loggedIn, verified} = useOutletContext<{
     loggedIn: boolean,
-    verified: boolean,
-    setLoggedIn: Function
+    verified: boolean
   }>()
 
   // Redirects

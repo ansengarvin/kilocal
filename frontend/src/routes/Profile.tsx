@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
@@ -12,9 +12,8 @@ const SignOutButton = styled.button`
 `
 
 function Profile() {
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const {loggedIn, verified, setLoggedIn} = useOutletContext<{
+  const {loggedIn, verified} = useOutletContext<{
     loggedIn: boolean,
     verified: boolean,
     setLoggedIn: Function
