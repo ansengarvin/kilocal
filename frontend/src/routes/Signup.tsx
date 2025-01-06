@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
