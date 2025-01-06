@@ -61,6 +61,10 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         background-color: #0ba100;
     }
 
+    button:hover {
+        background-color: #0cb900;
+    }
+
     a {
         // Default blue link color
         color: #0073ff;
