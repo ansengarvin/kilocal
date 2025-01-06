@@ -5,20 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"
 import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { NavLink } from "react-router-dom"
-
-const LoginStyle = styled.div `
-    height: 500px;
-    width: 400px;
-    background-color: #dadada;
-    border-radius: 10px;
-    padding-top: 10px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    text-align: center;
-`
+import { LoginStyle } from "../styles/LoginStyle"
 
 interface LoginInfo {
   email: string,
@@ -69,7 +56,6 @@ export function Login() {
 
   return (
     <LoginStyle>
-      <div>
         <h1>Login</h1>
         <form onSubmit={e => {
           e.preventDefault()
@@ -81,9 +67,8 @@ export function Login() {
         </form>
         Don't have an account?<br/>
         <NavLink to="/signup">Sign up</NavLink>
-      </div>
-      {isLoading ? <>Loading</> : <></>}
-      {isError ? <p>{errorMessage}</p> : <></>}
+        {isLoading ? <>Loading</> : <></>}
+        {isError ? <p>{errorMessage}</p> : <></>}
     </LoginStyle>
   )
 }
