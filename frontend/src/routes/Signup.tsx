@@ -118,8 +118,14 @@ export function Signup() {
                     onChange={e => setPassword(e.target.value)}
                     required
                 />
-                <label htmlFor="confirm">Confirm Password</label>
+                <label 
+                    htmlFor="confirm"
+                    className={!passwordsMatch ? 'error' : ''}
+                >
+                    Confirm Password
+                </label>
                 <input
+                    className={!passwordsMatch ? 'error' : ''}
                     type="password"
                     id="confirm"
                     value={confirmPassword}
@@ -149,7 +155,7 @@ export function Signup() {
             
             {isSuccess && <p>Success!</p>}
             {isError && <p>{errorMessage}</p>}
-            {!passwordsMatch && <p>Passwords do not match</p>}
+            {!passwordsMatch && <span className="error">Error: Passwords must match</span>}
         </LoginStyle>      
     )
 }

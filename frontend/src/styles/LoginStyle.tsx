@@ -35,6 +35,19 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         border: 1px solid black;
         background-color: white;
         margin-bottom: 10px;
+        // Set text margin
+        padding-left: 10px;
+        // Adjust width so padding doesnt make it wider
+        box-sizing: border-box;
+    }
+
+    input.error{
+        border: 1px solid red;
+        background-color: #ffe4e4;
+    }
+
+    span.error {
+        color: #c50000;
     }
 
     div.buttonSection {
