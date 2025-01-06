@@ -87,8 +87,9 @@ export function Signup() {
     })
 
     return (
-        <LoginStyle>
-            <h1>Signup</h1>
+        <LoginStyle width="700px">
+            <h1>Create an Account</h1>
+
             <form onSubmit={(e) => {
                 e.preventDefault()
                 // Confirm password
@@ -109,7 +110,6 @@ export function Signup() {
                     onChange={e => setEmail(e.target.value)}
                     required
                 />
-                <br/>
                 <label htmlFor="password">Password</label>
                 <input
                     type="password"
@@ -118,7 +118,6 @@ export function Signup() {
                     onChange={e => setPassword(e.target.value)}
                     required
                 />
-                <br/>
                 <label htmlFor="confirm">Confirm Password</label>
                 <input
                     type="password"
@@ -137,16 +136,17 @@ export function Signup() {
                     onChange={e => setName(e.target.value)}
                     required
                 />
-                <br/>
                 <div className="buttonSection">
                     <button className="signup" type="submit">
                         Sign Up
                     </button>
-                </div>
-                
+                </div> 
             </form>
-            Already have an account?<br/>
-            <NavLink to="/login">Go to Login</NavLink>
+
+            <span>
+                Already have an account? <NavLink to="/login">Log In</NavLink>
+            </span>
+            
             {isSuccess && <p>Success!</p>}
             {isError && <p>{errorMessage}</p>}
             {!passwordsMatch && <p>Passwords do not match</p>}

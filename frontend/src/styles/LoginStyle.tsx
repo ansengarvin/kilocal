@@ -1,8 +1,12 @@
 import styled from "@emotion/styled";
 
-export const LoginStyle = styled.div`
+interface LoginStyleProps {
+    width: string
+}
+
+export const LoginStyle = styled.div<LoginStyleProps>`
     height: min-content;
-    width: 700px;
+    width: ${props => props.width};
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -11,6 +15,10 @@ export const LoginStyle = styled.div`
     padding-bottom: 50px;
     margin-top: 50px;
     border-radius: 10px;
+
+    form {
+        width: 80%;
+    }
 
     input {
         margin: 0;
@@ -50,13 +58,12 @@ export const LoginStyle = styled.div`
         background-color: black;
         color: white;
         width: 100%;
-    }
-
-    button.login {
-        background-color: #5e99e1;
-    }
-
-    button.signup {
         background-color: #0ba100;
+    }
+
+    a {
+        // Default blue link color
+        color: #0073ff;
+        text-decoration: none;
     }
 `
