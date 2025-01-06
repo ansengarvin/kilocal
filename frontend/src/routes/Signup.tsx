@@ -14,7 +14,6 @@ interface UserInfo {
 }
 
 export function Signup() {
-
     const {verified, loggedIn, isLoadingInitial} = useOutletContext<{
         loggedIn: boolean,
         verified: boolean,
@@ -89,6 +88,7 @@ export function Signup() {
 
     return (
         <LoginStyle>
+            <h1>Signup</h1>
             <form onSubmit={(e) => {
                 e.preventDefault()
                 // Confirm password
@@ -101,7 +101,6 @@ export function Signup() {
                 setIsError(false)
                 signUpMutation.mutate({email, password, name})
             }}>
-                <h1>Signup</h1>
                 <label htmlFor="email">Email</label>
                 <input
                     type="email"
