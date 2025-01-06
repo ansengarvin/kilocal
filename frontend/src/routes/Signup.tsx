@@ -4,7 +4,7 @@ import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { LoginStyle } from "../styles/LoginStyle";
+import { LoginStyle } from "../components/styles/LoginStyle";
 //import { useNavigate } from "react-router-dom";
 
 interface UserInfo {
@@ -152,7 +152,6 @@ export function Signup() {
             <span>
                 Already have an account? <NavLink to="/login">Log In</NavLink>
             </span>
-            
             {isSuccess && <p>Success!</p>}
             {isError && <p>{errorMessage}</p>}
             {!passwordsMatch && <span className="error">Error: Passwords must match</span>}

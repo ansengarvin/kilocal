@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"
 import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { NavLink } from "react-router-dom"
-import { LoginStyle } from "../styles/LoginStyle"
+import { LoginStyle } from "../components/styles/LoginStyle"
 
 interface LoginInfo {
     email: string,
