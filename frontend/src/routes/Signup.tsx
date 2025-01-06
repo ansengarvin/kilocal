@@ -5,14 +5,8 @@ import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { LoginStyle } from "../styles/LoginStyle";
 //import { useNavigate } from "react-router-dom";
-
-const SignupStyle = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`
 
 interface UserInfo {
     email: string,
@@ -30,8 +24,11 @@ export function Signup() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [name, setName] = useState('')
     const [weight, setWeight] = useState(0)
+
+    const [passwordsMatch, setPasswordsMatch] = useState(true)
 
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -92,14 +89,20 @@ export function Signup() {
     })
 
     return (
-        <SignupStyle>
+        <LoginStyle>
             <form onSubmit={(e) => {
                 e.preventDefault()
+                // Confirm password
                 signUpMutation.reset()
+                if (password !== confirmPassword) {
+                    setPasswordsMatch(false)
+                    return
+                }
                 setIsSuccess(false)
                 setIsError(false)
                 signUpMutation.mutate({email, password, name})
             }}>
+                <h1>Signup</h1>
                 <label htmlFor="email">Email</label>
                 <input
                     type="email"
@@ -118,6 +121,17 @@ export function Signup() {
                     required
                 />
                 <br/>
+                <label htmlFor="confirm">Confirm Password</label>
+                <input
+                    type="password"
+                    id="confirm"
+                    value={confirmPassword}
+                    onChange={e => {
+                        setConfirmPassword(e.target.value)
+                    }}
+                    required
+                />
+
                 <label htmlFor="name">Name</label>
                 <input
                     type="text"
@@ -135,6 +149,7 @@ export function Signup() {
             <NavLink to="/login">Go to Login</NavLink>
             {isSuccess && <p>Success!</p>}
             {isError && <p>{errorMessage}</p>}
-        </SignupStyle>      
+            {!passwordsMatch && <p>Passwords do not match</p>}
+        </LoginStyle>      
     )
 }
