@@ -38,6 +38,7 @@ export function Login() {
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(true)
     const [errorMessage, setErrorMessage] = useState("")
+    const [credentialError, setCredentialError] = useState(false)
 
     const loginMutation = useMutation({
         mutationFn: async (loginInfo: LoginInfo) => {
@@ -47,9 +48,23 @@ export function Login() {
         onSuccess() {
             console.log("User signed in")
         },
-        onError(error) {
+        onError(error: any) {
             setIsError(true)
-            setErrorMessage(error.message)
+            if (error.name == "FirebaseError") {
+                if (error.code == "auth/invalid-credential") {
+                    setCredentialError(true)
+                    setErrorMessage("Invalid username or password")
+                } else if (error.code == "auth/too-many-requests") {
+                    setErrorMessage("Too many requests. Try again later.")
+                } else {
+                    setErrorMessage(error.message)
+                }
+            } else {
+                setErrorMessage(error.message)
+            } 
+        },
+        onSettled() {
+            setIsLoading(false)
         }
     })
 
@@ -59,16 +74,26 @@ export function Login() {
 
             <form onSubmit={e => {
                 e.preventDefault()
+                setCredentialError(false)
                 loginMutation.mutate({email, password})
             }}>
                 <label htmlFor="email">
                     Email
                 </label>
-                <input value={email} onChange={e=>setEmail(e.target.value)}/>
+                <input
+                    value={email}
+                    onChange={e=>setEmail(e.target.value)}
+                    className={credentialError ? 'error' : ''}
+                />
                 <label htmlFor="password">
                     Password
                 </label>
-                <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/>
+                <input
+                    value={password}
+                    type="password"
+                    onChange={e=>setPassword(e.target.value)}
+                    className={credentialError ? 'error' : ''}
+                />
                 <div className="buttonSection">
                     <button className="login" type="submit">
                         Log In
@@ -80,7 +105,7 @@ export function Login() {
                 Don't have an account? <NavLink to="/signup">Create an account</NavLink>
             </span>
             {isLoading ? <>Loading</> : <></>}
-            {isError ? <p>{errorMessage}</p> : <></>}
+            {isError ? <span className='error'>{errorMessage}</span> : <></>}
         </LoginStyle>
     )
 }
