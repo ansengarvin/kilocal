@@ -1,4 +1,3 @@
-import styled from "@emotion/styled"
 import { useEffect, useState } from "react"
 import { firebaseAuth } from "../lib/firebase"
 import { signInWithEmailAndPassword } from "firebase/auth"
