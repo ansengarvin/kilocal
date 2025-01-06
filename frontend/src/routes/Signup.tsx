@@ -129,7 +129,6 @@ export function Signup() {
                     }}
                     required
                 />
-
                 <label htmlFor="name">Name</label>
                 <input
                     type="text"
@@ -139,9 +138,12 @@ export function Signup() {
                     required
                 />
                 <br/>
-                <button type="submit">
-                    Submit
-                </button>
+                <div className="buttonSection">
+                    <button className="signup" type="submit">
+                        Sign Up
+                    </button>
+                </div>
+                
             </form>
             Already have an account?<br/>
             <NavLink to="/login">Go to Login</NavLink>

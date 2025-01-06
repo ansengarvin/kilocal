@@ -60,8 +60,9 @@ export function Login() {
           e.preventDefault()
           loginMutation.mutate({email, password})
         }}>
-          Email <input value={email} onChange={e=>setEmail(e.target.value)}/><br/>
-          Password <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/><br/>
+          <label htmlFor="email">Email</label>
+          <input value={email} onChange={e=>setEmail(e.target.value)}/><br/>
+          <input value={password} type="password" onChange={e=>setPassword(e.target.value)}/><br/>
           <button type="submit">Login</button>
         </form>
         Don't have an account?<br/>
