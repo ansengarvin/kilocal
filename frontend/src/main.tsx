@@ -23,6 +23,12 @@ const globalStyle = css`
   .appElement {
     background-color: #e9e9e9;
   }
+
+  a {
+    // Default blue link color
+    color: #0073ff;
+    text-decoration: none;
+  }
 `
 
 const queryClient = new QueryClient()

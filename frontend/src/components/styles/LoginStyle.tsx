@@ -16,6 +16,8 @@ export const LoginStyle = styled.div<LoginStyleProps>`
     margin-top: 50px;
     border-radius: 10px;
 
+    text-align: center;
+
     form {
         width: 80%;
     }
@@ -53,10 +55,11 @@ export const LoginStyle = styled.div<LoginStyleProps>`
     div.buttonSection {
         width: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
         margin-top: 15px;
+        gap: 5px;
     }
 
     button {
@@ -78,9 +81,17 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         background-color: #0cb900;
     }
 
-    a {
-        // Default blue link color
-        color: #0073ff;
-        text-decoration: none;
+    button.half {
+        width: 45%;
     }
+
+    button.grey {
+        background-color: grey;
+
+        :hover {
+            background-color: #8c8c8c;
+        }
+    }
+
+    
 `

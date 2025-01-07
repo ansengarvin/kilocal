@@ -1,17 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
-import { ContentWindow } from "../components/global/ContentWindow"
-import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
 import { sendEmailVerification } from "firebase/auth"
 import { useEffect, useState } from "react"
-import { NavLink } from "react-router-dom"
-
-const SignOutButton = styled.button`
-  margin-top: auto;
-  width: 80%;
-  height: 50px;
-`
+import { LoginStyle } from "../components/styles/LoginStyle"
 
 function Verify() {
     const navigate = useNavigate()
@@ -86,7 +78,7 @@ function Verify() {
     })
 
   return (
-    <ContentWindow>
+    <LoginStyle width={'700px'}>
       <div className="content">
         {isLoading ? <>Loading</> : <></>}
         {error ? <>Error</> : <></>}
@@ -98,27 +90,28 @@ function Verify() {
           </>
         }
         You aren't verified yet. Please check your email for a verification link.
-        <SignOutButton onClick={(e) => {
+        <div className="buttonSection">
+          <button className="grey half" onClick={(e) => {
+              e.preventDefault
+              resendMutation.reset()
+              resendMutation.mutate()
+              setResent(false)
+              setIsError(true)
+          }}>
+              Resend Link
+          </button> or 
+          <button className="grey half" onClick={(e) => {
             e.preventDefault
-            resendMutation.reset()
-            resendMutation.mutate()
-            setResent(false)
-            setIsError(true)
-        }}>
-            Resend
-        </SignOutButton>
-        <SignOutButton onClick={(e) => {
-          e.preventDefault
-          signOut.mutate()
-        }}>
-          Sign Out
-        </SignOutButton>
+            signOut.mutate()
+          }}>
+            Sign Out
+          </button>
+        </div>
         {isError ? <p>Error sending verification email</p> : <></>}
         {resent ? <p>Verification email resent</p> : <></>}
         {signoutError ? <p>Error signing out: {signoutErrorMessage}</p> : <></>}
-        <NavLink to="/verify">Refresh</NavLink>
       </div>  
-    </ContentWindow>
+    </LoginStyle>
   )
 }
   
