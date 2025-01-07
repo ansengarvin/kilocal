@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { firebaseAuth } from "../lib/firebase"
 import { sendEmailVerification } from "firebase/auth"
@@ -30,22 +30,6 @@ function Verify() {
         }
       }  
     }, [verified, loggedIn])
-
-    const {isLoading, error, data} = useQuery({
-    queryKey: ["user"],
-    enabled: (loggedIn ? true : false),
-    queryFn: async () => {
-        const token = await firebaseAuth.currentUser?.getIdToken()
-        const url = "http://localhost:8000/users/"
-        const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            'Authorization': 'Bearer ' + token
-        } 
-        })
-        return response.json()
-    }
-    })
 
     // Resends email verification
     const resendMutation = useMutation({
@@ -79,16 +63,8 @@ function Verify() {
 
   return (
     <LoginStyle width={'700px'}>
+      <h1>Welcome to KiloCal!</h1>
       <div className="content">
-        {isLoading ? <>Loading</> : <></>}
-        {error ? <>Error</> : <></>}
-        {data &&
-          <>
-            <h1>
-            Welcome, {data.name}!
-            </h1>  
-          </>
-        }
         You aren't verified yet. Please check your email for a verification link.
         <div className="buttonSection">
           <button className="grey half" onClick={(e) => {
