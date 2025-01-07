@@ -1,18 +1,11 @@
-import styled from "@emotion/styled";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { LoginStyle } from "../components/styles/LoginStyle";
 //import { useNavigate } from "react-router-dom";
-
-const SignupStyle = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`
 
 interface UserInfo {
     email: string,
@@ -21,7 +14,6 @@ interface UserInfo {
 }
 
 export function Signup() {
-
     const {verified, loggedIn, isLoadingInitial} = useOutletContext<{
         loggedIn: boolean,
         verified: boolean,
@@ -30,8 +22,11 @@ export function Signup() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [name, setName] = useState('')
     const [weight, setWeight] = useState(0)
+
+    const [passwordsMatch, setPasswordsMatch] = useState(true)
 
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -92,10 +87,17 @@ export function Signup() {
     })
 
     return (
-        <SignupStyle>
+        <LoginStyle width="700px">
+            <h1>Create an Account</h1>
+
             <form onSubmit={(e) => {
                 e.preventDefault()
+                // Confirm password
                 signUpMutation.reset()
+                if (password !== confirmPassword) {
+                    setPasswordsMatch(false)
+                    return
+                }
                 setIsSuccess(false)
                 setIsError(false)
                 signUpMutation.mutate({email, password, name})
@@ -108,7 +110,6 @@ export function Signup() {
                     onChange={e => setEmail(e.target.value)}
                     required
                 />
-                <br/>
                 <label htmlFor="password">Password</label>
                 <input
                     type="password"
@@ -117,7 +118,22 @@ export function Signup() {
                     onChange={e => setPassword(e.target.value)}
                     required
                 />
-                <br/>
+                <label 
+                    htmlFor="confirm"
+                    className={!passwordsMatch ? 'error' : ''}
+                >
+                    Confirm Password
+                </label>
+                <input
+                    className={!passwordsMatch ? 'error' : ''}
+                    type="password"
+                    id="confirm"
+                    value={confirmPassword}
+                    onChange={e => {
+                        setConfirmPassword(e.target.value)
+                    }}
+                    required
+                />
                 <label htmlFor="name">Name</label>
                 <input
                     type="text"
@@ -126,15 +142,19 @@ export function Signup() {
                     onChange={e => setName(e.target.value)}
                     required
                 />
-                <br/>
-                <button type="submit">
-                    Submit
-                </button>
+                <div className="buttonSection">
+                    <button className="signup" type="submit">
+                        Sign Up
+                    </button>
+                </div> 
             </form>
-            Already have an account?<br/>
-            <NavLink to="/login">Go to Login</NavLink>
+
+            <span>
+                Already have an account? <NavLink to="/login">Log In</NavLink>
+            </span>
             {isSuccess && <p>Success!</p>}
             {isError && <p>{errorMessage}</p>}
-        </SignupStyle>      
+            {!passwordsMatch && <span className="error">Error: Passwords must match</span>}
+        </LoginStyle>      
     )
 }

@@ -1,17 +1,9 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
-import { ContentWindow } from "../components/global/ContentWindow"
-import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
 import { sendEmailVerification } from "firebase/auth"
 import { useEffect, useState } from "react"
-import { NavLink } from "react-router-dom"
-
-const SignOutButton = styled.button`
-  margin-top: auto;
-  width: 80%;
-  height: 50px;
-`
+import { LoginStyle } from "../components/styles/LoginStyle"
 
 function Verify() {
     const navigate = useNavigate()
@@ -31,29 +23,13 @@ function Verify() {
           if (!verified) {
             navigate('/verify')
           } else {
-            navigate('/profile')
+            navigate('/')
           }
         } else {
             navigate('/')
         }
       }  
     }, [verified, loggedIn])
-
-    const {isLoading, error, data} = useQuery({
-    queryKey: ["user"],
-    enabled: (loggedIn ? true : false),
-    queryFn: async () => {
-        const token = await firebaseAuth.currentUser?.getIdToken()
-        const url = "http://localhost:8000/users/"
-        const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            'Authorization': 'Bearer ' + token
-        } 
-        })
-        return response.json()
-    }
-    })
 
     // Resends email verification
     const resendMutation = useMutation({
@@ -86,39 +62,32 @@ function Verify() {
     })
 
   return (
-    <ContentWindow>
+    <LoginStyle width={'700px'}>
+      <h1>Welcome to KiloCal!</h1>
       <div className="content">
-        {isLoading ? <>Loading</> : <></>}
-        {error ? <>Error</> : <></>}
-        {data &&
-          <>
-            <h1>
-            Welcome, {data.name}!
-            </h1>  
-          </>
-        }
         You aren't verified yet. Please check your email for a verification link.
-        <SignOutButton onClick={(e) => {
+        <div className="buttonSection">
+          <button className="grey half" onClick={(e) => {
+              e.preventDefault
+              resendMutation.reset()
+              resendMutation.mutate()
+              setResent(false)
+              setIsError(true)
+          }}>
+              Resend Link
+          </button> or 
+          <button className="grey half" onClick={(e) => {
             e.preventDefault
-            resendMutation.reset()
-            resendMutation.mutate()
-            setResent(false)
-            setIsError(true)
-        }}>
-            Resend
-        </SignOutButton>
-        <SignOutButton onClick={(e) => {
-          e.preventDefault
-          signOut.mutate()
-        }}>
-          Sign Out
-        </SignOutButton>
+            signOut.mutate()
+          }}>
+            Sign Out
+          </button>
+        </div>
         {isError ? <p>Error sending verification email</p> : <></>}
         {resent ? <p>Verification email resent</p> : <></>}
         {signoutError ? <p>Error signing out: {signoutErrorMessage}</p> : <></>}
-        <NavLink to="/verify">Refresh</NavLink>
       </div>  
-    </ContentWindow>
+    </LoginStyle>
   )
 }
   
