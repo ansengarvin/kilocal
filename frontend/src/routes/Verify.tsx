@@ -23,7 +23,7 @@ function Verify() {
           if (!verified) {
             navigate('/verify')
           } else {
-            navigate('/profile')
+            navigate('/')
           }
         } else {
             navigate('/')
