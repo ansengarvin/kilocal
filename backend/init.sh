@@ -45,7 +45,7 @@ function all() {
 }
 
 function scrape_func_names() {
-	functions=($(grep -oE 'function[[:space:]]+[a-zA-Z_][a-zA-Z_0-9]*' ./run.sh | sed 's/function[[:space:]]*//'))
+	functions=($(grep -oE 'function[[:space:]]+[a-zA-Z_][a-zA-Z_0-9]*' ./init.sh | sed 's/function[[:space:]]*//'))
 }
 
 # if no command line args, just run the all function
