@@ -8,15 +8,11 @@
 
         cd backend
 
-3. Add execute permissions to the shell file
-
-        chmod +x ./init.sh
-
 4. Run all functions in the shell file:
 
-        ./init.sh npm
-        ./init.sh docker
-        ./init.sh nginx
+        ./init.sh install_npm
+        ./init.sh get_docker
+        ./init.sh get_nginx
 
         or
 
