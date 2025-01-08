@@ -10,6 +10,13 @@ types.setTypeParser(1700, function(val: string) {
     return parseFloat(val)
 })
 
+console.log("All env stuff:")
+console.log(process.env.DB_USER)
+console.log(process.env.DB_PASS)
+console.log(process.env.DB_HOST)
+console.log(process.env.DB_PORT)
+console.log(process.env.DB_NAME)
+
 export const pool = new Pool({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
