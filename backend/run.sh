@@ -1,4 +1,18 @@
-function install_npm() {
+#############################
+#    API Server Commands    #
+#############################
+function start() {
+    sudo docker compose up -d
+}
+
+function stop() {
+    sudo docker compose down
+}
+
+############################
+#    VPS Initialization    #
+############################
+function init_npm() {
     sudo apt-get update
 
     sudo apt-get install -y npm
@@ -6,7 +20,7 @@ function install_npm() {
     npm install
 }
 
-function get_docker() {
+function init_docker() {
     # Add Docker's official GPG key:
     sudo apt-get update
     sudo apt-get install -y ca-certificates curl
@@ -30,7 +44,7 @@ function get_docker() {
     sudo docker run hello-world
 }
 
-function get_nginx() {
+function init_nginx() {
     # Update debian repository information
     sudo apt-get update
 
@@ -41,7 +55,7 @@ function get_nginx() {
     sudo nginx -v
 }
 
-function verify() {
+function verify_init() {
     echo "Verifying NPM:"
     npm -v
     echo "Verifying Docker:"
@@ -51,15 +65,18 @@ function verify() {
     sudo nginx -v
 }
 
-function all() {
-    npm
-    docker
-    nginx
-    verify
+function init_all() {
+    init_npm
+    init_docker
+    init_nginx
+    verify_init
 }
 
+###################################
+#    Shell Script Functionality   #
+###################################
 function scrape_func_names() {
-	functions=($(grep -oE 'function[[:space:]]+[a-zA-Z_][a-zA-Z_0-9]*' ./init.sh | sed 's/function[[:space:]]*//'))
+	functions=($(grep -oE 'function[[:space:]]+[a-zA-Z_][a-zA-Z_0-9]*' ./run.sh | sed 's/function[[:space:]]*//'))
 }
 
 # if no command line args, just run the all function
