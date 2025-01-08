@@ -3,6 +3,7 @@
 #############################
 function start() {
     sudo docker compose up -d
+    mv_conf
     nginx -c nginx.conf
 }
 
@@ -66,7 +67,7 @@ function init_nginx() {
     sudo nginx -v
 
     # Move nginx config file to proper directory
-    sudo cp -f proxy.conf /etc/nginx/conf.d/proxy.conf
+    mv_conf
 }
 
 function verify_init() {
