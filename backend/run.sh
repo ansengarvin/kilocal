@@ -3,10 +3,17 @@
 #############################
 function start() {
     sudo docker compose up -d
+    nginx -c ./nginx.conf
 }
 
 function stop() {
     sudo docker compose down
+    nginx -s stop
+}
+
+function restart() {
+    stop
+    start
 }
 
 ############################
