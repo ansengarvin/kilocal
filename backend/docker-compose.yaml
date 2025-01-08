@@ -17,7 +17,7 @@ services:
     networks:
       - apiserver
     volumes:
-      - ./backend:/home/node/app
+      - ./:/home/node/app
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
       - DB_HOST=${DB_HOST}
