@@ -3,7 +3,7 @@ import admin from 'firebase-admin'
 import { pool } from './database'
 
 admin.initializeApp({
-    credential: admin.credential.cert("./lib/keys/service.json")
+    credential: admin.credential.cert("./etc/keys/service.json")
 })
 
 export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
