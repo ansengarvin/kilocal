@@ -1,7 +1,7 @@
 function npm() {
     sudo apt-get update
 
-    sudo apt-get install npm
+    sudo apt install npm
 
     npm install
 }
