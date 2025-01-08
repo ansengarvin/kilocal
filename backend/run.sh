@@ -3,7 +3,7 @@
 #############################
 function start() {
     sudo docker compose up -d
-    nginx -c /home/ubuntu/kilocal/backend/nginx.conf
+    nginx -c nginx.conf
 }
 
 function stop() {
@@ -60,6 +60,9 @@ function init_nginx() {
 
     # Verify the installation
     sudo nginx -v
+
+    # Move nginx config file to proper directory
+    sudo cp -f proxy.conf /etc/nginx/conf.d/proxy.conf
 }
 
 function verify_init() {
