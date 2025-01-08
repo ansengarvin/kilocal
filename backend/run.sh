@@ -3,7 +3,7 @@
 #############################
 function start() {
     sudo docker compose up -d
-    nginx -c ./nginx.conf
+    nginx -c /home/ubuntu/kilocal/backend/nginx.conf
 }
 
 function stop() {
