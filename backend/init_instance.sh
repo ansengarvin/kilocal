@@ -1,3 +1,9 @@
+# Install npm
+sudo apt-get install npm
+
+# Run npm install
+npm install
+
 # Add Docker's official GPG key:
 sudo apt-get update
 sudo apt-get install ca-certificates curl
