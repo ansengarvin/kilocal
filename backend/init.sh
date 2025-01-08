@@ -1,12 +1,12 @@
-function npm() {
+function install_npm() {
     sudo apt-get update
 
-    sudo apt install npm
+    sudo apt-get install npm
 
     npm install
 }
 
-function docker() {
+function get_docker() {
     # Add Docker's official GPG key:
     sudo apt-get update
     sudo apt-get install ca-certificates curl
@@ -29,7 +29,7 @@ function docker() {
     sudo docker run hello-world
 }
 
-function nginx() {
+function get_nginx() {
     # Update debian repository information
     sudo apt-get update
 
