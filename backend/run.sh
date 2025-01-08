@@ -4,12 +4,12 @@
 function start() {
     sudo docker compose up -d
     mv_conf
-    nginx -c nginx.conf
+    sudo nginx -c nginx.conf
 }
 
 function stop() {
     sudo docker compose down
-    nginx -s stop
+    sudo nginx -s stop
 }
 
 function restart() {
