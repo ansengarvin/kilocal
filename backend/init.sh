@@ -41,10 +41,21 @@ function get_nginx() {
     sudo nginx -v
 }
 
+function verify() {
+    echo "Verifying NPM:"
+    npm -v
+    echo "Verifying Docker:"
+    docker -v
+    sudo docker run hello-world
+    echo "Verifying Nginx:"
+    sudo nginx -v
+}
+
 function all() {
     npm
     docker
     nginx
+    verify
 }
 
 function scrape_func_names() {

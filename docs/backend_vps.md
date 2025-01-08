@@ -8,7 +8,7 @@
 
         cd backend
 
-4. Run all functions in the shell file:
+3. Run all functions in the shell file:
 
         ./init.sh install_npm
         ./init.sh get_docker
@@ -18,8 +18,8 @@
 
         ./init.sh all
 
-5. Move the firebase service.json key into /etc/keys/service.json
+4. Move the firebase service.json key into /etc/keys/service.json
 
-6. Run the server
+5. Run the server
 
         docker compose up -d
