@@ -4,7 +4,7 @@
 function start() {
     sudo docker compose up -d
     mv_conf
-    sudo nginx -c nginx.conf
+    sudo nginx
 }
 
 function stop() {
@@ -68,6 +68,9 @@ function init_nginx() {
 
     # Move nginx config file to proper directory
     mv_conf
+
+    # Remove default site styling from nginx
+    sudo rm /etc/nginx/sites-enabled/default
 }
 
 function verify_init() {
