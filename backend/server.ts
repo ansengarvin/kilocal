@@ -30,11 +30,10 @@ declare global {
 
 app.get('/test', async function (req, res) {
     try {
-        const result = await pool.query('SELECT NOW()')
+        // Returns the current time in pacific time
         res.status(200).send({
-            message: 'time:',
-            result: result.rows[0].now
-        });
+            time: new Date().toLocaleString("en-US", {timeZone: "America/Los_Angeles"})
+        })
     } catch (err) {
         res.status(400).send({
             err: err.message
