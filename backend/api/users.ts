@@ -1,10 +1,8 @@
 import {Router} from 'express'
-var bcrypt = require('bcryptjs')
 
 const router = Router()
 import { createUserIfNoneExists, requireAuthentication} from '../lib/authentication'
 import {pool} from '../lib/database'
-import { create } from 'ts-node'
 
 router.post('/', requireAuthentication, async function (req, res) {
     try {

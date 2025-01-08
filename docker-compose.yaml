@@ -1,3 +1,4 @@
+# docker compose for local testing
 networks:
   apiserver:
     driver: bridge
@@ -35,9 +36,6 @@ services:
   frontend:
     image: node:latest
     container_name: frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     working_dir: /app
     ports:
       - 5000:3000
