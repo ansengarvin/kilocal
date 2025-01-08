@@ -16,6 +16,10 @@ function restart() {
     start
 }
 
+function mv_conf() {
+    sudo cp -f proxy.conf /etc/nginx/conf.d/proxy.conf
+}
+
 ############################
 #    VPS Initialization    #
 ############################
