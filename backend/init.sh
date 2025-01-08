@@ -1,5 +1,5 @@
 function npm() {
-    sudo apt install npm
+    sudo apt-get install npm
 
     npm install
 }
