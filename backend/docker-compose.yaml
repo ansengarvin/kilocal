@@ -1,0 +1,31 @@
+# docker compose file for production
+networks:
+  apiserver:
+    driver: bridge
+
+services:
+  backend:
+    image: node:latest
+    container_name: backend
+    user:
+      "node"
+    working_dir: /home/node/app
+    expose:
+      - "8000"
+    ports:
+      - 8000:8000
+    networks:
+      - apiserver
+    volumes:
+      - ./backend:/home/node/app
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+    command: "npm start"
+volumes:
+  node_modules:
+  dist:
