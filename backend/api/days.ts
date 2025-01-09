@@ -130,6 +130,7 @@ router.get('/:date', requireAuthentication, async function(req, res) {
 
 
     } catch(err) {
+        console.log("DATE get error:", err)
         res.status(500).send({
             err: err
         })
