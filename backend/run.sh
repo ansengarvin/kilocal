@@ -79,6 +79,10 @@ function init_nginx() {
     sudo rm /etc/nginx/sites-enabled/default
 }
 
+function init_ssl() {
+    
+}
+
 function verify_init() {
     echo "Verifying NPM:"
     npm -v
