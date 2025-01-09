@@ -21,6 +21,12 @@ function mv_conf() {
     sudo cp -f proxy.conf /etc/nginx/conf.d/proxy.conf
 }
 
+function restart_nginx() {
+    sudo nginx -s stop
+    mv_conf
+    sudo nginx
+}
+
 ############################
 #    VPS Initialization    #
 ############################
