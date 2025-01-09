@@ -9,6 +9,7 @@ import { Icon } from "../components/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
 import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
+import { apiURL } from "../lib/api";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -139,7 +140,7 @@ function App() {
     queryKey: ["day", formattedDate],
     queryFn: async () => {
       const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `http://localhost:8000/days/${formattedDate}`
+      const url = `${apiURL}/days/${formattedDate}`
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -171,7 +172,7 @@ function App() {
       setFoodName("")
 
       const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `http://localhost:8000/days/${formattedDate}/food`
+      const url = `${apiURL}/days/${formattedDate}/food`
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -191,7 +192,7 @@ function App() {
     queryKey: ["foodDelete", deleteID],
     queryFn: async () => {
       const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `http://localhost:8000/days/${formattedDate}/food/${deleteID}`
+      const url = `${apiURL}/days/${formattedDate}/food/${deleteID}`
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
