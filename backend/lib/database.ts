@@ -26,6 +26,6 @@ export const pool = new Pool({
     port: Number(process.env.DB_PORT),
     database: process.env.DB_NAME,
     idleTimeoutMillis: 0,
-    ssl: process.env.DB_SSL
+    ssl: process.env.DB_SSL === 'true'
 })
 
