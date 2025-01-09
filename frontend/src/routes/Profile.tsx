@@ -4,6 +4,7 @@ import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
 import { useEffect, useState } from "react"
+import { apiURL } from "../lib/api"
 
 const SignOutButton = styled.button`
   margin-top: auto;
@@ -38,7 +39,7 @@ function Profile() {
     enabled: (loggedIn ? true : false),
     queryFn: async () => {
       const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = "http://localhost:8000/users/"
+      const url = `${apiURL}/users/`
       const response = await fetch(url, {
         method: "GET",
         headers: {
