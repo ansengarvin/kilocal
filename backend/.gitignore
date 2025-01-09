@@ -1,5 +1,3 @@
 /node_modules
 /postgres-data
 .env
-/etc/keys/*
-/etc/certs/*

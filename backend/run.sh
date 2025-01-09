@@ -3,10 +3,32 @@
 #############################
 function start() {
     sudo docker compose up -d
+    mv_conf
+    sudo nginx
 }
 
 function stop() {
     sudo docker compose down
+    sudo nginx -s stop
+}
+
+function restart() {
+    stop
+    start
+}
+
+function mv_conf() {
+    sudo cp -f proxy.conf /etc/nginx/conf.d/proxy.conf
+}
+
+function check_conf() {
+    sudo cat /etc/nginx/conf.d/proxy.conf
+}
+
+function restart_nginx() {
+    sudo nginx -s stop
+    mv_conf
+    sudo nginx
 }
 
 ############################
@@ -53,6 +75,20 @@ function init_nginx() {
 
     # Verify the installation
     sudo nginx -v
+
+    # Move nginx config file to proper directory
+    mv_conf
+
+    # Remove default site styling from nginx
+    sudo rm /etc/nginx/sites-enabled/default
+}
+
+# Source: https://certbot.eff.org/instructions?ws=nginx&os=snap
+function init_certbot() {
+    sudo snap install --classic certbot
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
+    sudo certbot certonly --nginx
+    sudo certbot renew --dry-run
 }
 
 function verify_init() {

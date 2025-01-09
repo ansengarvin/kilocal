@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { LoginStyle } from "../components/styles/LoginStyle";
+import { apiURL } from "../lib/api";
 //import { useNavigate } from "react-router-dom";
 
 interface UserInfo {
@@ -54,7 +55,7 @@ export function Signup() {
             const user = userCredentials.user
             await sendEmailVerification(user)
             const token = await user.getIdToken()
-            const url = 'http://localhost:8000/users'
+            const url = `${apiURL}/users`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

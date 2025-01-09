@@ -34,6 +34,10 @@ function psql() {
 	docker exec -it postgres psql -U dev -W kilocal_api
 }
 
+function psql_dump() {
+	docker exec -t postgres pg_dump --dbname=postgresql://dev:dev@localhost:5432/kilocal_api --inserts > database/backups/dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
+}
+
 function test_short() {
 	python -m pytest -s --tb=short tests/*.py
 }

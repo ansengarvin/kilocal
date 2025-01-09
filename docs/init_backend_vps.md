@@ -18,7 +18,7 @@
 
         ./init.sh all
 
-4. Move the firebase service.json key into /etc/keys/service.json
+4. Move the firebase service.json key into ./etc/keys/service.json
 
 5. Run the server
 

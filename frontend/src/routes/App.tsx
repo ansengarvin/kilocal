@@ -9,6 +9,7 @@ import { Icon } from "../components/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
 import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
+import { apiURL } from "../lib/api";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -139,13 +140,17 @@ function App() {
     queryKey: ["day", formattedDate],
     queryFn: async () => {
       const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `http://localhost:8000/days/${formattedDate}`
+      const url = `${apiURL}/days/${formattedDate}`
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           "Authorization": "Bearer " + token
         }
       })
+      // Print to console if 500
+      if (response.status == 500) {
+        console.log(response)
+      }
       return response.json()
     }
   })
@@ -171,7 +176,7 @@ function App() {
       setFoodName("")
 
       const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `http://localhost:8000/days/${formattedDate}/food`
+      const url = `${apiURL}/days/${formattedDate}/food`
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -191,7 +196,7 @@ function App() {
     queryKey: ["foodDelete", deleteID],
     queryFn: async () => {
       const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `http://localhost:8000/days/${formattedDate}/food/${deleteID}`
+      const url = `${apiURL}/days/${formattedDate}/food/${deleteID}`
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
@@ -293,6 +298,7 @@ function App() {
             {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
               No food for this day yet!
             </p>}
+
             {foodGet.data?.food && foodGet.data?.food.length != 0 &&
               <FoodEntries
                 foodList={foodGet.data.food}
