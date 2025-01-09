@@ -56,6 +56,7 @@ router.post('/', requireAuthentication, async function(req, res) {
 
         
     } catch( err ) {
+        console.log("error in days:", err)
         res.status(500).send({
             error: err
         })
