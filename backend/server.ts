@@ -1,7 +1,7 @@
 
 import express from 'express'
 import {pool} from './lib/database'
-
+const isDev = 0
 
 var api = require('./api')
 var cors = require('cors')
@@ -12,7 +12,8 @@ app.use(express.json());
 
 // TODO: Change origin to prod origin
 app.use(cors({
-    origin: '*',
+    origin: process.env.CORS ? process.env.CORS : 'http://localhost:3000',
+    credentials: true,
     optionsSuccessStatus: 200
 }))
 app.use('/', api)
