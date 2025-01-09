@@ -17,6 +17,7 @@ console.log(process.env.DB_HOST)
 console.log(process.env.DB_PORT)
 console.log(process.env.DB_NAME)
 console.log(process.env.CORS_URL)
+console.log(process.env.DB_SSL)
 
 export const pool = new Pool({
     user: process.env.DB_USER,
@@ -24,6 +25,7 @@ export const pool = new Pool({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     database: process.env.DB_NAME,
-    idleTimeoutMillis: 0
+    idleTimeoutMillis: 0,
+    ssl: process.env.DB_SSL
 })
 

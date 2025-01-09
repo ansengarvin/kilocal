@@ -26,6 +26,7 @@ services:
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
       - CORS_URL=${CORS_URL}
+      - DB_SSL=${DB_SSL}
     command: "npm start"
 volumes:
   node_modules:
