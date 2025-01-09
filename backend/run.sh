@@ -79,8 +79,12 @@ function init_nginx() {
     sudo rm /etc/nginx/sites-enabled/default
 }
 
-function init_ssl() {
-    
+# Source: https://certbot.eff.org/instructions?ws=nginx&os=snap
+function init_certbot() {
+    sudo snap install --classic certbot
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
+    sudo certbot certonly --nginx
+    sudo certbot renew --dry-run
 }
 
 function verify_init() {
