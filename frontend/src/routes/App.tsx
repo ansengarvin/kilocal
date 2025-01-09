@@ -147,6 +147,10 @@ function App() {
           "Authorization": "Bearer " + token
         }
       })
+      // Print to console if 500
+      if (response.status == 500) {
+        console.log(response)
+      }
       return response.json()
     }
   })
@@ -294,6 +298,7 @@ function App() {
             {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
               No food for this day yet!
             </p>}
+
             {foodGet.data?.food && foodGet.data?.food.length != 0 &&
               <FoodEntries
                 foodList={foodGet.data.food}
