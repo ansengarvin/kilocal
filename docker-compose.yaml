@@ -39,7 +39,9 @@ services:
       - DB_NAME=${DB_NAME}
     command: "npm start"
   frontend:
-    image: node:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: frontend
     working_dir: /app
     ports:
