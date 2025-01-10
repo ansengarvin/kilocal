@@ -39,7 +39,7 @@ services:
       - DB_NAME=${DB_NAME}
     command: "npm start"
   frontend:
-    build:
+    build: # Can't serve react app from docker without first building it
       context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
