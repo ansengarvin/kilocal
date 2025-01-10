@@ -23,7 +23,7 @@ console.log(process.env.CA_PATH)
 
 const sslConfig = process.env.DB_SSL === 'true' ? {
     rejectUnauthorized: true,
-    ca: process.env.CA_PATH
+    ca: fs.readFileSync(process.env.CA_PATH).toString()
 } : false;
 
 export const pool = new Pool({
