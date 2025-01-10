@@ -1,4 +1,5 @@
 import pg from 'pg'
+import fs from 'fs'
 
 const {Pool, types} = pg
 
@@ -18,6 +19,12 @@ console.log(process.env.DB_PORT)
 console.log(process.env.DB_NAME)
 console.log(process.env.CORS_URL)
 console.log(process.env.DB_SSL)
+console.log(process.env.CA_PATH)
+
+const sslConfig = process.env.DB_SSL === 'true' ? {
+    rejectUnauthorized: true,
+    ca: fs.readFileSync(process.env.CA_PATH).toString()
+} : false;
 
 export const pool = new Pool({
     user: process.env.DB_USER,
@@ -26,6 +33,6 @@ export const pool = new Pool({
     port: Number(process.env.DB_PORT),
     database: process.env.DB_NAME,
     idleTimeoutMillis: 0,
-    ssl: process.env.DB_SSL === 'true'
+    ssl: sslConfig
 })
 

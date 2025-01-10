@@ -91,6 +91,10 @@ function init_certbot() {
     sudo certbot renew --dry-run
 }
 
+function init_db() {
+    wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o ./etc/certs/
+}
+
 function verify_init() {
     echo "Verifying NPM:"
     npm -v
