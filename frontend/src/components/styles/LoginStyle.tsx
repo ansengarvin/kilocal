@@ -93,5 +93,9 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         }
     }
 
-    
+    button.loading {
+        background-color: #41be38;
+        color: black;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
 `

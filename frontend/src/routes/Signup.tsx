@@ -144,8 +144,16 @@ export function Signup() {
                     required
                 />
                 <div className="buttonSection">
-                    <button className="signup" type="submit">
-                        Sign Up
+                    <button
+                        className={signUpMutation.isPending ? 'signup loading' : 'signup'}
+                        type="submit"
+                        disabled={signUpMutation.isPending}
+                    >
+                        {
+                            signUpMutation.isPending ?
+                            'Loading' :
+                            'Sign Up'
+                        }
                     </button>
                 </div> 
             </form>
