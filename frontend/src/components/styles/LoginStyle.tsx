@@ -54,11 +54,13 @@ export const LoginStyle = styled.div<LoginStyleProps>`
 
     div.buttonSection {
         width: 100%;
+        height: 35px;
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
         margin-top: 15px;
+        margin-bottom: 10px;
         gap: 5px;
     }
 
@@ -70,7 +72,6 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         font: inherit;
         height: 35px;
         border-radius: 10px;
-        margin-bottom: 10px;
         background-color: black;
         color: white;
         width: 100%;

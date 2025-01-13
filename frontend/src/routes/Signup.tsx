@@ -6,6 +6,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { apiURL } from "../lib/api";
+import { ProgressBarText } from "../components/data/ProgressBar";
 //import { useNavigate } from "react-router-dom";
 
 interface UserInfo {
@@ -110,6 +111,7 @@ export function Signup() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
+                    disabled={signUpMutation.isPending}
                 />
                 <label htmlFor="password">Password</label>
                 <input
@@ -118,6 +120,7 @@ export function Signup() {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
+                    disabled={signUpMutation.isPending}
                 />
                 <label 
                     htmlFor="confirm"
@@ -134,6 +137,7 @@ export function Signup() {
                         setConfirmPassword(e.target.value)
                     }}
                     required
+                    disabled={signUpMutation.isPending}
                 />
                 <label htmlFor="name">Name</label>
                 <input
@@ -142,8 +146,16 @@ export function Signup() {
                     value={name}
                     onChange={e => setName(e.target.value)}
                     required
+                    disabled={signUpMutation.isPending}
                 />
                 <div className="buttonSection">
+                    <ProgressBarText
+                        value={10}
+                        goal={30}
+                        height={'35px'}
+                        width={'100%'}
+                        text={'Progress'}
+                    />
                     <button
                         className={signUpMutation.isPending ? 'signup loading' : 'signup'}
                         type="submit"
