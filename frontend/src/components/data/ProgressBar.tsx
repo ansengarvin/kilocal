@@ -18,18 +18,18 @@ const ProgressBarDiv = styled.div<progressBarDivProps>`
 
   font-size: ${props => props.fontSize || '1rem'};
 
-  background-color: white;
+  background-color: #737373;
   border-radius: 25px;
   
   .number {
     position: absolute;
-    color: #343434;
+    color: #dbdbdb;
   }
 
   .progressBar {
     width: ${props => props.progressWidth};
     height: inherit;
-    background-color: #c3c3c3;
+    background-color: #03af00;
     border-radius: 25px;
     margin-right: auto;
   }

@@ -75,11 +75,11 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         background-color: black;
         color: white;
         width: 100%;
-        background-color: #0ba100;
+        background-color: #1a91e0;
     }
 
     button:hover {
-        background-color: #0cb900;
+        background-color: #2baaff;
     }
 
     button.half {
