@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { ContentWindow } from "../components/global/ContentWindow";
+import { ContentWindow } from "../components/styles/AppStyle";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
