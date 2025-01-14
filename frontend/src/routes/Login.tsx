@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { NavLink } from "react-router-dom"
 import { LoginStyle } from "../components/styles/LoginStyle"
+import { apiURL } from "../lib/api"
 
 interface LoginInfo {
     email: string,
@@ -19,20 +20,6 @@ export function Login() {
         isLoadingInitial: boolean
     }>()
 
-    // Redirects
-    useEffect(() => {
-        if (!isLoadingInitial) {
-            if (loggedIn) {
-                if (!verified) {
-                    navigate('/verify')
-                } else {
-                    navigate('/')
-                }
-            }
-        }
-        
-    }, [verified, loggedIn])
-
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
@@ -44,6 +31,21 @@ export function Login() {
         mutationFn: async (loginInfo: LoginInfo) => {
             setIsLoading(true)
             await signInWithEmailAndPassword(firebaseAuth, loginInfo.email, loginInfo.password)
+            // Log into our backend (e.g. create database if none exists)
+            const token = await firebaseAuth.currentUser?.getIdToken()
+            const url = `${apiURL}/users/login`
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            // Throw error if response not ok
+            if (!response.ok) {
+                const responseMessage = await response.json()
+                throw new Error(responseMessage.err)
+            }
         },
         onSuccess() {
             console.log("User signed in")
@@ -67,6 +69,20 @@ export function Login() {
             setIsLoading(false)
         }
     })
+
+    // Redirects
+    useEffect(() => {
+        if (!isLoadingInitial && !loginMutation.isPending) {
+            if (loggedIn) {
+                if (!verified) {
+                    navigate('/verify')
+                } else {
+                    navigate('/')
+                }
+            }
+        }
+        
+    }, [verified, loggedIn, loginMutation.isPending])
 
     return (
         <LoginStyle width={'700px'}>
