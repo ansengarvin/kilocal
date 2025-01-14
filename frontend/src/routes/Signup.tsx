@@ -35,6 +35,9 @@ export function Signup() {
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
 
+    const [stage, setStage] = useState(0)
+    const [stageName, setStageName] = useState("")
+
     // Redirects
     useEffect(() => {
         if (!isPosting && !isLoadingInitial) {
@@ -51,12 +54,16 @@ export function Signup() {
     const signUpMutation = useMutation({
         mutationFn: async (userInfo: UserInfo) => {
             setIsPosting(true)
+            setStage(0)
+            setStageName("Creating user account")
             const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, userInfo.email, userInfo.password)
+            setStage(1)
+            setStageName("Sending verification email")
             const user = userCredentials.user
             await sendEmailVerification(user)
             const token = await user.getIdToken()
-
-            // Create user in api database
+            setStage(2)
+            setStageName("Setting up profile")
             var retries = 0
             while (retries < 3) {
                 try {
@@ -166,25 +173,24 @@ export function Signup() {
                     disabled={signUpMutation.isPending}
                 />
                 <div className="buttonSection">
+                {signUpMutation.isPending ? (
                     <ProgressBarText
-                        value={10}
-                        goal={30}
-                        height={'35px'}
-                        width={'100%'}
-                        text={'Progress'}
+                        value={stage}
+                        goal={3}
+                        height="35px"
+                        width="100%"
+                        text={stageName}
                     />
+                ) : (
                     <button
                         className={signUpMutation.isPending ? 'signup loading' : 'signup'}
                         type="submit"
                         disabled={signUpMutation.isPending}
                     >
-                        {
-                            signUpMutation.isPending ?
-                            'Loading' :
-                            'Sign Up'
-                        }
+                        {signUpMutation.isPending ? 'Loading' : 'Sign Up'}
                     </button>
-                </div> 
+                )}
+            </div>
             </form>
 
             <span>
