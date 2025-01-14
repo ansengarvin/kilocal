@@ -32,6 +32,7 @@ export function Login() {
             setIsLoading(true)
             await signInWithEmailAndPassword(firebaseAuth, loginInfo.email, loginInfo.password)
             // Log into our backend (e.g. create database if none exists)
+            console.log("Create account if none exists")
             const token = await firebaseAuth.currentUser?.getIdToken()
             const url = `${apiURL}/users/login`
             const response = await fetch(url, {
