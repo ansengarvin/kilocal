@@ -10,12 +10,14 @@ interface pieChartWithKeyProps {
     titles: Array<string>
     textColor: string
     ignoreKeyWidth?: boolean
+    fontSize: string
 }
 
 interface chartDivProps {
     height: number
     color: string
     keyWidth: string
+    fontSize: string
 }
 
 const ChartDiv = styled.div<chartDivProps>`
@@ -43,7 +45,8 @@ const ChartDiv = styled.div<chartDivProps>`
     p {
         margin: 0;
         padding: 0;
-        white-space: nowrap
+        white-space: nowrap;
+        font-size: ${props => props.fontSize};
     }
 `
 
@@ -51,13 +54,14 @@ export function PieChartWithKey(props: pieChartWithKeyProps) {
     const {
         radius, borderWidth, borderColor,
         sections, colors, titles, textColor,
-        ignoreKeyWidth
+        ignoreKeyWidth, fontSize
     } = props
     return (
         <ChartDiv
             height={radius}
             color={textColor}
             keyWidth={ignoreKeyWidth ? '0' : 'min-content'}
+            fontSize={fontSize}
         >
             <PieChart
                 radius={radius}
@@ -76,7 +80,7 @@ export function PieChartWithKey(props: pieChartWithKeyProps) {
                                         <circle cx="10" cy="10" r="5" fill={colors[index]} />
                                     </svg>
                                     <p>
-                                        {(sections[index] * 100).toFixed(1)}% {title}
+                                        {(sections[index] * 100).toFixed(0)}% {title}
                                     </p>    
                                 </div>
                             </div>

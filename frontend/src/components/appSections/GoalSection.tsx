@@ -26,6 +26,7 @@ const fatColor = "#ED9B40"
 
 const largeMetricRadius = (screen.width > mobileViewPx ? 60 : 40);
 const largeMetricFontSize = (screen.width > mobileViewPx ? "14pt" : "11pt");
+const pieChartKeyFontSize = (screen.width > mobileViewPx ? "12pt" : "10pt");
 
 const smallMetricRadius = (screen.width > mobileViewPx ? 50 : 30);
 const smallMetricFontSize = (screen.width > mobileViewPx ? "12pt" : "10pt");
@@ -125,6 +126,7 @@ export function GoalSection(props: GoalSectionProps) {
                         titles={["Carbs", "Protein", "Fat"]}
                         textColor={metricTextColor}
                         ignoreKeyWidth={true}
+                        fontSize={pieChartKeyFontSize}
                     />
                 </div>
             </div>
