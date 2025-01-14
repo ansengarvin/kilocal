@@ -30,7 +30,6 @@ export function Signup() {
 
     const [passwordsMatch, setPasswordsMatch] = useState(true)
 
-    const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
     const [isPosting, setIsPosting] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -56,28 +55,42 @@ export function Signup() {
             const user = userCredentials.user
             await sendEmailVerification(user)
             const token = await user.getIdToken()
-            const url = `${apiURL}/users`
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: userInfo.name,
-                    weight: weight
-                })
-            })
-            // Make sure response is successful
-            if (!response.ok) {
-                const errorResposne = await response.json()
-                throw new Error(errorResposne.err)
+
+            // Create user in api database
+            var retries = 0
+            while (retries < 3) {
+                try {
+                    const url = `${apiURL}/users`
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: userInfo.name,
+                            weight: weight
+                        })
+                    })
+                    // Make sure response is successful
+                    if (!response.ok) {
+                        const errorResposne = await response.json()
+                        throw new Error(errorResposne.err)
+                    }
+                    setIsPosting(false)
+                    return response.json()
+                } catch (error) {
+                    retries++
+                }
             }
-            setIsPosting(false)
-            return response.json()
+            // Out of retries. Sign the user out, return error.
+            // When the user logs in again, the API server will try to create the account again.
+            await firebaseAuth.signOut()
+            throw new Error(
+                `Error: Account creation was successful, but there was a server error. Please try to log in later.`
+            )
         },
         onSuccess: () => {
-            setIsSuccess(true)
             navigate('/verify')
         },
         onError: (error) => {
@@ -105,7 +118,6 @@ export function Signup() {
                     setPasswordsMatch(false)
                     return
                 }
-                setIsSuccess(false)
                 setIsError(false)
                 signUpMutation.mutate({email, password, name})
             }}>
@@ -178,8 +190,7 @@ export function Signup() {
             <span>
                 Already have an account? <NavLink to="/login">Log In</NavLink>
             </span>
-            {isSuccess && <p>Success!</p>}
-            {isError && <p>{errorMessage}</p>}
+            {isError && <span className="error">{errorMessage}</span>}
             {!passwordsMatch && <span className="error">Error: Passwords must match</span>}
         </LoginStyle>      
     )
