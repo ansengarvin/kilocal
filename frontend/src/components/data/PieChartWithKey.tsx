@@ -22,6 +22,7 @@ interface chartDivProps {
 
 const ChartDiv = styled.div<chartDivProps>`
     display: flex;
+    height: ${props => props.height}px;
     color: ${props => props.color};
     width: min-content;
 
@@ -58,7 +59,7 @@ export function PieChartWithKey(props: pieChartWithKeyProps) {
     } = props
     return (
         <ChartDiv
-            height={radius}
+            height={radius*2}
             color={textColor}
             keyWidth={ignoreKeyWidth ? '0' : 'min-content'}
             fontSize={fontSize}
