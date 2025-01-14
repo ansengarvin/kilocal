@@ -23,7 +23,6 @@ export function Login() {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [isError, setIsError] = useState(true)
     const [errorMessage, setErrorMessage] = useState("")
     const [credentialError, setCredentialError] = useState(false)
 
@@ -75,7 +74,6 @@ export function Login() {
             console.log("User signed in")
         },
         onError(error: any) {
-            setIsError(true)
             if (error.name == "FirebaseError") {
                 if (error.code == "auth/invalid-credential") {
                     setCredentialError(true)
@@ -154,7 +152,7 @@ export function Login() {
             <span>
                 Don't have an account? <NavLink to="/signup">Create an account</NavLink>
             </span>
-            {isError ? <span className='error'>{errorMessage}</span> : <></>}
+            {loginMutation.isError ? <span className='error'>{errorMessage}</span> : <></>}
         </LoginStyle>
     )
 }
