@@ -48,6 +48,15 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         background-color: #ffe4e4;
     }
 
+    input:disabled {
+        background-color: #f5f5f5;
+        border-color: #7a7a7a;
+        color: #7a7a7a;
+        // Remove autofill color
+        -webkit-text-fill-color: #7a7a7a;
+        cursor: wait;
+    }
+
     span.error {
         color: #c50000;
     }

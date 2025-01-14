@@ -33,6 +33,10 @@ const ProgressBarDiv = styled.div<progressBarDivProps>`
     border-radius: 25px;
     margin-right: auto;
   }
+
+  :hover{
+    cursor: wait;
+  }
 `
 
 interface progressBarProps {
