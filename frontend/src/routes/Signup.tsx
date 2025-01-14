@@ -30,7 +30,6 @@ export function Signup() {
 
     const [passwordsMatch, setPasswordsMatch] = useState(true)
 
-    const [isError, setIsError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
 
@@ -88,7 +87,6 @@ export function Signup() {
             navigate('/verify')
         },
         onError: (error) => {
-            setIsError(true)
             setErrorMessage(error.message)
         },
         onSettled: () => {
@@ -125,7 +123,6 @@ export function Signup() {
                     setPasswordsMatch(false)
                     return
                 }
-                setIsError(false)
                 signUpMutation.mutate({email, password, name})
             }}>
                 <label htmlFor="email">Email</label>
@@ -196,7 +193,7 @@ export function Signup() {
             <span>
                 Already have an account? <NavLink to="/login">Log In</NavLink>
             </span>
-            {isError && <span className="error">{errorMessage}</span>}
+            {signUpMutation.isError && <span className="error">{errorMessage}</span>}
             {!passwordsMatch && <span className="error">Error: Passwords must match</span>}
         </LoginStyle>      
     )
