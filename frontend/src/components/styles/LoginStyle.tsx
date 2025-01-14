@@ -1,12 +1,8 @@
 import styled from "@emotion/styled";
 
-interface LoginStyleProps {
-    width: string
-}
-
-export const LoginStyle = styled.div<LoginStyleProps>`
+export const LoginStyle = styled.div`
     height: min-content;
-    width: ${props => props.width};
+    width: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;

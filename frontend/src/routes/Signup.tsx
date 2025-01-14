@@ -112,7 +112,7 @@ export function Signup() {
     }, [verified, loggedIn, signUpMutation.isPending])
 
     return (
-        <LoginStyle width="700px">
+        <LoginStyle>
             <h1>Create an Account</h1>
 
             <form onSubmit={(e) => {

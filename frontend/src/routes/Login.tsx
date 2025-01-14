@@ -104,7 +104,7 @@ export function Login() {
     }, [verified, loggedIn, loginMutation.isPending])
 
     return (
-        <LoginStyle width={'700px'}>
+        <LoginStyle>
             <h1>Login</h1>
 
             <form onSubmit={e => {
