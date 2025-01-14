@@ -86,7 +86,9 @@ function Verify() {
         {isError ? <p>Error sending verification email</p> : <></>}
         {resent ? <p>Verification email resent</p> : <></>}
         {signoutError ? <p>Error signing out: {signoutErrorMessage}</p> : <></>}
-      </div>  
+      </div> 
+      <br/>
+      <span>Account verified? <a href="/verify">Click here to refresh.</a></span>
     </LoginStyle>
   )
 }

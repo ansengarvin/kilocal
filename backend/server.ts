@@ -12,7 +12,7 @@ app.use(express.json());
 
 // TODO: Change origin to prod origin
 app.use(cors({
-    origin: process.env.CORS_URL ? process.env.CORS_URL : 'http://localhost:3000',
+    origin: process.env.CORS_URL ? process.env.CORS_URL : '*',
     credentials: true,
     optionsSuccessStatus: 200
 }))
@@ -21,9 +21,9 @@ app.use('/', api)
 declare global {
     namespace Express {
       interface Request {
-        user?: String,
+        user?: string,
         admin?: boolean,
-        email?: String
+        email?: string
       }
     }
   }

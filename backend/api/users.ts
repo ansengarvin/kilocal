@@ -1,33 +1,26 @@
 import {Router} from 'express'
 
 const router = Router()
-import { createUserIfNoneExists, requireAuthentication} from '../lib/authentication'
+import { createUserIfNoneExists, requireAuthentication, syncFirebaseUserWithDB} from '../lib/authentication'
 import {pool} from '../lib/database'
 
 router.post('/', requireAuthentication, async function (req, res) {
-    try {
-        await createUserIfNoneExists(req, res)
-        res.status(201).send({
-            id: req.user
-        })
-    } catch(err) {
-        res.status(400).send({
-            err: err.message
-        })
-    } 
+    syncFirebaseUserWithDB(req, res)
 })
 
 router.post('/login', requireAuthentication, async function(req, res) {
-    try {
-        await createUserIfNoneExists(req, res)
-        res.status(200).send({
-            message: "User logged in"
-        })
-    } catch(err) {
-        res.status(400).send({
-            err: err.message
-        })
-    }
+     const uid = req.user
+     var text = "SELECT id FROM users WHERE id = $1"
+     var values = [uid]
+     var result = await pool.query(text, values)
+     if (result.rowCount) {
+            // User ID exists, free to proceed.
+            res.status(200).send(result.rows[0])
+            return
+     } else {
+        // User ID doesn't exist, need to perform a sync.
+        syncFirebaseUserWithDB(req, res)
+     }
 })
 
 router.delete('/:user_id', requireAuthentication, async function (req, res) {

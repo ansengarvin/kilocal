@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { NavLink } from "react-router-dom"
 import { LoginStyle } from "../components/styles/LoginStyle"
+import { apiURL } from "../lib/api"
+import { ProgressBarText } from "../components/data/ProgressBar"
 
 interface LoginInfo {
     email: string,
@@ -19,37 +21,59 @@ export function Login() {
         isLoadingInitial: boolean
     }>()
 
-    // Redirects
-    useEffect(() => {
-        if (!isLoadingInitial) {
-            if (loggedIn) {
-                if (!verified) {
-                    navigate('/verify')
-                } else {
-                    navigate('/')
-                }
-            }
-        }
-        
-    }, [verified, loggedIn])
-
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
-    const [isError, setIsError] = useState(true)
     const [errorMessage, setErrorMessage] = useState("")
     const [credentialError, setCredentialError] = useState(false)
 
+    const [stage, setStage] = useState(0)
+    const [stageName, setStageName] = useState("")
+
     const loginMutation = useMutation({
         mutationFn: async (loginInfo: LoginInfo) => {
-            setIsLoading(true)
+            setStage(0)
+            setStageName("Signing In")
             await signInWithEmailAndPassword(firebaseAuth, loginInfo.email, loginInfo.password)
+            // Log into our backend (e.g. create database if none exists)
+            console.log("Create account if none exists")
+            const token = await firebaseAuth.currentUser?.getIdToken()
+
+
+            setStage(1)
+            setStageName("Syncing data")
+
+            var retries = 0
+            while (retries < 3) {
+                try {
+                    const url = `${apiURL}/users/login`
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        }
+                    })
+                    // Throw error if response not ok
+                    if (!response.ok) {
+                        const responseMessage = await response.json()
+                        throw new Error(responseMessage.err)
+                    }
+                    break
+                } catch (error) {
+                    retries++
+                    if (retries == 3) {
+                        // Sign user out
+                        await firebaseAuth.signOut()
+                        throw new Error("Failed to sign into API server. Try again later.")
+                    }
+                }
+            }
+
         },
         onSuccess() {
             console.log("User signed in")
         },
         onError(error: any) {
-            setIsError(true)
             if (error.name == "FirebaseError") {
                 if (error.code == "auth/invalid-credential") {
                     setCredentialError(true)
@@ -62,11 +86,22 @@ export function Login() {
             } else {
                 setErrorMessage(error.message)
             } 
-        },
-        onSettled() {
-            setIsLoading(false)
         }
     })
+
+    // Redirects
+    useEffect(() => {
+        if (!isLoadingInitial && !loginMutation.isPending) {
+            if (loggedIn) {
+                if (!verified) {
+                    navigate('/verify')
+                } else {
+                    navigate('/')
+                }
+            }
+        }
+        
+    }, [verified, loggedIn, loginMutation.isPending])
 
     return (
         <LoginStyle width={'700px'}>
@@ -84,6 +119,7 @@ export function Login() {
                     value={email}
                     onChange={e=>setEmail(e.target.value)}
                     className={credentialError ? 'error' : ''}
+                    disabled={loginMutation.isPending}
                 />
                 <label htmlFor="password">
                     Password
@@ -93,19 +129,32 @@ export function Login() {
                     type="password"
                     onChange={e=>setPassword(e.target.value)}
                     className={credentialError ? 'error' : ''}
+                    disabled={loginMutation.isPending}
                 />
                 <div className="buttonSection">
-                    <button className="login" type="submit">
-                        Log In
-                    </button>
+                    {
+                        loginMutation.isPending ? (
+                            <ProgressBarText
+                                value={stage}
+                                goal={2}
+                                height="35px"
+                                width="100%"
+                                text={stageName}
+                            />
+                        ) : (
+                            <button className="login" type="submit">
+                                Log In
+                            </button>
+                        )
+                    }
+                    
                 </div> 
             </form>
 
             <span>
                 Don't have an account? <NavLink to="/signup">Create an account</NavLink>
             </span>
-            {isLoading ? <>Loading</> : <></>}
-            {isError ? <span className='error'>{errorMessage}</span> : <></>}
+            {loginMutation.isError ? <span className='error'>{errorMessage}</span> : <></>}
         </LoginStyle>
     )
 }

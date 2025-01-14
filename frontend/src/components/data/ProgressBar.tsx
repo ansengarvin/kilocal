@@ -4,34 +4,38 @@ interface progressBarDivProps{
     barWidth: string
     barHeight: string
     progressWidth: string
-    fontSize: string
+    fontSize?: string
 }
 
 const ProgressBarDiv = styled.div<progressBarDivProps>`
   height: ${props => props.barHeight};
   width: ${props => props.barWidth};
-  position: relative;
 
   display: flex;
   gap: 10px;
   justify-content: center;
+  align-items: center;
 
-  font-size: ${props => props.fontSize};
+  font-size: ${props => props.fontSize || '1rem'};
 
-  background-color: white;
+  background-color: #737373;
   border-radius: 25px;
   
   .number {
     position: absolute;
-    color: #343434;
+    color: #dbdbdb;
   }
 
   .progressBar {
     width: ${props => props.progressWidth};
     height: inherit;
-    background-color: #c3c3c3;
+    background-color: #03af00;
     border-radius: 25px;
     margin-right: auto;
+  }
+
+  :hover{
+    cursor: wait;
   }
 `
 
@@ -40,10 +44,11 @@ interface progressBarProps {
     goal: number
     height: string
     width: string
-    fontSize: string
+    fontSize?: string
+    text?: string
 }
 
-export function ProgressBar(props: progressBarProps) {
+export function ProgressBarNumber(props: progressBarProps) {
     const {value, goal, height, width, fontSize} = props
 
     const progressWidth = (`${(value / 2000 * 100).toString()}%`)
@@ -60,6 +65,26 @@ export function ProgressBar(props: progressBarProps) {
             <div className="progressBar"/>
             <div className="number total" tabIndex={0} aria-label={labelText}>
                 {value} / {goal}
+            </div>
+        </ProgressBarDiv>
+    )
+}
+
+export function ProgressBarText(props: progressBarProps) {
+    const {value, goal, height, width, fontSize, text} = props
+
+    const progressWidth = (`${(value / goal * 100).toString()}%`)
+
+    return (
+        <ProgressBarDiv 
+            barWidth =  {width}
+            barHeight = {height}
+            progressWidth = {progressWidth}
+            fontSize={fontSize}
+        >
+            <div className="progressBar"/>
+            <div className="number total" tabIndex={0} aria-label={text}>
+                {text}
             </div>
         </ProgressBarDiv>
     )

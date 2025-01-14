@@ -48,17 +48,28 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         background-color: #ffe4e4;
     }
 
+    input:disabled {
+        background-color: #f5f5f5;
+        border-color: #7a7a7a;
+        color: #7a7a7a;
+        // Remove autofill color
+        -webkit-text-fill-color: #7a7a7a;
+        cursor: wait;
+    }
+
     span.error {
         color: #c50000;
     }
 
     div.buttonSection {
         width: 100%;
+        height: 35px;
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
         margin-top: 15px;
+        margin-bottom: 10px;
         gap: 5px;
     }
 
@@ -70,15 +81,14 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         font: inherit;
         height: 35px;
         border-radius: 10px;
-        margin-bottom: 10px;
         background-color: black;
         color: white;
         width: 100%;
-        background-color: #0ba100;
+        background-color: #1a91e0;
     }
 
     button:hover {
-        background-color: #0cb900;
+        background-color: #2baaff;
     }
 
     button.half {
@@ -93,5 +103,9 @@ export const LoginStyle = styled.div<LoginStyleProps>`
         }
     }
 
-    
+    button.loading {
+        background-color: #41be38;
+        color: black;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
 `
