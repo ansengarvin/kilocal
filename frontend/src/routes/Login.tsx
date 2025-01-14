@@ -39,21 +39,37 @@ export function Login() {
             console.log("Create account if none exists")
             const token = await firebaseAuth.currentUser?.getIdToken()
 
+
             setStage(1)
             setStageName("Syncing data")
-            const url = `${apiURL}/users/login`
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
+
+            var retries = 0
+            while (retries < 3) {
+                try {
+                    const url = `${apiURL}/users/login`
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        }
+                    })
+                    // Throw error if response not ok
+                    if (!response.ok) {
+                        const responseMessage = await response.json()
+                        throw new Error(responseMessage.err)
+                    }
+                    break
+                } catch (error) {
+                    retries++
+                    if (retries == 3) {
+                        // Sign user out
+                        await firebaseAuth.signOut()
+                        throw new Error("Failed to sign into API server. Try again later.")
+                    }
                 }
-            })
-            // Throw error if response not ok
-            if (!response.ok) {
-                const responseMessage = await response.json()
-                throw new Error(responseMessage.err)
             }
+
         },
         onSuccess() {
             console.log("User signed in")
