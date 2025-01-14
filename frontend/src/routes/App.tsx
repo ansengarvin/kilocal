@@ -22,7 +22,7 @@ function formatDate(date: Date) {
 const DateSection = styled.div`
   position: relative;
   height: auto;
-  width: 90%;
+  width: 100%;
   height: 50px;
   margin-bottom: 10px;
   padding-top: 10px;
@@ -84,7 +84,7 @@ const DateSection = styled.div`
 const FoodJournal = styled.div`
   border-radius: 10px;
   height: min-content;
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

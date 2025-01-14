@@ -5,6 +5,7 @@ import { Footer } from './Footer'
 import { Outlet, useLocation } from "react-router-dom"
 import { firebaseAuth } from '../../lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import { mobileView } from '../../lib/defines'
 //import { useQuery } from '@tanstack/react-query'
 
 interface RootProps {
@@ -19,6 +20,11 @@ const Grid = styled.div`
         "footer footer footer";
     grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
+
+    @media (max-width: ${mobileView}) {
+        grid-template-columns: 10px 1fr 10px;
+        grid-template-rows: auto 1fr auto;
+    }
     row-gap: 15px;
 
     main {

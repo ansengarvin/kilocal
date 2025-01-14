@@ -24,7 +24,7 @@ const proteinColor = "#C1292E"
 const fatColor = "#ED9B40"
 
 const GoalSectionDiv = styled.div`
-    width: 90%;
+    width: 100%;
     height: min-content;
     margin-bottom: 10px;
     border-radius: 10px;

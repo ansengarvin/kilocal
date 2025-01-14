@@ -1,16 +1,24 @@
 import styled from "@emotion/styled";
+import { mobileView } from "../../lib/defines";
 
 export const LoginStyle = styled.div`
     height: min-content;
     width: 700px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+    @media (max-width: ${mobileView}) {
+        width: 100%;
+    }
+
+    
     background-color: #cdcdcd;
     padding-top: 50px;
     padding-bottom: 50px;
     margin-top: 50px;
     border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     text-align: center;
 
