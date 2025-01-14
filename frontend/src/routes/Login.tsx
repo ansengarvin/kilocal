@@ -119,6 +119,7 @@ export function Login() {
                     value={email}
                     onChange={e=>setEmail(e.target.value)}
                     className={credentialError ? 'error' : ''}
+                    disabled={loginMutation.isPending}
                 />
                 <label htmlFor="password">
                     Password
@@ -128,6 +129,7 @@ export function Login() {
                     type="password"
                     onChange={e=>setPassword(e.target.value)}
                     className={credentialError ? 'error' : ''}
+                    disabled={loginMutation.isPending}
                 />
                 <div className="buttonSection">
                     {
