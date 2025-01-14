@@ -9,7 +9,18 @@ router.post('/', requireAuthentication, async function (req, res) {
 })
 
 router.post('/login', requireAuthentication, async function(req, res) {
-    createUserIfNoneExists(req, res)
+     const uid = req.user
+     var text = "SELECT id FROM users WHERE id = $1"
+     var values = [uid]
+     var result = await pool.query(text, values)
+     if (result.rowCount) {
+            // User ID exists, free to proceed.
+            res.status(200).send(result.rows[0])
+            return
+     } else {
+        // User ID doesn't exist, need to perform a sync.
+        syncFirebaseUserWithDB(req, res)
+     }
 })
 
 router.delete('/:user_id', requireAuthentication, async function (req, res) {

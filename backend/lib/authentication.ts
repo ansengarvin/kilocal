@@ -134,17 +134,16 @@ export async function syncFirebaseUserWithDB(req: Request, res: Response) {
     const email = req.email
 
     // Check if the user's email exists in the database
-    const text = "SELECT id FROM users WHERE email = $1"
-    const values = [email]
-    const result = await pool.query(text, values)
+    var text = "SELECT id FROM users WHERE email = $1"
+    var values = [email]
+    var result = await pool.query(text, values)
     if (result.rowCount) {
         const dbUserId = result.rows[0].id
 
         try {
             await admin.auth().getUser(dbUserId)
-
-            // User exists both in firebase and DB. This shouldn't ever happen (since firebase doesn't allow for duplicate emails),
-            // but just in case, send 409.
+            // User exists both in firebase and DB. 
+            // This shouldn't ever happen (since firebase doesn't allow for duplicate emails).
             res.status(409).send({
                 err: "Duplicate email issue in Firebase"
             })
