@@ -25,11 +25,11 @@ CREATE TABLE Foods (
     day_id INTEGER,
     recipe_id INTEGER,
     name VARCHAR(255),
-    calories NUMERIC(5, 2) NOT NULL,
+    calories NUMERIC(10, 2) NOT NULL,
     amount INTEGER NOT NULL,
-    carbs NUMERIC(5, 2) NOT NULL,
-    fat NUMERIC(5, 2) NOT NULL,
-    protein NUMERIC(5, 2) NOT NULL,
+    carbs NUMERIC(10, 2) NOT NULL,
+    fat NUMERIC(10, 2) NOT NULL,
+    protein NUMERIC(10, 2) NOT NULL,
     position INTEGER,
     CONSTRAINT check_day_recipe check (
         (day_id IS NOT NULL AND recipe_id IS NULL) OR
