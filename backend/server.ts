@@ -21,9 +21,9 @@ app.use('/', api)
 declare global {
     namespace Express {
       interface Request {
-        user?: String,
+        user?: string,
         admin?: boolean,
-        email?: String
+        email?: string
       }
     }
   }

@@ -68,6 +68,11 @@ export function Signup() {
                     weight: weight
                 })
             })
+            // Make sure response is successful
+            if (!response.ok) {
+                const errorResposne = await response.json()
+                throw new Error(errorResposne.err)
+            }
             setIsPosting(false)
             return response.json()
         },
