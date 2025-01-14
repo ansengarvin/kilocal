@@ -96,6 +96,11 @@ const FoodJournal = styled.div`
     height: 10px;
     background-color: green;
   }
+
+  span {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 `
 
 function App() {
@@ -294,9 +299,9 @@ function App() {
           <h2>
             Food Journal
           </h2>
-          {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
+          {foodGet.data?.food && foodGet.data?.food.length == 0 && <span>
             No food for this day yet!
-          </p>}
+          </span>}
 
           {foodGet.data?.food && foodGet.data?.food.length != 0 &&
             <FoodEntries

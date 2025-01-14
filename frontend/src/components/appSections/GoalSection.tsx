@@ -176,8 +176,7 @@ export function GoalSection(props: GoalSectionProps) {
                         color={fatColor}
                     />  
                 </div>
-            </div>
-            
+            </div>   
         </GoalSectionDiv>
     )
 }
