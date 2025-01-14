@@ -102,7 +102,7 @@ export function Signup() {
 
     // Redirects
     useEffect(() => {
-        if (signUpMutation.isPending && !isLoadingInitial) {
+        if (!signUpMutation.isPending && !isLoadingInitial) {
             if (loggedIn) {
                 if (verified) {
                     navigate('/profile')
