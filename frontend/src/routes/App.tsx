@@ -9,7 +9,7 @@ import { Icon } from "../components/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
 import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
-import { apiURL } from "../lib/api";
+import { apiURL } from "../lib/defines";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -233,84 +233,82 @@ function App() {
   } else {
     return (
       <ContentWindow>
-        <div className='content'>
-          <DateSection className="appElement">
-            <button className="date left" onClick={(e) => {
-                e.preventDefault()
-                const newDate = new Date(dayDate)
-                newDate.setDate(dayDate.getDate() - 1)
-                setDayDate(newDate)
-                setFormattedDate(formatDate(newDate))
-              }}>
-                <Icon iconName="backArrow" color={'#ffffff'}/>
-              </button>
-            
-            <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
-  
-            <button className="date right" disabled={isCurrentDay} onClick={(e) => {
-                e.preventDefault()
-                const newDate = new Date(dayDate)
-                newDate.setDate(dayDate.getDate() + 1)
-                setDayDate(newDate)
-                setFormattedDate(formatDate(newDate))
-              }}>
-                <Icon iconName="forwardArrow" color={'#ffffff'}/>
-              </button>
-          </DateSection>
-          {
-            foodGet.data ? 
-            <GoalSection
-              calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
-              carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
-              proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
-              fatTotal={foodGet.data?.totalFat} fatGoal={50}
-            /> :
-            <GoalSection
-              calorieTotal={0} calorieGoal={2000}
-              carbTotal={0} carbGoal={300}
-              proteinTotal={0} proteinGoal={100}
-              fatTotal={0} fatGoal={50}
+        <DateSection className="appElement">
+          <button className="date left" onClick={(e) => {
+              e.preventDefault()
+              const newDate = new Date(dayDate)
+              newDate.setDate(dayDate.getDate() - 1)
+              setDayDate(newDate)
+              setFormattedDate(formatDate(newDate))
+            }}>
+              <Icon iconName="backArrow" color={'#ffffff'}/>
+            </button>
+          
+          <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
+
+          <button className="date right" disabled={isCurrentDay} onClick={(e) => {
+              e.preventDefault()
+              const newDate = new Date(dayDate)
+              newDate.setDate(dayDate.getDate() + 1)
+              setDayDate(newDate)
+              setFormattedDate(formatDate(newDate))
+            }}>
+              <Icon iconName="forwardArrow" color={'#ffffff'}/>
+            </button>
+        </DateSection>
+        {
+          foodGet.data ? 
+          <GoalSection
+            calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
+            carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
+            proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
+            fatTotal={foodGet.data?.totalFat} fatGoal={50}
+          /> :
+          <GoalSection
+            calorieTotal={0} calorieGoal={2000}
+            carbTotal={0} carbGoal={300}
+            proteinTotal={0} proteinGoal={100}
+            fatTotal={0} fatGoal={50}
+          />
+        }
+        
+        <FoodJournal className="appElement">
+          <h2>
+            Add a Food
+          </h2>
+          <PostSection
+            foodPost={foodPost}
+            foodName={foodName}
+            calories={calories}
+            carbs={carbs}
+            protein={protein}
+            fat={fat}
+            setPostReady={setPostReady}
+            setFoodName={setFoodName}
+            setCalories={setCalories}
+            setCarbs={setCarbs}
+            setProtein={setProtein}
+            setFat={setFat}
+          />
+          <br/>
+          <h2>
+            Food Journal
+          </h2>
+          {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
+            No food for this day yet!
+          </p>}
+
+          {foodGet.data?.food && foodGet.data?.food.length != 0 &&
+            <FoodEntries
+              foodList={foodGet.data.food}
+              setDeleteID={setDeleteID}
+              setDeleteReady={setDeleteReady}
+              hasRecipes={false}
+              hasTitles={true}
+              width={'95%'}
             />
           }
-          
-          <FoodJournal className="appElement">
-            <h2>
-              Add a Food
-            </h2>
-            <PostSection
-              foodPost={foodPost}
-              foodName={foodName}
-              calories={calories}
-              carbs={carbs}
-              protein={protein}
-              fat={fat}
-              setPostReady={setPostReady}
-              setFoodName={setFoodName}
-              setCalories={setCalories}
-              setCarbs={setCarbs}
-              setProtein={setProtein}
-              setFat={setFat}
-            />
-            <br/>
-            <h2>
-              Food Journal
-            </h2>
-            {foodGet.data?.food && foodGet.data?.food.length == 0 && <p>
-              No food for this day yet!
-            </p>}
-
-            {foodGet.data?.food && foodGet.data?.food.length != 0 &&
-              <FoodEntries
-                foodList={foodGet.data.food}
-                setDeleteID={setDeleteID}
-                setDeleteReady={setDeleteReady}
-                hasRecipes={false}
-                hasTitles={true}
-                width={'95%'}
-              />
-            }
-          </FoodJournal>
-        </div>    
+        </FoodJournal>
       </ContentWindow>   
     )
   }

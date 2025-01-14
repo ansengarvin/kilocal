@@ -1,9 +1,13 @@
-import styled from "@emotion/styled"
+  import styled from "@emotion/styled"
+  import { mobileView } from "../../lib/defines"
 
-export const ContentWindow = styled.div`
+  export const ContentWindow = styled.div`
   width: 750px;
+
+  @media (max-width: ${mobileView}) {
+    width: 100%;
+  }
   div.content {
-    grid-area: center;
     width: 100%;
     height: 100%;
 
@@ -11,4 +15,4 @@ export const ContentWindow = styled.div`
     flex-direction: column;
     align-items: center;
   }
-`
+  `

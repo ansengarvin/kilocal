@@ -4,7 +4,7 @@ import { ContentWindow } from "../components/global/ContentWindow"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
 import { useEffect, useState } from "react"
-import { apiURL } from "../lib/api"
+import { apiURL } from "../lib/defines"
 
 const SignOutButton = styled.button`
   margin-top: auto;

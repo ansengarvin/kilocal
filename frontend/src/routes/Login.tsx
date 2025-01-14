@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { NavLink } from "react-router-dom"
 import { LoginStyle } from "../components/styles/LoginStyle"
-import { apiURL } from "../lib/api"
+import { apiURL } from "../lib/defines"
 import { ProgressBarText } from "../components/data/ProgressBar"
 
 interface LoginInfo {
