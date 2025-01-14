@@ -20,15 +20,14 @@ const Grid = styled.div`
     grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
     row-gap: 15px;
-`
 
-const Main = styled.main`
-    grid-area: main;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    main {
+        grid-area: main;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 `
-
 
 export function Root(props: RootProps) {
     const {children} = props
@@ -70,9 +69,9 @@ export function Root(props: RootProps) {
             <>
                 <Grid>
                     <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
-                        <Main>
+                        <main>
                             LOADING
-                        </Main>
+                        </main>
                     <Footer/>
                 </Grid>
             </>
@@ -82,13 +81,13 @@ export function Root(props: RootProps) {
             <>
                 <Grid>
                     <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
-                    <Main>
-                        {children || <Outlet context={{
-                            loggedIn, setLoggedIn,
-                            verified, setVerified,
-                            isLoadingInitial, setIsLoadingInitial
-                        }}/>}
-                    </Main>
+                        <main>
+                            {children || <Outlet context={{
+                                loggedIn, setLoggedIn,
+                                verified, setVerified,
+                                isLoadingInitial, setIsLoadingInitial
+                            }}/>}
+                        </main>
                     <Footer/>
                 </Grid>
             </>
