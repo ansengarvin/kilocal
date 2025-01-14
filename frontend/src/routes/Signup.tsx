@@ -31,29 +31,16 @@ export function Signup() {
     const [passwordsMatch, setPasswordsMatch] = useState(true)
 
     const [isError, setIsError] = useState(false)
-    const [isPosting, setIsPosting] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
 
     const [stage, setStage] = useState(0)
     const [stageName, setStageName] = useState("")
 
-    // Redirects
-    useEffect(() => {
-        if (!isPosting && !isLoadingInitial) {
-            if (loggedIn) {
-                if (verified) {
-                    navigate('/profile')
-                } else {
-                    navigate('/verify')
-                }
-            }
-        }
-    }, [verified, loggedIn, isPosting])
+    
 
     const signUpMutation = useMutation({
         mutationFn: async (userInfo: UserInfo) => {
-            setIsPosting(true)
             setStage(0)
             setStageName("Creating user account")
             const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, userInfo.email, userInfo.password)
@@ -84,7 +71,7 @@ export function Signup() {
                         const errorResposne = await response.json()
                         throw new Error(errorResposne.err)
                     }
-                    setIsPosting(false)
+                    
                     return response.json()
                 } catch (error) {
                     retries++
@@ -112,6 +99,19 @@ export function Signup() {
             setWeight(0)
         }
     })
+
+    // Redirects
+    useEffect(() => {
+        if (signUpMutation.isPending && !isLoadingInitial) {
+            if (loggedIn) {
+                if (verified) {
+                    navigate('/profile')
+                } else {
+                    navigate('/verify')
+                }
+            }
+        }
+    }, [verified, loggedIn, signUpMutation.isPending])
 
     return (
         <LoginStyle width="700px">

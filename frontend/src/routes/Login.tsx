@@ -6,6 +6,7 @@ import { useNavigate, useOutletContext } from "react-router-dom"
 import { NavLink } from "react-router-dom"
 import { LoginStyle } from "../components/styles/LoginStyle"
 import { apiURL } from "../lib/api"
+import { ProgressBarText } from "../components/data/ProgressBar"
 
 interface LoginInfo {
     email: string,
@@ -22,18 +23,24 @@ export function Login() {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(true)
     const [errorMessage, setErrorMessage] = useState("")
     const [credentialError, setCredentialError] = useState(false)
 
+    const [stage, setStage] = useState(0)
+    const [stageName, setStageName] = useState("")
+
     const loginMutation = useMutation({
         mutationFn: async (loginInfo: LoginInfo) => {
-            setIsLoading(true)
+            setStage(0)
+            setStageName("Signing In")
             await signInWithEmailAndPassword(firebaseAuth, loginInfo.email, loginInfo.password)
             // Log into our backend (e.g. create database if none exists)
             console.log("Create account if none exists")
             const token = await firebaseAuth.currentUser?.getIdToken()
+
+            setStage(1)
+            setStageName("Syncing data")
             const url = `${apiURL}/users/login`
             const response = await fetch(url, {
                 method: 'POST',
@@ -65,9 +72,6 @@ export function Login() {
             } else {
                 setErrorMessage(error.message)
             } 
-        },
-        onSettled() {
-            setIsLoading(false)
         }
     })
 
@@ -112,16 +116,28 @@ export function Login() {
                     className={credentialError ? 'error' : ''}
                 />
                 <div className="buttonSection">
-                    <button className="login" type="submit">
-                        Log In
-                    </button>
+                    {
+                        loginMutation.isPending ? (
+                            <ProgressBarText
+                                value={stage}
+                                goal={2}
+                                height="35px"
+                                width="100%"
+                                text={stageName}
+                            />
+                        ) : (
+                            <button className="login" type="submit">
+                                Log In
+                            </button>
+                        )
+                    }
+                    
                 </div> 
             </form>
 
             <span>
                 Don't have an account? <NavLink to="/signup">Create an account</NavLink>
             </span>
-            {isLoading ? <>Loading</> : <></>}
             {isError ? <span className='error'>{errorMessage}</span> : <></>}
         </LoginStyle>
     )
