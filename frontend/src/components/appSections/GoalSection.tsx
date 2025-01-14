@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ProgressCircle } from "../data/ProgressCircle";
 import { PieChartWithKey } from "../data/PieChartWithKey";
+import { mobileViewPx } from "../../lib/defines";
 
 interface GoalSectionProps {
     calorieTotal: number,
@@ -22,6 +23,12 @@ const calorieColor = "#417B5A"
 const carbColor = "#235789"
 const proteinColor = "#C1292E"
 const fatColor = "#ED9B40"
+
+const largeMetricRadius = (screen.width > mobileViewPx ? 60 : 40);
+const largeMetricFontSize = (screen.width > mobileViewPx ? "14pt" : "11pt");
+
+const smallMetricRadius = (screen.width > mobileViewPx ? 50 : 30);
+const smallMetricFontSize = (screen.width > mobileViewPx ? "12pt" : "10pt");
 
 const GoalSectionDiv = styled.div`
     width: 100%;
@@ -100,8 +107,8 @@ export function GoalSection(props: GoalSectionProps) {
                         value={calorieTotal}
                         goal={calorieGoal}
                         strokeWidth={15}
-                        radius={60}
-                        fontSize="14pt"
+                        radius={largeMetricRadius}
+                        fontSize={largeMetricFontSize}
                         textColor={metricTextColor}
                         backColor={metricBackColor}
                         color={calorieColor}
@@ -110,7 +117,7 @@ export function GoalSection(props: GoalSectionProps) {
                 <div className="metric">
                     <h3>Macros</h3>
                     <PieChartWithKey
-                        radius={60}
+                        radius={largeMetricRadius}
                         borderWidth={0}
                         borderColor={"#000000"}
                         sections={[carbPercentage, proteinPercentage, fatPercentage]}
@@ -130,8 +137,8 @@ export function GoalSection(props: GoalSectionProps) {
                         value={carbTotal}
                         goal={carbGoal}
                         strokeWidth={10}
-                        radius={50}
-                        fontSize="12pt"
+                        radius={smallMetricRadius}
+                        fontSize={smallMetricFontSize}
                         textColor={metricTextColor}
                         backColor={metricBackColor}
                         color={carbColor}
@@ -145,8 +152,8 @@ export function GoalSection(props: GoalSectionProps) {
                         value={proteinTotal}
                         goal={proteinGoal}
                         strokeWidth={10}
-                        radius={50}
-                        fontSize="12pt"
+                        radius={smallMetricRadius}
+                        fontSize={smallMetricFontSize}
                         textColor={metricTextColor}
                         backColor={metricBackColor}
                         color={proteinColor}
@@ -160,8 +167,8 @@ export function GoalSection(props: GoalSectionProps) {
                         value={fatTotal}
                         goal={fatGoal}
                         strokeWidth={10}
-                        radius={50}
-                        fontSize="12pt"
+                        radius={smallMetricRadius}
+                        fontSize={smallMetricFontSize}
                         textColor={metricTextColor}
                         backColor={metricBackColor}
                         color={fatColor}
