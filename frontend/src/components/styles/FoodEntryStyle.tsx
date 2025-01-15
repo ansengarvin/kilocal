@@ -143,11 +143,11 @@ export const FoodEntryStyle = styled.div`
     }
 
     button.submit {
-        background-color: #3edb3e;
+        background-color: #37bc37;
     }
 
     button.submit:hover {
-        background-color: #50ff50;
+        background-color: #43d043;
     }
     
     button.delete {
