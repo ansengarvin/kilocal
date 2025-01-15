@@ -69,18 +69,18 @@ const DateSection = styled.div`
       width: 35px;
     }
 
-    background-color: #626262;
+    background-color: #848484;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 
     :hover {
-      background-color: #8a8a8a;
+      background-color: #a4a4a4;
     }
 
     :disabled {
-      background-color: #c3c3c3;
+      background-color: #d3d3d3;
     }
   }
 `
