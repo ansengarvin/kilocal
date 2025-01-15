@@ -11,5 +11,5 @@ export const tabletViewPx = 800;
 
 // Global site colors
 export const appAccentColor = '#36373b';
-export const appAccentHover = '#44464b';
+export const appAccentHover = '#747580';
 export const appWindowColor = '#f7f7f2';

@@ -79,6 +79,10 @@ const globalStyle = css`
     color: #0073ff;
     text-decoration: none;
   }
+
+  button {
+    transition: 0.5s;
+  }
 `
 
 const queryClient = new QueryClient()

@@ -24,6 +24,9 @@ const carbColor = "#235789"
 const proteinColor = "#C1292E"
 const fatColor = "#ED9B40"
 
+const metricBackColor = "#dbd8cc"
+const metricTextColor = "#383838"
+
 const largeMetricRadius = (screen.width > mobileViewPx ? 60 : 40);
 const largeMetricFontSize = (screen.width > mobileViewPx ? "14pt" : "11pt");
 const pieChartKeyFontSize = (screen.width > mobileViewPx ? "12pt" : "10pt");
@@ -66,9 +69,6 @@ const GoalSectionDiv = styled.div`
         gap: 20px;
     }
 `
-
-const metricBackColor = "#cbcbcb"
-const metricTextColor = "#383838"
 
 
 export function GoalSection(props: GoalSectionProps) {

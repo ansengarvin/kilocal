@@ -70,10 +70,11 @@ export const FoodEntryStyle = styled.div`
         // Add own styling
         background-color:white;
         text-align: center;
+        outline: solid 1px #dbd8cc;
     }
     
     div.stat {
-        background-color: #d5d5d5;
+        background-color: #dbd8cc;
     }
 
     .header {

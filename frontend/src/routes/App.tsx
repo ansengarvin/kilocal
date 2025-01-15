@@ -77,6 +77,8 @@ const DateSection = styled.div`
 
     :hover {
       background-color: ${appAccentHover};
+      // Fade out
+      
     }
 
     :disabled {
