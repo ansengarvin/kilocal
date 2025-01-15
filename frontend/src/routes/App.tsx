@@ -243,7 +243,7 @@ function App() {
   } else {
     return (
       <ContentWindow>
-        <DateSection className="appElement">
+        <DateSection className="appWindow">
           <button className="date left" onClick={(e) => {
               e.preventDefault()
               const newDate = new Date(dayDate)
@@ -281,7 +281,7 @@ function App() {
             fatTotal={0} fatGoal={50}
           />
         }
-        <FoodJournal className="appElement">
+        <FoodJournal className="appWindow">
           <h2>
             Add a Food
           </h2>

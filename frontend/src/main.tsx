@@ -4,7 +4,7 @@ import {Global, css} from '@emotion/react'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { mobileView } from './lib/defines.tsx'
+import { appAccentColor, appWindowColor, mobileView } from './lib/defines.tsx'
 
 const globalStyle = css`
   html, body {
@@ -22,7 +22,7 @@ const globalStyle = css`
   h1, h2, h3 {
     margin: 0;
 
-    color: #3d3d3d;
+    color: ${appAccentColor};
   }
 
   h1 {
@@ -59,11 +59,7 @@ const globalStyle = css`
   }
 
   input, td {
-    font-size: 1em;
-
-    @media (max-width: ${mobileView}) {
-      font-size: 0.75em;
-    }
+    
   }
 
   span {
@@ -74,8 +70,8 @@ const globalStyle = css`
     }
   }
 
-  .appElement {
-    background-color: #e9e9e9;
+  .appWindow {
+    background-color: ${appWindowColor}
   }
 
   a {

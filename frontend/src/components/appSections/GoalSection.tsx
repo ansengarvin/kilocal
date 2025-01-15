@@ -95,7 +95,7 @@ export function GoalSection(props: GoalSectionProps) {
    
 
     return (
-        <GoalSectionDiv className="appElement">
+        <GoalSectionDiv className="appWindow">
             <h2>
                 Daily Goals
             </h2>

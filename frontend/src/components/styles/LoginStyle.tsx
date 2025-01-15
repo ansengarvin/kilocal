@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { mobileView } from "../../lib/defines";
+import { appWindowColor, mobileView } from "../../lib/defines";
 
 export const LoginStyle = styled.div`
     height: min-content;
@@ -10,8 +10,8 @@ export const LoginStyle = styled.div`
     }
 
     
-    background-color: #cdcdcd;
-    padding-top: 50px;
+    background-color: ${appWindowColor};
+    padding-top: 10px;
     padding-bottom: 50px;
     margin-top: 50px;
     border-radius: 10px;
@@ -19,7 +19,6 @@ export const LoginStyle = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
     text-align: center;
 
     form {
@@ -88,11 +87,11 @@ export const LoginStyle = styled.div`
         background-color: black;
         color: white;
         width: 100%;
-        background-color: #1a91e0;
+        background-color: #1673b1;
     }
 
     button:hover {
-        background-color: #2baaff;
+        background-color: #258ace;
     }
 
     button.half {
@@ -111,5 +110,9 @@ export const LoginStyle = styled.div`
         background-color: #41be38;
         color: black;
         transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    h1 {
+        margin-bottom: 20px;
     }
 `

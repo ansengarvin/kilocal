@@ -8,3 +8,7 @@ export const mobileViewPx = 450;
 
 export const tabletView = '800px';
 export const tabletViewPx = 800;
+
+// Global site colors
+export const appAccentColor = '#36373be0';
+export const appWindowColor = '#f7f7f2';

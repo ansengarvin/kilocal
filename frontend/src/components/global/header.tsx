@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
 import { ReactNode } from "react";
-import { tabletView } from "../../lib/defines";
+import { appAccentColor, tabletView } from "../../lib/defines";
 
 interface HeaderProps {
     children?: ReactNode
@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 const Headerbar = styled.nav`
-    background-color: grey;
+    background-color: ${appAccentColor};
     grid-area: header;
     display: flex;
     align-items: center;
