@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
 import { ReactNode } from "react";
+import { tabletView } from "../../lib/defines";
 
 interface HeaderProps {
     children?: ReactNode
@@ -15,8 +16,14 @@ const Headerbar = styled.nav`
     justify-content: right;
     gap: 20px;
     height: 50px;
+
     padding-left: 100px;
     padding-right: 100px;
+
+    @media (max-width: ${tabletView}) {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 
     a {
         color: white;
