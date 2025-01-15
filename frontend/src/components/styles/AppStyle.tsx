@@ -1,10 +1,10 @@
 import styled from "@emotion/styled"
-import { mobileView } from "../../lib/defines"
+import { tabletView } from "../../lib/defines"
 
 export const ContentWindow = styled.div`
   width: 750px;
 
-  @media (max-width: ${mobileView}) {
+  @media (max-width: ${tabletView}) {
     width: 100%;
   }
 
