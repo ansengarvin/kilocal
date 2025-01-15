@@ -9,6 +9,8 @@ export const FoodEntryStyle = styled.div`
     flex-direction: column;
     align-items: center;
 
+    background-color: #d4c9b4;
+
     table {
         background-color: green;
     }
@@ -20,7 +22,7 @@ export const FoodEntryStyle = styled.div`
     form.entryContainer {
         width: calc(95% - 3px);
         padding: 3px;
-        background-color: #8c754a;
+        background-color: #bcbcbc;
     }
 
     table.entryContainer {
@@ -35,7 +37,6 @@ export const FoodEntryStyle = styled.div`
         justify-content: space-between;
         align-items: center;
         gap: 4px;
-        overflow: hidden;
     }
 
     // Remove arrow buttons from number inputs across platforms
@@ -53,6 +54,8 @@ export const FoodEntryStyle = styled.div`
     // Remove default styling from inputs
     input {
         all: unset;
+        width: 0;
+        min-width: 0;
     }
 
     .stat {
@@ -94,7 +97,6 @@ export const FoodEntryStyle = styled.div`
     }
 
     label.foodName, input.foodName {
-        min-width: 0;
         flex-grow: 1;
         flex-shrink: 1;
         background-color: grey;

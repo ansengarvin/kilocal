@@ -32,7 +32,7 @@ export function PostSection(props: postSectionProps) {
         }}>
             <div className="row">
               <label htmlFor="name" className="foodName">
-                Food Name
+                Food
               </label>
               <label htmlFor="calories" className="calories">
                 Calories
