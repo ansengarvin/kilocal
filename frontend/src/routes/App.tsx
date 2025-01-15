@@ -9,7 +9,7 @@ import { Icon } from "../components/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
 import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
-import { apiURL } from "../lib/defines";
+import { apiURL, mobileView } from "../lib/defines";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -63,6 +63,11 @@ const DateSection = styled.div`
     margin: 0;
     height: 50px;
     width: 50px;
+
+    @media (max-width: ${mobileView}) {
+      height: 35px;
+      width: 35px;
+    }
 
     background-color: #626262;
     border-radius: 50%;
