@@ -99,35 +99,78 @@ export function GoalSection(props: GoalSectionProps) {
             <h2>
                 Daily Goals
             </h2>
-            <div className="subsection">
-                <div className="metric">
-                    <h3>
-                        Calories
-                    </h3>
-                    <ProgressCircle
-                        value={calorieTotal}
-                        goal={calorieGoal}
-                        strokeWidth={15}
-                        radius={largeMetricRadius}
-                        fontSize={largeMetricFontSize}
-                        textColor={metricTextColor}
-                        backColor={metricBackColor}
-                        color={calorieColor}
-                    />
-                    <h3>Macros</h3>
-                    <PieChartWithKey
-                        radius={largeMetricRadius}
-                        borderWidth={0}
-                        borderColor={"#000000"}
-                        sections={[carbPercentage, proteinPercentage, fatPercentage]}
-                        colors={[carbColor, proteinColor, fatColor]}
-                        titles={["Carbs", "Protein", "Fat"]}
-                        textColor={metricTextColor}
-                        ignoreKeyWidth={true}
-                        fontSize={pieChartKeyFontSize}
-                    />
-                </div>
-            </div>
+            {
+                screen.width < mobileViewPx ? (
+                    <>
+                        <div className="subsection">
+                            <div className="metric">
+                                <h3>
+                                    Calories
+                                </h3>
+                                <ProgressCircle
+                                    value={calorieTotal}
+                                    goal={calorieGoal}
+                                    strokeWidth={15}
+                                    radius={largeMetricRadius}
+                                    fontSize={largeMetricFontSize}
+                                    textColor={metricTextColor}
+                                    backColor={metricBackColor}
+                                    color={calorieColor}
+                                />
+                            </div>
+                        </div>
+                        <div className="subsection">
+                            <div className="metric">
+                                <h3>Macros</h3>
+                                <PieChartWithKey
+                                    radius={largeMetricRadius}
+                                    borderWidth={0}
+                                    borderColor={"#000000"}
+                                    sections={[carbPercentage, proteinPercentage, fatPercentage]}
+                                    colors={[carbColor, proteinColor, fatColor]}
+                                    titles={["Carbs", "Protein", "Fat"]}
+                                    textColor={metricTextColor}
+                                    ignoreKeyWidth={true}
+                                    fontSize={pieChartKeyFontSize}
+                                />
+                            </div>
+                        </div>
+                    </>    
+                ) : (
+                    <div className="subsection">
+                        <div className="metric">
+                            <h3>
+                                Calories
+                            </h3>
+                            <ProgressCircle
+                                value={calorieTotal}
+                                goal={calorieGoal}
+                                strokeWidth={15}
+                                radius={largeMetricRadius}
+                                fontSize={largeMetricFontSize}
+                                textColor={metricTextColor}
+                                backColor={metricBackColor}
+                                color={calorieColor}
+                            />
+                        </div>
+                        <div className="metric">
+                            <h3>Macros</h3>
+                            <PieChartWithKey
+                                radius={largeMetricRadius}
+                                borderWidth={0}
+                                borderColor={"#000000"}
+                                sections={[carbPercentage, proteinPercentage, fatPercentage]}
+                                colors={[carbColor, proteinColor, fatColor]}
+                                titles={["Carbs", "Protein", "Fat"]}
+                                textColor={metricTextColor}
+                                ignoreKeyWidth={true}
+                                fontSize={pieChartKeyFontSize}
+                            />
+                        </div>
+                    </div>
+                )
+            }
+            
             <div className="subsection">
                 <div className="metric">
                     <h3>
