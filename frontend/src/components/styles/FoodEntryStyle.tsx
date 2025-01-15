@@ -3,6 +3,7 @@ import { mobileView } from "../../lib/defines";
 
 export const FoodEntryStyle = styled.div`
     width: 100%;
+    height: min-content;
 
     display: flex;
     flex-direction: column;
@@ -18,11 +19,47 @@ export const FoodEntryStyle = styled.div`
 
     .entryContainer {
         width: 95%;
+        background-color: #e3a4e3;
+    }
+
+    form.entryContainer {
+        width: calc(95% - 3px);
+        padding: 3px;
+    }
+
+    div.row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 4px;
+    }
+
+    // Remove arrow buttons from number inputs across platforms
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    // Remove default styling from inputs
+    input {
+        all: unset;
     }
 
     .stat {
         height: 50px;
         border-radius: 10px;
+
+        @media (max-width: ${mobileView}) {
+            height: 40px;
+        }
         
         display: flex;
         justify-content: center;
@@ -30,9 +67,11 @@ export const FoodEntryStyle = styled.div`
     }
 
     input.stat {
+        // Add own styling
         background-color:white;
+        text-align: center;
     }
-
+    
     div.stat {
         background-color: #ffffff;
     }
@@ -41,28 +80,33 @@ export const FoodEntryStyle = styled.div`
         height: 20px;
     }
 
-    .entry {
-        height: 50px;
-
-        @media (max-width: ${mobileView}) {
-            height: 40px;
-        }
+    td.foodName, th.foodName {
+        width: 100%;
     }
 
-    .foodName {
-        width: 100%;
+    label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 3px;
+    }
+
+    label.foodName, input.foodName {
+        flex-grow: 1;  
     }
 
     .calories {
         min-width: 75px;
+        max-width: 75px;
     }
 
     .macro {
         min-width: 50px;
+        max-width: 50px;
     }
 
     .buttonContainer {
-        width: min-content;
+        width: 35px;
         background-color: green;
     }
 

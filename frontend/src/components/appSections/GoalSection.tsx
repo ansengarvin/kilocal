@@ -114,8 +114,6 @@ export function GoalSection(props: GoalSectionProps) {
                         backColor={metricBackColor}
                         color={calorieColor}
                     />
-                </div>
-                <div className="metric">
                     <h3>Macros</h3>
                     <PieChartWithKey
                         radius={largeMetricRadius}

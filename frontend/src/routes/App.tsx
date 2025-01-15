@@ -276,7 +276,6 @@ function App() {
             fatTotal={0} fatGoal={50}
           />
         }
-        
         <FoodJournal className="appElement">
           <h2>
             Add a Food

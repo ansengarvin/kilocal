@@ -13,6 +13,8 @@ interface RootProps {
 }
 
 const Grid = styled.div`
+    width: 100%;
+
     display: grid;
     grid-template-areas:
         "header header header"
@@ -20,6 +22,8 @@ const Grid = styled.div`
         "footer footer footer";
     grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
+
+    background-color: orange;
 
     @media (max-width: ${mobileView}) {
         grid-template-columns: 10px 1fr 10px;
@@ -87,13 +91,13 @@ export function Root(props: RootProps) {
             <>
                 <Grid>
                     <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
-                        <main>
-                            {children || <Outlet context={{
-                                loggedIn, setLoggedIn,
-                                verified, setVerified,
-                                isLoadingInitial, setIsLoadingInitial
-                            }}/>}
-                        </main>
+                    <main>
+                        {children || <Outlet context={{
+                            loggedIn, setLoggedIn,
+                            verified, setVerified,
+                            isLoadingInitial, setIsLoadingInitial
+                        }}/>}
+                    </main>
                     <Footer/>
                 </Grid>
             </>
