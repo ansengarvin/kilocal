@@ -3,20 +3,18 @@ import styled from "@emotion/styled";
 import { ReactNode } from "react";
 
 interface HeaderProps {
-    bgColor: string
-    height: string
     children?: ReactNode
     loggedIn: boolean
 }
 
-const Headerbar = styled.nav<{color: string, height: string}>`
-    background-color: ${(props)=> props.color};
+const Headerbar = styled.nav`
+    background-color: grey;
     grid-area: header;
     display: flex;
     align-items: center;
     justify-content: right;
     gap: 20px;
-    height: ${(props)=> props.height};
+    height: 50px;
     padding-left: 100px;
     padding-right: 100px;
 
@@ -36,10 +34,10 @@ const Headerbar = styled.nav<{color: string, height: string}>`
 `
 
 export function Header(props: HeaderProps) {
-    const {bgColor, height, loggedIn} = props
+    const {loggedIn} = props
 
     return (
-        <Headerbar color={bgColor} height={height}>
+        <Headerbar>
             {
                 loggedIn ?
                 <>

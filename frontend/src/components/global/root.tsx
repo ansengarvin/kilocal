@@ -76,7 +76,7 @@ export function Root(props: RootProps) {
         return (
             <>
                 <Grid>
-                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
+                    <Header loggedIn={loggedIn}/>
                         <main>
                             LOADING
                         </main>
@@ -88,7 +88,7 @@ export function Root(props: RootProps) {
         return (
             <>
                 <Grid>
-                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
+                    <Header loggedIn={loggedIn}/>
                     <main>
                         {children || <Outlet context={{
                             loggedIn, setLoggedIn,
