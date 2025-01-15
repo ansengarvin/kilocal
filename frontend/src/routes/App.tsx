@@ -310,7 +310,6 @@ function App() {
               setDeleteReady={setDeleteReady}
               hasRecipes={false}
               hasTitles={true}
-              width={'95%'}
             />
           }
         </FoodJournal>

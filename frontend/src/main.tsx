@@ -45,7 +45,8 @@ const globalStyle = css`
     }
   }
 
-  label {
+  label, th {
+    font-weight: normal;
     font-size: 1em;
 
     @media (max-width: ${mobileView}) {
