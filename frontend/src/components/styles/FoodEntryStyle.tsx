@@ -95,7 +95,6 @@ export const FoodEntryStyle = styled.div`
     label.foodName, input.foodName {
         flex-grow: 1;
         flex-shrink: 1;
-        background-color: grey;
     }
 
     .calories {
@@ -110,7 +109,6 @@ export const FoodEntryStyle = styled.div`
 
     .buttonContainer {
         width: 35px;
-        background-color: #636363;
     }
 
     button {
