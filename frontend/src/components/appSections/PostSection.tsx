@@ -94,21 +94,15 @@ export function PostSection(props: postSectionProps) {
                 value={fat}
                 onChange={e => setFat(e.target.valueAsNumber)}
               />
-              <div className="entryInputContainer buttons">  
-                <div className="buttonContainer">
-                  <button className="submit" type="submit">
-                    <Icon
-                      iconName="add"
-                      color={'#ffffff'}
-                    />
-                  </button>
-                </div>         
-              </div>
+              <div className="buttonContainer">
+                <button className="submit" type="submit">
+                  <Icon
+                    iconName="add"
+                    color={'#ffffff'}
+                  />
+                </button>
+              </div>         
             </div>
-
-            
-            
-            
         </form>
         {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
       </FoodEntryStyle>  

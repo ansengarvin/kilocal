@@ -17,14 +17,15 @@ export const FoodEntryStyle = styled.div`
         white-space: nowrap;
     }
 
-    .entryContainer {
-        width: 95%;
-        background-color: #e3a4e3;
-    }
-
     form.entryContainer {
         width: calc(95% - 3px);
         padding: 3px;
+        background-color: #8c754a;
+    }
+
+    table.entryContainer {
+        width: 95%;
+        background-color: #e3a4e3;
     }
 
     div.row {
@@ -34,6 +35,7 @@ export const FoodEntryStyle = styled.div`
         justify-content: space-between;
         align-items: center;
         gap: 4px;
+        overflow: hidden;
     }
 
     // Remove arrow buttons from number inputs across platforms
@@ -92,12 +94,15 @@ export const FoodEntryStyle = styled.div`
     }
 
     label.foodName, input.foodName {
-        flex-grow: 1;  
+        min-width: 0;
+        flex-grow: 1;
+        flex-shrink: 1;
+        background-color: grey;
     }
 
     .calories {
-        min-width: 75px;
-        max-width: 75px;
+        min-width: 50px;
+        max-width: 50px;
     }
 
     .macro {
@@ -107,7 +112,7 @@ export const FoodEntryStyle = styled.div`
 
     .buttonContainer {
         width: 35px;
-        background-color: green;
+        background-color: #636363;
     }
 
     button {
@@ -120,6 +125,14 @@ export const FoodEntryStyle = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    button.submit {
+        background-color: #3edb3e;
+    }
+
+    button.submit:hover {
+        background-color: #50ff50;
     }
     
     button.delete {
