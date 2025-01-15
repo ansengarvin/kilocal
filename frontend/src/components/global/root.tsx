@@ -23,8 +23,6 @@ const Grid = styled.div`
     grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
 
-    background-color: orange;
-
     @media (max-width: ${mobileView}) {
         grid-template-columns: 10px 1fr 10px;
         grid-template-rows: auto 1fr auto;

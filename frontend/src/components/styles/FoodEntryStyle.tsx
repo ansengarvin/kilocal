@@ -9,10 +9,8 @@ export const FoodEntryStyle = styled.div`
     flex-direction: column;
     align-items: center;
 
-    background-color: #d4c9b4;
-
     table {
-        background-color: green;
+
     }
 
     td {
@@ -22,12 +20,10 @@ export const FoodEntryStyle = styled.div`
     form.entryContainer {
         width: calc(95% - 3px);
         padding: 3px;
-        background-color: #bcbcbc;
     }
 
     table.entryContainer {
         width: 95%;
-        background-color: #e3a4e3;
     }
 
     div.row {
