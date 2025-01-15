@@ -9,7 +9,7 @@ import { Icon } from "../components/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
 import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
-import { apiURL, mobileView } from "../lib/defines";
+import { apiURL, appAccentColor, appAccentHover, mobileView } from "../lib/defines";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -69,14 +69,14 @@ const DateSection = styled.div`
       width: 35px;
     }
 
-    background-color: #848484;
+    background-color: ${appAccentColor};
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 
     :hover {
-      background-color: #a4a4a4;
+      background-color: ${appAccentHover};
     }
 
     :disabled {
