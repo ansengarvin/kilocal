@@ -15,6 +15,10 @@ const globalStyle = css`
     color: #353535;
   }
 
+  input {
+    all: unset;
+  }
+
   h1, h2, h3 {
     margin: 0;
 
@@ -47,6 +51,14 @@ const globalStyle = css`
 
   label, th {
     font-weight: normal;
+    font-size: 1em;
+
+    @media (max-width: ${mobileView}) {
+      font-size: 0.75em;
+    }
+  }
+
+  input, td {
     font-size: 1em;
 
     @media (max-width: ${mobileView}) {

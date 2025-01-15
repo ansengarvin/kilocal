@@ -18,12 +18,12 @@ export const FoodEntryStyle = styled.div`
     }
 
     form.entryContainer {
-        width: calc(95% - 3px);
+        width: calc(98% - 3px);
         padding: 3px;
     }
 
     table.entryContainer {
-        width: 95%;
+        width: 98%;
     }
 
     div.row {
@@ -49,7 +49,6 @@ export const FoodEntryStyle = styled.div`
 
     // Remove default styling from inputs
     input {
-        all: unset;
         width: 0;
         min-width: 0;
     }
@@ -74,7 +73,7 @@ export const FoodEntryStyle = styled.div`
     }
     
     div.stat {
-        background-color: #ffffff;
+        background-color: #d5d5d5;
     }
 
     .header {
@@ -98,22 +97,42 @@ export const FoodEntryStyle = styled.div`
     }
 
     .calories {
-        min-width: 50px;
-        max-width: 50px;
+        min-width: 75px;
+        max-width: 75px;
+
+        @media (max-width: ${mobileView}) {
+            min-width: 40px;
+            max-width: 40px;
+        }
     }
 
     .macro {
-        min-width: 50px;
-        max-width: 50px;
+        min-width: 75px;
+        max-width: 75px;
+
+        @media (max-width: ${mobileView}) {
+            min-width: 40px;
+            max-width: 40px;
+        }
     }
 
     .buttonContainer {
         width: 35px;
+        @media (max-width: ${mobileView}) {
+            width: 25px;
+        }
     }
 
     button {
+        
         height: 35px;
         width: 35px;
+
+        @media (max-width: ${mobileView}) {
+            height: 25px;
+            width: 25px;
+        }
+
         border: none;
         border-radius: 50%;
         padding: 0;
