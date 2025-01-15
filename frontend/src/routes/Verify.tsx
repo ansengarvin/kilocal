@@ -62,7 +62,7 @@ function Verify() {
     })
 
   return (
-    <LoginStyle width={'700px'}>
+    <LoginStyle>
       <h1>Welcome to KiloCal!</h1>
       <div className="content">
         You aren't verified yet. Please check your email for a verification link.

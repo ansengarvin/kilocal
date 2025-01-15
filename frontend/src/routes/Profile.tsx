@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useNavigate, useOutletContext } from "react-router-dom"
-import { ContentWindow } from "../components/global/ContentWindow"
+import { ContentWindow } from "../components/styles/AppStyle"
 import styled from "@emotion/styled"
 import { firebaseAuth } from "../lib/firebase"
 import { useEffect, useState } from "react"
-import { apiURL } from "../lib/api"
+import { apiURL } from "../lib/defines"
 
 const SignOutButton = styled.button`
   margin-top: auto;

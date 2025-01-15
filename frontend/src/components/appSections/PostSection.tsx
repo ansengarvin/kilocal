@@ -1,125 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query"
-import styled from "@emotion/styled"
 import { Icon } from "../icons/Icon"
-
-const PostSectionStyle = styled.div`
-  width: 95%;
-  height: min-content;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  
-  form {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    padding: 2px;
-  }
-
-  div.inputSection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    input {
-      all: unset;
-
-      width: 100%;
-      height: 50px;
-      border-radius: 5px;
-
-      background-color: white;
-      color: #555555;
-
-      text-align: center;
-    } 
-
-    // Remove arrow buttons from number inputs across platforms
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    input[type=number] {
-      -webkit-appearance: textfield;
-      -moz-appearance: textfield;
-      appearance: textfield;
-    }
-
-    label {
-      height: 20px;
-    }
-
-    div.fakeLabel {
-      height: 20px;
-      width: 100%;
-    }
-
-    .buttonContainer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 50px;
-    }
-  }
-
-
-  .buttons {
-    width: 5%;
-    margin-left: 5px;
-  }
-
-  .foodName {
-    width: 50%;
-  }
-
-  .calories {
-    width: 15%;
-  }
-
-  .carbs {
-    width: 10%;
-  }
-
-  .protein {
-    width: 10%;
-  }
-
-  .fat {
-    width: 10%;
-  }
-
-  button.submit {
-    width: 10px;
-    height: 50px;
-    border-radius: 50%;
-    height: 35px;
-    width: 35px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background-color: #4CAF50;
-    color: white;
-    font-size: 20px;
-
-    border: none;
-  }
-
-  button.submit:hover {
-    background-color: #4abc50;
-  }
-
-  input:hover {
-    background-color: #e6e6e6;
-  }
-
-`
+import { FoodEntryStyle } from "../styles/FoodEntryStyle"
 
 interface postSectionProps {
   foodPost: UseQueryResult<any, Error>
@@ -144,16 +25,32 @@ export function PostSection(props: postSectionProps) {
     } = props
     
     return (
-      <PostSectionStyle>
-        <form className="formGrid" onSubmit={(e) => {
+      <FoodEntryStyle>
+        <form className="entryContainer" onSubmit={(e) => {
             e.preventDefault()
             setPostReady(true)
         }}>
-            <div className="inputSection foodName">
-              <label htmlFor="name">
-                Food Name
+            <div className="row">
+              <label htmlFor="name" className="foodName">
+                Food
               </label>
+              <label htmlFor="calories" className="calories">
+                Calories
+              </label>
+              <label htmlFor="carbs" className="macro">
+                Carbs
+              </label>
+              <label htmlFor="protein" className="macro">
+                Protein
+              </label>
+              <label htmlFor="fat" className="macro">
+                Fat
+              </label>
+              <div className="buttonContainer"/>
+            </div>
+            <div className="row">
               <input
+                className="stat foodName"
                 id="name"
                 name="Food Name"
                 type="text"
@@ -161,13 +58,8 @@ export function PostSection(props: postSectionProps) {
                 value={foodName}
                 onChange={e => setFoodName(e.target.value)}
               />
-            </div>
-            
-            <div className="inputSection calories">
-              <label htmlFor="calories">
-                Calories
-              </label>
               <input
+                className="stat calories"
                 id="calories"
                 name="calories"
                 type="number"
@@ -175,13 +67,8 @@ export function PostSection(props: postSectionProps) {
                 value={calories}
                 onChange={e => setCalories(e.target.valueAsNumber)}
               />
-            </div>
-
-            <div className="inputSection carbs">
-              <label htmlFor="carbs">
-                Carbs
-              </label>
               <input
+                className="stat macro"
                 id="carbs"
                 name="carbs"
                 type="number"
@@ -189,13 +76,8 @@ export function PostSection(props: postSectionProps) {
                 value={carbs}
                 onChange={e => setCarbs(e.target.valueAsNumber)}
               />
-            </div>
-
-            <div className="inputSection protein">
-              <label htmlFor="protein">
-                Protein
-              </label>
               <input
+                className="stat macro"
                 id="protein"
                 name="protein"
                 type="number"
@@ -203,13 +85,8 @@ export function PostSection(props: postSectionProps) {
                 value={protein}
                 onChange={e => setProtein(e.target.valueAsNumber)}
               />
-            </div>
-
-            <div className="inputSection fat">
-              <label htmlFor="fat">
-                Fat
-              </label>
               <input
+                className="stat macro"
                 id="fat"
                 name="fat"
                 type="number"
@@ -217,10 +94,6 @@ export function PostSection(props: postSectionProps) {
                 value={fat}
                 onChange={e => setFat(e.target.valueAsNumber)}
               />
-            </div>
-
-            <div className="inputSection buttons">
-              <div className="fakeLabel"/>
               <div className="buttonContainer">
                 <button className="submit" type="submit">
                   <Icon
@@ -228,13 +101,10 @@ export function PostSection(props: postSectionProps) {
                     color={'#ffffff'}
                   />
                 </button>
-              </div>
-              
+              </div>         
             </div>
-            
-            
         </form>
         {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
-      </PostSectionStyle>  
+      </FoodEntryStyle>  
     ) 
 }

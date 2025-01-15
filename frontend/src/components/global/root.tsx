@@ -5,6 +5,7 @@ import { Footer } from './Footer'
 import { Outlet, useLocation } from "react-router-dom"
 import { firebaseAuth } from '../../lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import { tabletView } from '../../lib/defines'
 //import { useQuery } from '@tanstack/react-query'
 
 interface RootProps {
@@ -12,6 +13,8 @@ interface RootProps {
 }
 
 const Grid = styled.div`
+    width: 100%;
+
     display: grid;
     grid-template-areas:
         "header header header"
@@ -19,16 +22,20 @@ const Grid = styled.div`
         "footer footer footer";
     grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
+
+    @media (max-width: ${tabletView}) {
+        grid-template-columns: 10px 1fr 10px;
+        grid-template-rows: auto 1fr auto;
+    }
     row-gap: 15px;
-`
 
-const Main = styled.main`
-    grid-area: main;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    main {
+        grid-area: main;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 `
-
 
 export function Root(props: RootProps) {
     const {children} = props
@@ -69,10 +76,10 @@ export function Root(props: RootProps) {
         return (
             <>
                 <Grid>
-                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
-                        <Main>
+                    <Header loggedIn={loggedIn}/>
+                        <main>
                             LOADING
-                        </Main>
+                        </main>
                     <Footer/>
                 </Grid>
             </>
@@ -81,14 +88,14 @@ export function Root(props: RootProps) {
         return (
             <>
                 <Grid>
-                    <Header bgColor = "grey" height = "100px" loggedIn={loggedIn}/>
-                    <Main>
+                    <Header loggedIn={loggedIn}/>
+                    <main>
                         {children || <Outlet context={{
                             loggedIn, setLoggedIn,
                             verified, setVerified,
                             isLoadingInitial, setIsLoadingInitial
                         }}/>}
-                    </Main>
+                    </main>
                     <Footer/>
                 </Grid>
             </>

@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { LoginStyle } from "../components/styles/LoginStyle";
-import { apiURL } from "../lib/api";
+import { apiURL } from "../lib/defines";
 import { ProgressBarText } from "../components/data/ProgressBar";
 //import { useNavigate } from "react-router-dom";
 
@@ -112,7 +112,7 @@ export function Signup() {
     }, [verified, loggedIn, signUpMutation.isPending])
 
     return (
-        <LoginStyle width="700px">
+        <LoginStyle>
             <h1>Create an Account</h1>
 
             <form onSubmit={(e) => {
