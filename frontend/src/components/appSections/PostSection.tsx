@@ -1,5 +1,5 @@
 import { UseQueryResult } from "@tanstack/react-query"
-import { Icon } from "../icons/Icon"
+import { Icon } from "../../lib/icons/Icon"
 import { FoodEntryStyle } from "../styles/FoodEntryStyle"
 
 interface postSectionProps {
