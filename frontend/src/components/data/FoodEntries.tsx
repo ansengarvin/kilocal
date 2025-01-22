@@ -1,5 +1,5 @@
 import { RecipeEntry } from "./RecipeEntry"
-import { Icon } from "../../lib/icons/Icon"
+import { Icon } from "../../lib/_icon"
 import { FoodEntryStyle } from "../styles/FoodEntryStyle"
 
 interface foodEntriesProps {

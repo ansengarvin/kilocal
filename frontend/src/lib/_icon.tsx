@@ -8,6 +8,7 @@ interface iconProps {
 // All SVG icons are sourced from https://fonts.google.com/icons
 export function Icon(props: iconProps) {
     const {iconName, color, height, width} = props
+    return (<></>)
     switch(iconName) {
         case "backArrow": {
             // arrow pointing left
