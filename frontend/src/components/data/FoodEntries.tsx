@@ -1,6 +1,6 @@
 import { RecipeEntry } from "./RecipeEntry"
-import { Icon } from "../../lib/icons/Icon"
 import { FoodEntryStyle } from "../styles/FoodEntryStyle"
+import { RemoveIcon } from "../../lib/icons/RemoveIcon"
 
 interface foodEntriesProps {
   foodList: Array<Object>
@@ -70,8 +70,7 @@ export function FoodEntries(props: foodEntriesProps) {
                       setDeleteID(food.id)
                       setDeleteReady(true)
                     }}>
-                      <Icon
-                        iconName="remove"
+                      <RemoveIcon
                         color={'#ffffff'}
                       />
                     </button>

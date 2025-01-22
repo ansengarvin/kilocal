@@ -5,11 +5,12 @@ import { ContentWindow } from "../components/styles/AppStyle";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
-import { Icon } from "../lib/icons/Icon";
 import { PostSection } from "../components/appSections/PostSection";
 import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
 import { apiURL, appAccentColor, appAccentHover, mobileView } from "../lib/defines";
+import { ArrowBackiOSIcon } from "../lib/icons/ArrowBackiOSIcon";
+import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
@@ -253,7 +254,9 @@ function App() {
               setDayDate(newDate)
               setFormattedDate(formatDate(newDate))
             }}>
-              <Icon iconName="backArrow" color={'#ffffff'}/>
+              <ArrowBackiOSIcon
+                color={'#ffffff'}
+              />
             </button>
           
           <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
@@ -265,7 +268,9 @@ function App() {
               setDayDate(newDate)
               setFormattedDate(formatDate(newDate))
             }}>
-              <Icon iconName="forwardArrow" color={'#ffffff'}/>
+              <ArrowForwardiOSIcon
+                color={'#ffffff'}
+              />
             </button>
         </DateSection>
         {
