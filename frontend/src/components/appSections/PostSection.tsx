@@ -1,6 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query"
-import { Icon } from "../../lib/_icon"
 import { FoodEntryStyle } from "../styles/FoodEntryStyle"
+import { AddIcon } from "../../lib/icons/AddIcon"
 
 interface postSectionProps {
   foodPost: UseQueryResult<any, Error>
@@ -96,8 +96,7 @@ export function PostSection(props: postSectionProps) {
               />
               <div className="buttonContainer">
                 <button className="submit" type="submit">
-                  <Icon
-                    iconName="add"
+                  <AddIcon
                     color={'#ffffff'}
                   />
                 </button>
