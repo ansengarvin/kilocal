@@ -10,7 +10,7 @@ import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
 import { apiURL, appAccentColor, appAccentHover, mobileView } from "../lib/defines";
 import { ArrowBackiOSIcon } from "../lib/icons/ArrowBackiOSIcon";
-import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardIOSIcon";
+import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
 
 function formatDate(date: Date) {
   const year = date.getFullYear()
