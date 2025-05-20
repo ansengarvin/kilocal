@@ -19,8 +19,7 @@ services:
   backend:
     image: node:latest
     container_name: backend
-    user:
-      "node"
+    user: "node"
     working_dir: /home/node/app
     expose:
       - "8000"
@@ -39,7 +38,7 @@ services:
       - DB_NAME=${DB_NAME}
     command: "npm start"
   frontend:
-    build: # Can't serve react app from docker without first building it
+    build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
