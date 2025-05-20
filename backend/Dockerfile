@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Run file
-RUN npm run start
+CMD ["npm", "start"]
 
 # Expose port
 EXPOSE 8000

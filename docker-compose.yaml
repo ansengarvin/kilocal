@@ -2,22 +2,25 @@
 networks:
   apiserver:
     driver: bridge
-
 services:
-  postgres:
-    image: postgres:latest
-    container_name: postgres
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
     networks:
       - apiserver
     environment:
-      POSTGRES_DB: "kilocal_api"
-      POSTGRES_USER: "dev"
-      POSTGRES_PASSWORD: "dev"
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - 1433:1433
     volumes:
-      - ./database/postgres-data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
   backend:
-    image: node:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: ghcr.io/ansengarvin/test-backend:latest
     container_name: backend
     user: "node"
     working_dir: /home/node/app
@@ -41,6 +44,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: ghcr.io/ansengarvin/test-frontend:latest
     container_name: frontend
     working_dir: /app
     ports:
