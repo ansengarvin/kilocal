@@ -1,38 +1,25 @@
-import pg from 'pg'
-import fs from 'fs'
+import sql from "mssql";
 
-const {Pool, types} = pg
+console.log("All env stuff:");
+console.log(process.env.DB_USER);
+console.log(process.env.DB_PASS);
+console.log(process.env.DB_HOST);
+console.log(process.env.DB_PORT);
+console.log(process.env.DB_NAME);
+console.log(process.env.CORS_URL);
+console.log(process.env.DB_SSL);
+console.log(process.env.CA_PATH);
 
-/*
-    By default, numerics are returned as strings by pg database.
-    Our app doesn't need a high degree of precision, so we simply cast to float.
-*/
-types.setTypeParser(1700, function(val: string) {
-    return parseFloat(val)
-})
+const sqlConfig = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  server: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  database: process.env.DB_NAME,
+  options: {
+    encrypt: true, // Use this if you're on Windows Azure
+    trustServerCertificate: true, // Change to true for local dev / self-signed certs
+  },
+};
 
-console.log("All env stuff:")
-console.log(process.env.DB_USER)
-console.log(process.env.DB_PASS)
-console.log(process.env.DB_HOST)
-console.log(process.env.DB_PORT)
-console.log(process.env.DB_NAME)
-console.log(process.env.CORS_URL)
-console.log(process.env.DB_SSL)
-console.log(process.env.CA_PATH)
-
-const sslConfig = process.env.DB_SSL === 'true' ? {
-    rejectUnauthorized: true,
-    ca: fs.readFileSync(process.env.CA_PATH).toString()
-} : false;
-
-export const pool = new Pool({
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    database: process.env.DB_NAME,
-    idleTimeoutMillis: 0,
-    ssl: sslConfig
-})
-
+export const pool = new sql.ConnectionPool(sqlConfig);

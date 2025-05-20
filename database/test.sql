@@ -1,7 +1,6 @@
 -- Insert test users
 INSERT INTO Users (id, email, name, weight) VALUES
-('user1', 'alice@example.com', 'Alice', 65.5),
-('user2', 'bob@example.com', 'Bob', 82.3);
+('user1', 'ansengarvin@gmail.com', 'Alice', 65.5),
 
 -- Insert test recipes
 INSERT INTO Recipes (user_id, name) VALUES

@@ -1,0 +1,22 @@
+services:
+  backend:
+    volumes:
+      - ./backend:/home/node/app
+  frontend:
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./frontend:/app
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    networks:
+      - apiserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - 1433:1433
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql

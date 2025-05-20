@@ -1,6 +1,6 @@
 # Builds the database
 function build () {
-	docker compose up --build -d
+	docker compose -f docker-compose.yaml up --build -d
 }
 
 # Destroys the database
@@ -16,10 +16,15 @@ function rebuild () {
 	sleep 8
 }
 
+function dev() {
+	docker compose down
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build -d
+}
+
 # Starts the database
 function start() {
     echo "Starting App"
-    docker-compose up -d
+    docker compose -f docker-compose.yaml up --build -d
 }
 
 # Stops the database
