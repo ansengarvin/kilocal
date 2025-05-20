@@ -4,35 +4,34 @@ import { PieChartWithKey } from "../data/PieChartWithKey";
 import { mobileViewPx } from "../../lib/defines";
 
 interface GoalSectionProps {
-    calorieTotal: number,
-    calorieGoal: number,
-    carbTotal: number,
-    carbGoal: number,
-    proteinTotal: number,
-    proteinGoal: number,
-    fatTotal: number,
-    fatGoal: number
+    calorieTotal: number;
+    calorieGoal: number;
+    carbTotal: number;
+    carbGoal: number;
+    proteinTotal: number;
+    proteinGoal: number;
+    fatTotal: number;
+    fatGoal: number;
 }
-
 
 // const carbColor = "#124E78"
 // const proteinColor = "#8C271E"
 // const fatColor = "#FFBA49"
 
-const calorieColor = "#417B5A"
-const carbColor = "#235789"
-const proteinColor = "#C1292E"
-const fatColor = "#ED9B40"
+const calorieColor = "#417B5A";
+const carbColor = "#235789";
+const proteinColor = "#C1292E";
+const fatColor = "#ED9B40";
 
-const metricBackColor = "#dbd8cc"
-const metricTextColor = "#383838"
+const metricBackColor = "#dbd8cc";
+const metricTextColor = "#383838";
 
-const largeMetricRadius = (screen.width > mobileViewPx ? 60 : 40);
-const largeMetricFontSize = (screen.width > mobileViewPx ? "14pt" : "11pt");
-const pieChartKeyFontSize = (screen.width > mobileViewPx ? "12pt" : "10pt");
+const largeMetricRadius = screen.width > mobileViewPx ? 60 : 40;
+const largeMetricFontSize = screen.width > mobileViewPx ? "14pt" : "11pt";
+const pieChartKeyFontSize = screen.width > mobileViewPx ? "12pt" : "10pt";
 
-const smallMetricRadius = (screen.width > mobileViewPx ? 50 : 30);
-const smallMetricFontSize = (screen.width > mobileViewPx ? "12pt" : "10pt");
+const smallMetricRadius = screen.width > mobileViewPx ? 50 : 30;
+const smallMetricFontSize = screen.width > mobileViewPx ? "12pt" : "10pt";
 
 const GoalSectionDiv = styled.div`
     width: 100%;
@@ -68,80 +67,29 @@ const GoalSectionDiv = styled.div`
         justify-content: center;
         gap: 20px;
     }
-`
-
+`;
 
 export function GoalSection(props: GoalSectionProps) {
-    const {
-        calorieTotal,
-        calorieGoal,
-        carbTotal,
-        carbGoal,
-        proteinTotal,
-        proteinGoal,
-        fatTotal,
-        fatGoal
-    } = props
+    const { calorieTotal, calorieGoal, carbTotal, carbGoal, proteinTotal, proteinGoal, fatTotal, fatGoal } = props;
 
-    const macroTotals = carbTotal + proteinTotal + fatTotal
-    let carbPercentage = (carbTotal / macroTotals)
-    let proteinPercentage = (proteinTotal / macroTotals)
-    let fatPercentage = (fatTotal / macroTotals)
-    if (macroTotals==0) {
-        carbPercentage = 0.333
-        proteinPercentage = 0.333
-        fatPercentage = 0.333
+    const macroTotals = carbTotal + proteinTotal + fatTotal;
+    let carbPercentage = carbTotal / macroTotals;
+    let proteinPercentage = proteinTotal / macroTotals;
+    let fatPercentage = fatTotal / macroTotals;
+    if (macroTotals == 0) {
+        carbPercentage = 0.333;
+        proteinPercentage = 0.333;
+        fatPercentage = 0.333;
     }
-   
 
     return (
         <GoalSectionDiv className="appWindow">
-            <h2>
-                Daily Goals
-            </h2>
-            {
-                screen.width < mobileViewPx ? (
-                    <>
-                        <div className="subsection">
-                            <div className="metric">
-                                <h3>
-                                    Calories
-                                </h3>
-                                <ProgressCircle
-                                    value={calorieTotal}
-                                    goal={calorieGoal}
-                                    strokeWidth={15}
-                                    radius={largeMetricRadius}
-                                    fontSize={largeMetricFontSize}
-                                    textColor={metricTextColor}
-                                    backColor={metricBackColor}
-                                    color={calorieColor}
-                                />
-                            </div>
-                        </div>
-                        <div className="subsection">
-                            <div className="metric">
-                                <h3>Macros</h3>
-                                <PieChartWithKey
-                                    radius={largeMetricRadius}
-                                    borderWidth={0}
-                                    borderColor={"#000000"}
-                                    sections={[carbPercentage, proteinPercentage, fatPercentage]}
-                                    colors={[carbColor, proteinColor, fatColor]}
-                                    titles={["Carbs", "Protein", "Fat"]}
-                                    textColor={metricTextColor}
-                                    ignoreKeyWidth={true}
-                                    fontSize={pieChartKeyFontSize}
-                                />
-                            </div>
-                        </div>
-                    </>    
-                ) : (
+            <h2>Daily Goals</h2>
+            {screen.width < mobileViewPx ? (
+                <>
                     <div className="subsection">
                         <div className="metric">
-                            <h3>
-                                Calories
-                            </h3>
+                            <h3>Calories</h3>
                             <ProgressCircle
                                 value={calorieTotal}
                                 goal={calorieGoal}
@@ -153,6 +101,8 @@ export function GoalSection(props: GoalSectionProps) {
                                 color={calorieColor}
                             />
                         </div>
+                    </div>
+                    <div className="subsection">
                         <div className="metric">
                             <h3>Macros</h3>
                             <PieChartWithKey
@@ -168,14 +118,42 @@ export function GoalSection(props: GoalSectionProps) {
                             />
                         </div>
                     </div>
-                )
-            }
-            
+                </>
+            ) : (
+                <div className="subsection">
+                    <div className="metric">
+                        <h3>Calories</h3>
+                        <ProgressCircle
+                            value={calorieTotal}
+                            goal={calorieGoal}
+                            strokeWidth={15}
+                            radius={largeMetricRadius}
+                            fontSize={largeMetricFontSize}
+                            textColor={metricTextColor}
+                            backColor={metricBackColor}
+                            color={calorieColor}
+                        />
+                    </div>
+                    <div className="metric">
+                        <h3>Macros</h3>
+                        <PieChartWithKey
+                            radius={largeMetricRadius}
+                            borderWidth={0}
+                            borderColor={"#000000"}
+                            sections={[carbPercentage, proteinPercentage, fatPercentage]}
+                            colors={[carbColor, proteinColor, fatColor]}
+                            titles={["Carbs", "Protein", "Fat"]}
+                            textColor={metricTextColor}
+                            ignoreKeyWidth={true}
+                            fontSize={pieChartKeyFontSize}
+                        />
+                    </div>
+                </div>
+            )}
+
             <div className="subsection">
                 <div className="metric">
-                    <h3>
-                        Carbs
-                    </h3>
+                    <h3>Carbs</h3>
                     <ProgressCircle
                         value={carbTotal}
                         goal={carbGoal}
@@ -185,12 +163,10 @@ export function GoalSection(props: GoalSectionProps) {
                         textColor={metricTextColor}
                         backColor={metricBackColor}
                         color={carbColor}
-                    />   
+                    />
                 </div>
                 <div className="metric">
-                    <h3>
-                        Protein
-                    </h3>
+                    <h3>Protein</h3>
                     <ProgressCircle
                         value={proteinTotal}
                         goal={proteinGoal}
@@ -200,12 +176,10 @@ export function GoalSection(props: GoalSectionProps) {
                         textColor={metricTextColor}
                         backColor={metricBackColor}
                         color={proteinColor}
-                    /> 
+                    />
                 </div>
                 <div className="metric">
-                    <h3>
-                        Fat
-                    </h3>
+                    <h3>Fat</h3>
                     <ProgressCircle
                         value={fatTotal}
                         goal={fatGoal}
@@ -215,9 +189,9 @@ export function GoalSection(props: GoalSectionProps) {
                         textColor={metricTextColor}
                         backColor={metricBackColor}
                         color={fatColor}
-                    />  
+                    />
                 </div>
-            </div>   
+            </div>
         </GoalSectionDiv>
-    )
+    );
 }

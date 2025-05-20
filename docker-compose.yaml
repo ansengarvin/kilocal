@@ -1,43 +1,43 @@
 # docker compose for local
 networks:
-  apiserver:
-    driver: bridge
+    apiserver:
+        driver: bridge
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: ghcr.io/ansengarvin/backend:latest
-    container_name: backend
-    user: "node"
-    working_dir: /app
-    expose:
-      - "8000"
-    ports:
-      - 8000:8000
-    networks:
-      - apiserver
-    environment:
-      - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
-    command: "npm start"
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: ghcr.io/ansengarvin/frontend:latest
-    container_name: frontend
-    working_dir: /app
-    ports:
-      - 5000:3000
-    networks:
-      - apiserver
-    command: "serve -s dist"
-    environment:
-      - NODE_ENV=development
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        image: ghcr.io/ansengarvin/backend:latest
+        container_name: backend
+        user: "node"
+        working_dir: /app
+        expose:
+            - "8000"
+        ports:
+            - 8000:8000
+        networks:
+            - apiserver
+        environment:
+            - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
+            - DB_HOST=${DB_HOST}
+            - DB_PORT=${DB_PORT}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - DB_NAME=${DB_NAME}
+        command: "npm start"
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        image: ghcr.io/ansengarvin/frontend:latest
+        container_name: frontend
+        working_dir: /app
+        ports:
+            - 5000:3000
+        networks:
+            - apiserver
+        command: "serve -s dist"
+        environment:
+            - NODE_ENV=development
 volumes:
-  node_modules:
+    node_modules:

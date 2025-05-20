@@ -13,321 +13,319 @@ import { ArrowBackiOSIcon } from "../lib/icons/ArrowBackiOSIcon";
 import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
 
 function formatDate(date: Date) {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
 
-  return `${year}-${month}-${day}`
+    return `${year}-${month}-${day}`;
 }
 
 const DateSection = styled.div`
-  position: relative;
-  height: auto;
-  width: 100%;
-  height: 50px;
-  margin-bottom: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 10px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-  h2 {
-    font-size: 18px;
-    margin: 0;
-    margin-bottom: 10px;
-  }
-
-  button.left {
-    position: absolute;
-    left: 10px;
-
-    svg {
-      margin-right: 5px;
-    }
-  }
-  button.right {
-    position: absolute;
-    right: 10px;
-
-    svg {
-      margin-left: 5px;
-    }
-  }
-  button {
-    // Remove all button styling
-    border: none;
-    outline: none;
-    margin: 0;
+    position: relative;
+    height: auto;
+    width: 100%;
     height: 50px;
-    width: 50px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
 
-    @media (max-width: ${mobileView}) {
-      height: 35px;
-      width: 35px;
-    }
-
-    background-color: ${appAccentColor};
-    border-radius: 50%;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
 
-    :hover {
-      background-color: ${appAccentHover};
-      // Fade out
-      
+    h2 {
+        font-size: 18px;
+        margin: 0;
+        margin-bottom: 10px;
     }
 
-    :disabled {
-      background-color: #d3d3d3;
-    }
-  }
-`
+    button.left {
+        position: absolute;
+        left: 10px;
 
+        svg {
+            margin-right: 5px;
+        }
+    }
+    button.right {
+        position: absolute;
+        right: 10px;
+
+        svg {
+            margin-left: 5px;
+        }
+    }
+    button {
+        // Remove all button styling
+        border: none;
+        outline: none;
+        margin: 0;
+        height: 50px;
+        width: 50px;
+
+        @media (max-width: ${mobileView}) {
+            height: 35px;
+            width: 35px;
+        }
+
+        background-color: ${appAccentColor};
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        :hover {
+            background-color: ${appAccentHover};
+            // Fade out
+        }
+
+        :disabled {
+            background-color: #d3d3d3;
+        }
+    }
+`;
 
 const FoodJournal = styled.div`
-  border-radius: 10px;
-  height: min-content;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+    border-radius: 10px;
+    height: min-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
 
-  div.postSection {
-    width: 95%;
-    height: 10px;
-    background-color: green;
-  }
+    div.postSection {
+        width: 95%;
+        height: 10px;
+        background-color: green;
+    }
 
-  span {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-`
+    span {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+`;
 
 function App() {
-  const navigate = useNavigate()
+    const navigate = useNavigate();
 
-  const {loggedIn, verified, isLoadingInitial} = useOutletContext<{
-    loggedIn: boolean,
-    verified: boolean,
-    isLoadingInitial: boolean
-  }>()
+    const { loggedIn, verified, isLoadingInitial } = useOutletContext<{
+        loggedIn: boolean;
+        verified: boolean;
+        isLoadingInitial: boolean;
+    }>();
 
-  // Redirects
-  useEffect(() => {
-    if (!isLoadingInitial) {
-      if (loggedIn) {
-        if (!verified) {
-          navigate('/verify')
+    // Redirects
+    useEffect(() => {
+        if (!isLoadingInitial) {
+            if (loggedIn) {
+                if (!verified) {
+                    navigate("/verify");
+                }
+            }
         }
-      }
-    }
-    
-}, [verified, loggedIn])
+    }, [verified, loggedIn]);
 
-  const [dayDate, setDayDate] = useState(new Date())
-  const [formattedDate, setFormattedDate] = useState(formatDate(dayDate))
-  const [isCurrentDay, setIsCurrentDay] = useState(true)
+    const [dayDate, setDayDate] = useState(new Date());
+    const [formattedDate, setFormattedDate] = useState(formatDate(dayDate));
+    const [isCurrentDay, setIsCurrentDay] = useState(true);
 
-  const [postReady, setPostReady] = useState(false)
-  const [foodName, setFoodName] = useState("")
-  const [calories, setCalories] = useState(0)
-  const [carbs, setCarbs] = useState(0)
-  const [protein, setProtein] = useState(0)
-  const [fat, setFat] = useState(0)
-  
-  const [deleteID, setDeleteID] = useState(0)
-  const [deleteReady, setDeleteReady] = useState(false)
+    const [postReady, setPostReady] = useState(false);
+    const [foodName, setFoodName] = useState("");
+    const [calories, setCalories] = useState(0);
+    const [carbs, setCarbs] = useState(0);
+    const [protein, setProtein] = useState(0);
+    const [fat, setFat] = useState(0);
 
-  
+    const [deleteID, setDeleteID] = useState(0);
+    const [deleteReady, setDeleteReady] = useState(false);
 
-  const foodGet = useQuery({
-    enabled: (loggedIn ? true : false),
-    queryKey: ["day", formattedDate],
-    queryFn: async () => {
-      const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `${apiURL}/days/${formattedDate}`
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          "Authorization": "Bearer " + token
-        }
-      })
-      // Print to console if 500
-      if (response.status == 500) {
-        console.log(response)
-      }
-      return response.json()
-    }
-  })
-
-  const foodPost = useQuery({
-    enabled: (postReady ? true: false),
-    queryKey: ["foodPost", formattedDate, calories, foodName],
-    queryFn: async () => {
-
-      const queryBody = JSON.stringify({
-        name: foodName,
-        calories: calories,
-        carbs: carbs,
-        protein: protein,
-        fat: fat
-      })
-      
-      setPostReady(false)
-      setCalories(0)
-      setCarbs(0)
-      setProtein(0)
-      setFat(0)
-      setFoodName("")
-
-      const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `${apiURL}/days/${formattedDate}/food`
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer " + token
+    const foodGet = useQuery({
+        enabled: loggedIn ? true : false,
+        queryKey: ["day", formattedDate],
+        queryFn: async () => {
+            const token = await firebaseAuth.currentUser?.getIdToken();
+            const url = `${apiURL}/days/${formattedDate}`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            });
+            // Print to console if 500
+            if (response.status == 500) {
+                console.log(response);
+            }
+            return response.json();
         },
-        body: queryBody
-      })
+    });
 
-      foodGet.refetch()
-      return response.json()
-    }
-  })
+    const foodPost = useQuery({
+        enabled: postReady ? true : false,
+        queryKey: ["foodPost", formattedDate, calories, foodName],
+        queryFn: async () => {
+            const queryBody = JSON.stringify({
+                name: foodName,
+                calories: calories,
+                carbs: carbs,
+                protein: protein,
+                fat: fat,
+            });
 
-  const foodDelete = useQuery({
-    enabled: (deleteReady ? true : false),
-    queryKey: ["foodDelete", deleteID],
-    queryFn: async () => {
-      const token = await firebaseAuth.currentUser?.getIdToken()
-      const url = `${apiURL}/days/${formattedDate}/food/${deleteID}`
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          "Authorization": "Bearer " + token
+            setPostReady(false);
+            setCalories(0);
+            setCarbs(0);
+            setProtein(0);
+            setFat(0);
+            setFoodName("");
+
+            const token = await firebaseAuth.currentUser?.getIdToken();
+            const url = `${apiURL}/days/${formattedDate}/food`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+                body: queryBody,
+            });
+
+            foodGet.refetch();
+            return response.json();
+        },
+    });
+
+    const foodDelete = useQuery({
+        enabled: deleteReady ? true : false,
+        queryKey: ["foodDelete", deleteID],
+        queryFn: async () => {
+            const token = await firebaseAuth.currentUser?.getIdToken();
+            const url = `${apiURL}/days/${formattedDate}/food/${deleteID}`;
+            const response = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            });
+            setDeleteReady(false);
+            foodGet.refetch();
+            return response;
+        },
+    });
+
+    // Effect used to disable the next-day button if it's the current day.
+    useEffect(() => {
+        const today = new Date();
+        if (formatDate(today) == formattedDate) {
+            setIsCurrentDay(true);
+        } else {
+            setIsCurrentDay(false);
         }
-      })
-      setDeleteReady(false)
-      foodGet.refetch()
-      return response
-    }
-  })
+    }, [formattedDate]);
 
-  // Effect used to disable the next-day button if it's the current day.
-  useEffect(() => {
-    const today = new Date()
-    if (formatDate(today) == formattedDate) {
-      setIsCurrentDay(true)
+    useEffect(() => {
+        if (foodDelete.error) {
+            console.log(foodDelete.error);
+        }
+    });
+
+    if (!loggedIn) {
+        return <Landing />;
     } else {
-      setIsCurrentDay(false)
+        return (
+            <ContentWindow>
+                <DateSection className="appWindow">
+                    <button
+                        className="date left"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            const newDate = new Date(dayDate);
+                            newDate.setDate(dayDate.getDate() - 1);
+                            setDayDate(newDate);
+                            setFormattedDate(formatDate(newDate));
+                        }}
+                    >
+                        <ArrowBackiOSIcon color={"#ffffff"} />
+                    </button>
+
+                    <h1 tabIndex={0}>
+                        {dayDate.toLocaleString("default", { month: "long" })} {dayDate.getDate()},{" "}
+                        {dayDate.getFullYear()}
+                    </h1>
+
+                    <button
+                        className="date right"
+                        disabled={isCurrentDay}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            const newDate = new Date(dayDate);
+                            newDate.setDate(dayDate.getDate() + 1);
+                            setDayDate(newDate);
+                            setFormattedDate(formatDate(newDate));
+                        }}
+                    >
+                        <ArrowForwardiOSIcon color={"#ffffff"} />
+                    </button>
+                </DateSection>
+                {foodGet.data ? (
+                    <GoalSection
+                        calorieTotal={foodGet.data?.totalCalories}
+                        calorieGoal={2000}
+                        carbTotal={foodGet.data?.totalCarbs}
+                        carbGoal={300}
+                        proteinTotal={foodGet.data?.totalProtein}
+                        proteinGoal={100}
+                        fatTotal={foodGet.data?.totalFat}
+                        fatGoal={50}
+                    />
+                ) : (
+                    <GoalSection
+                        calorieTotal={0}
+                        calorieGoal={2000}
+                        carbTotal={0}
+                        carbGoal={300}
+                        proteinTotal={0}
+                        proteinGoal={100}
+                        fatTotal={0}
+                        fatGoal={50}
+                    />
+                )}
+                <FoodJournal className="appWindow">
+                    <h2>Add a Food</h2>
+                    <PostSection
+                        foodPost={foodPost}
+                        foodName={foodName}
+                        calories={calories}
+                        carbs={carbs}
+                        protein={protein}
+                        fat={fat}
+                        setPostReady={setPostReady}
+                        setFoodName={setFoodName}
+                        setCalories={setCalories}
+                        setCarbs={setCarbs}
+                        setProtein={setProtein}
+                        setFat={setFat}
+                    />
+                    <br />
+                    <h2>Food Journal</h2>
+                    {foodGet.data?.food && foodGet.data?.food.length == 0 && <span>No food for this day yet!</span>}
+
+                    {foodGet.data?.food && foodGet.data?.food.length != 0 && (
+                        <FoodEntries
+                            foodList={foodGet.data.food}
+                            setDeleteID={setDeleteID}
+                            setDeleteReady={setDeleteReady}
+                            hasRecipes={false}
+                            hasTitles={true}
+                        />
+                    )}
+                </FoodJournal>
+            </ContentWindow>
+        );
     }
-  }, [formattedDate])
-
-  useEffect(() => {
-    if (foodDelete.error) {
-      console.log(foodDelete.error)
-    }
-  })
-
-
-  if (!loggedIn) {
-    return(
-      <Landing/>
-    )
-  } else {
-    return (
-      <ContentWindow>
-        <DateSection className="appWindow">
-          <button className="date left" onClick={(e) => {
-              e.preventDefault()
-              const newDate = new Date(dayDate)
-              newDate.setDate(dayDate.getDate() - 1)
-              setDayDate(newDate)
-              setFormattedDate(formatDate(newDate))
-            }}>
-              <ArrowBackiOSIcon
-                color={'#ffffff'}
-              />
-            </button>
-          
-          <h1 tabIndex={0}>{dayDate.toLocaleString('default', {month: 'long'})} {dayDate.getDate()}, {dayDate.getFullYear()}</h1>
-
-          <button className="date right" disabled={isCurrentDay} onClick={(e) => {
-              e.preventDefault()
-              const newDate = new Date(dayDate)
-              newDate.setDate(dayDate.getDate() + 1)
-              setDayDate(newDate)
-              setFormattedDate(formatDate(newDate))
-            }}>
-              <ArrowForwardiOSIcon
-                color={'#ffffff'}
-              />
-            </button>
-        </DateSection>
-        {
-          foodGet.data ? 
-          <GoalSection
-            calorieTotal={foodGet.data?.totalCalories} calorieGoal={2000}
-            carbTotal={foodGet.data?.totalCarbs} carbGoal={300}
-            proteinTotal={foodGet.data?.totalProtein} proteinGoal={100}
-            fatTotal={foodGet.data?.totalFat} fatGoal={50}
-          /> :
-          <GoalSection
-            calorieTotal={0} calorieGoal={2000}
-            carbTotal={0} carbGoal={300}
-            proteinTotal={0} proteinGoal={100}
-            fatTotal={0} fatGoal={50}
-          />
-        }
-        <FoodJournal className="appWindow">
-          <h2>
-            Add a Food
-          </h2>
-          <PostSection
-            foodPost={foodPost}
-            foodName={foodName}
-            calories={calories}
-            carbs={carbs}
-            protein={protein}
-            fat={fat}
-            setPostReady={setPostReady}
-            setFoodName={setFoodName}
-            setCalories={setCalories}
-            setCarbs={setCarbs}
-            setProtein={setProtein}
-            setFat={setFat}
-          />
-          <br/>
-          <h2>
-            Food Journal
-          </h2>
-          {foodGet.data?.food && foodGet.data?.food.length == 0 && <span>
-            No food for this day yet!
-          </span>}
-
-          {foodGet.data?.food && foodGet.data?.food.length != 0 &&
-            <FoodEntries
-              foodList={foodGet.data.food}
-              setDeleteID={setDeleteID}
-              setDeleteReady={setDeleteReady}
-              hasRecipes={false}
-              hasTitles={true}
-            />
-          }
-        </FoodJournal>
-      </ContentWindow>   
-    )
-  }
- 
 }
 
-export default App
+export default App;
