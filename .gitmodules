@@ -1,6 +1,0 @@
-[submodule "frontend/dist"]
-	path = frontend/dist
-	url = https://github.com/ansengarvin/kilocal_dist
-[submodule "frontend/src/lib/react-google-icons"]
-	path = frontend/src/lib/react-google-icons
-	url = https://github.com/ansengarvin/react-google-icons
