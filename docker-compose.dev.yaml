@@ -1,12 +1,4 @@
 services:
-  backend:
-    volumes:
-      - ./backend:/home/node/app
-  frontend:
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - ./frontend:/app
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql
