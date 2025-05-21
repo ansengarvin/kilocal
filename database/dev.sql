@@ -32,14 +32,16 @@ CREATE TABLE Foods (
 
 -- Insert test users
 INSERT INTO Users (id, email, name, weight) VALUES
-('user1', 'ansengarvin@gmail.com', 'Ansen', 65.5);
+('ao9AvidztBfIdVdbVk17bJShLgg2', 'ansengarvin@gmail.com', 'Ansen', 65.5);
 
 -- Insert test days
 INSERT INTO Days (user_id, date) VALUES
-('user1', '2025-05-20');
+('ao9AvidztBfIdVdbVk17bJShLgg2', '2025-05-20');
 
 -- Insert test foods (linked to a day)
 INSERT INTO Foods (day_id, name, calories, amount, carbs, fat, protein, position)
 VALUES
-(1, 'Apple', 95, 1, 25, 0.3, 0.5, 1),
-(1, 'Egg', 78, 2, 1.1, 5.3, 6.3, 2);
+(1, 'Chicken Breast', 165.00, 200, 0, 3.6, 31, 1),
+(1, 'Brown Rice', 111.00, 100, 23, 0.9, 2.6, 2),
+(1, 'Broccoli', 55.00, 100, 11.2, 0.6, 3.7, 3),
+(1, 'Olive Oil', 119.00, 10, 0, 13.5, 0, 4);
