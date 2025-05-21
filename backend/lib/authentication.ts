@@ -1,62 +1,66 @@
-import express, {Request, Response, NextFunction} from 'express'
-import admin from 'firebase-admin'
-import { pool } from './database'
+import express, { Request, Response, NextFunction } from "express";
+import admin from "firebase-admin";
+import { getPool, poolPromise } from "./database";
 
 admin.initializeApp({
-    credential: admin.credential.cert("./etc/keys/service.json")
-})
+    credential: admin.credential.cert("./etc/keys/service.json"),
+});
 
 export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
-    const authHeader = req.get("Authorization") || ""
+    const authHeader = req.get("Authorization") || "";
 
     if (!authHeader) {
-        req.user = ""
+        req.user = "";
         res.status(401).send({
-            err: "no authorization header"
-        })
+            err: "no authorization header",
+        });
     } else {
-        const token = authHeader.split("Bearer ")[1]
+        const token = authHeader.split("Bearer ")[1];
 
         if (!token) {
-            req.user = ""
+            req.user = "";
             res.status(401).send({
-                err: "missing auth token"
-            })
+                err: "missing auth token",
+            });
         } else {
-            admin.auth().verifyIdToken(token)
+            admin
+                .auth()
+                .verifyIdToken(token)
                 .then((user) => {
-                    req.user = user.uid
-                    req.email = user.email
-                    next()
+                    req.user = user.uid;
+                    req.email = user.email;
+                    next();
                 })
                 .catch((err) => {
-                    req.user = ""
+                    req.user = "";
                     res.status(401).send({
-                        err: "invalid auth token"
-                    })
-                })
+                        err: "invalid auth token",
+                    });
+                });
         }
     }
 }
 
 export function requireVerification(req: Request, res: Response, next: NextFunction) {
-    const uid = req.user
+    const uid = req.user;
 
-    admin.auth().getUser(uid.valueOf())
+    admin
+        .auth()
+        .getUser(uid.valueOf())
         .then((user) => {
             if (user.emailVerified) {
-                next()
+                next();
             } else {
                 res.status(403).send({
-                    err: "email not verified"
-                })
+                    err: "email not verified",
+                });
             }
         })
         .catch((err) => {
             res.status(400).send({
-                err: err.message
-            })
-        })
+                err: err.message,
+            });
+        });
 }
 
 /*
@@ -66,62 +70,82 @@ export function requireVerification(req: Request, res: Response, next: NextFunct
 */
 export async function createUserIfNoneExists(req: Request, res: Response) {
     try {
-        const uid = req.user
-        const email = req.email
+        const pool = await getPool();
+        const uid = req.user;
+        const email = req.email;
 
-        const text = `
-            INSERT INTO users(id, name, email, weight)
-            VALUES($1, $2, $3, $4)
-            ON CONFLICT (id) DO NOTHING
-            RETURNING id, name, email, weight
-        `
-        const values = [uid, req.body.name, email, req.body.weight]
-    
-        // This returning sucessfully means either the user has been created, or it already exists.
-        await pool.query(text, values)
+        // Check if user already exists
+        const checkResult = await pool.request().input("id", uid).query("SELECT id FROM users WHERE id = @id");
+
+        if (checkResult.recordset.length > 0) {
+            // User already exists, do nothing
+            res.status(200).send({ id: uid });
+            return;
+        }
+
+        // Insert new user
+        const insertResult = await pool
+            .request()
+            .input("id", uid)
+            .input("name", req.body.name)
+            .input("email", email)
+            .input("weight", req.body.weight).query(`
+                INSERT INTO users(id, name, email, weight)
+                OUTPUT INSERTED.id, INSERTED.name, INSERTED.email, INSERTED.weight
+                VALUES(@id, @name, @email, @weight)
+            `);
 
         res.status(201).send({
-            id: uid
-        })
+            id: insertResult.recordset[0].id,
+            name: insertResult.recordset[0].name,
+            email: insertResult.recordset[0].email,
+            weight: insertResult.recordset[0].weight,
+        });
     } catch (err: any) {
-        console.log(err.message)
+        console.log(err.message);
         res.status(400).send({
-            err: err.message
-        })
-        return
+            err: err.message,
+        });
+        return;
     }
 }
 
 export async function replaceUser(deleteUID: string, req: Request, res: Response) {
-    const insertUID = req.user
-    const insertEmail = req.email
+    const insertUID = req.user;
+    const insertEmail = req.email;
     try {
-        const deleteText = `DELETE FROM users WHERE id = $1`
-        const insertText = `
-            INSERT INTO users(id, name, email, weight)
-            VALUES($1, $2, $3, $4)
-            ON CONFLICT (id) DO UPDATE SET
-                name = EXCLUDED.name,
-                email = EXCLUDED.email,
-                weight = EXCLUDED.weight
-            RETURNING id, name, email, weight
+        const pool = await getPool();
+        // Delete user by ID
+        await pool.request().input("id", deleteUID).query("DELETE FROM users WHERE id = @id");
+
+        // Upsert user (insert or update)
+        const upsertQuery = `
+            MERGE INTO users WITH (HOLDLOCK) AS target
+            USING (SELECT @id AS id, @name AS name, @email AS email, @weight AS weight) AS source
+            ON target.id = source.id
+            WHEN MATCHED THEN
+                UPDATE SET name = source.name, email = source.email, weight = source.weight
+            WHEN NOT MATCHED THEN
+                INSERT (id, name, email, weight)
+                VALUES (source.id, source.name, source.email, source.weight)
+            OUTPUT inserted.id, inserted.name, inserted.email, inserted.weight;
         `;
-        const deleteValues = [deleteUID]
-        const insertValues = [insertUID, req.body.name, insertEmail, req.body.weight]
 
-        // Execute delete query
-        await pool.query(deleteText, deleteValues)
+        const result = await pool
+            .request()
+            .input("id", insertUID)
+            .input("name", req.body.name)
+            .input("email", insertEmail)
+            .input("weight", req.body.weight)
+            .query(upsertQuery);
 
-        // Execute insert query
-        const result = await pool.query(insertText, insertValues)
-
-        res.status(200).send(result.rows[0])
-        return
-    } catch (err) {
+        res.status(200).send(result.recordset[0]);
+        return;
+    } catch (err: any) {
         res.status(400).send({
-            err: err.message
-        })
-        return
+            err: err.message,
+        });
+        return;
     }
 }
 
@@ -130,43 +154,40 @@ export async function replaceUser(deleteUID: string, req: Request, res: Response
  * Firebase is treated as the authority here - Fi
  */
 export async function syncFirebaseUserWithDB(req: Request, res: Response) {
-    const uid = req.user
-    const email = req.email
+    const pool = await getPool();
+    const uid = req.user;
+    const email = req.email;
 
     // Check if the user's email exists in the database
-    var text = "SELECT id FROM users WHERE email = $1"
-    var values = [email]
-    var result = await pool.query(text, values)
-    if (result.rowCount) {
-        const dbUserId = result.rows[0].id
+    const result = await pool.request().input("email", email).query("SELECT id FROM users WHERE email = @email");
+
+    if (result.recordset.length) {
+        const dbUserId = result.recordset[0].id;
 
         try {
-            await admin.auth().getUser(dbUserId)
-            // User exists both in firebase and DB. 
+            await admin.auth().getUser(dbUserId);
+            // User exists both in firebase and DB.
             // This shouldn't ever happen (since firebase doesn't allow for duplicate emails).
             res.status(409).send({
-                err: "Duplicate email issue in Firebase"
-            })
-            return
-        } catch (err) { 
+                err: "Duplicate email issue in Firebase",
+            });
+            return;
+        } catch (err: any) {
             // User doesn't exist in firebase, but exists in DB.
             // Treat Firebase as the authority; Delete the bad entry and replace it with the new one.
             if (err.code !== "auth/user-not-found") {
                 res.status(500).send({
-                    err: err.message
-                })
-                return
+                    err: err.message,
+                });
+                return;
             } else {
                 await replaceUser(dbUserId, req, res);
-                return
+                return;
             }
-            
         }
-
-    }
-    else {
+    } else {
         // User doesn't exist in our database. Create a new user.
-        await createUserIfNoneExists(req, res)
-        return
+        await createUserIfNoneExists(req, res);
+        return;
     }
 }

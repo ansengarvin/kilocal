@@ -1,38 +1,57 @@
-import pg from 'pg'
-import fs from 'fs'
+import sql from "mssql";
 
-const {Pool, types} = pg
+console.log("All env stuff:");
+console.log(process.env.DB_USER);
+console.log(process.env.DB_PASS);
+console.log(process.env.DB_HOST);
+console.log(process.env.DB_PORT);
+console.log(process.env.DB_NAME);
+console.log(process.env.CORS_URL);
+console.log(process.env.DB_SSL);
+console.log(process.env.CA_PATH);
 
-/*
-    By default, numerics are returned as strings by pg database.
-    Our app doesn't need a high degree of precision, so we simply cast to float.
-*/
-types.setTypeParser(1700, function(val: string) {
-    return parseFloat(val)
-})
-
-console.log("All env stuff:")
-console.log(process.env.DB_USER)
-console.log(process.env.DB_PASS)
-console.log(process.env.DB_HOST)
-console.log(process.env.DB_PORT)
-console.log(process.env.DB_NAME)
-console.log(process.env.CORS_URL)
-console.log(process.env.DB_SSL)
-console.log(process.env.CA_PATH)
-
-const sslConfig = process.env.DB_SSL === 'true' ? {
-    rejectUnauthorized: true,
-    ca: fs.readFileSync(process.env.CA_PATH).toString()
-} : false;
-
-export const pool = new Pool({
+const sqlConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
-    host: process.env.DB_HOST,
+    server: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
-    database: process.env.DB_NAME,
-    idleTimeoutMillis: 0,
-    ssl: sslConfig
-})
+    options: {
+        encrypt: true,
+        trustServerCertificate: true,
+        connectionTimeout: 30000, // 30 seconds
+    },
+};
 
+// Retry configuration
+const MAX_RETRIES = 5;
+const RETRY_DELAY_MS = 3000; // 3 seconds
+
+async function connectWithRetry(retryCount = 0) {
+    try {
+        const pool = new sql.ConnectionPool(sqlConfig);
+        await pool.connect();
+        console.log("Connected to MSSQL successfully");
+        return pool;
+    } catch (err) {
+        if (retryCount < MAX_RETRIES) {
+            console.log(`Connection attempt ${retryCount + 1} failed. Retrying in ${RETRY_DELAY_MS / 1000} seconds...`);
+            console.error("Error details:", err.message);
+
+            // Wait before retrying
+            await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+
+            // Recursive retry with incremented counter
+            return connectWithRetry(retryCount + 1);
+        } else {
+            console.error(`Failed to connect after ${MAX_RETRIES} attempts:`, err);
+            throw err;
+        }
+    }
+}
+
+export async function getPool() {
+    return poolPromise;
+}
+
+// Export a promise that resolves to the connected pool
+export const poolPromise = connectWithRetry();

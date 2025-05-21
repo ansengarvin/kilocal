@@ -1,166 +1,180 @@
-import {Router} from 'express'
-import { requireAuthentication } from '../lib/authentication'
-import {pool} from '../lib/database'
+import { Router } from "express";
+import { requireAuthentication } from "../lib/authentication";
+import { getPool, poolPromise } from "../lib/database";
 
-const router = Router()
+const router = Router();
 
 // Gets a day ID if the day entry exists.
 // If the day entry does not exist, creates then returns ID.
-async function get_day_id(user_id, date: String) {
-    let text = "SELECT id FROM days WHERE user_id = $1 AND date = $2"
-    let values = [user_id, date]
-    let result = await pool.query(text, values)
+//TODO: Using multiple SQL queries is probably not the way to do this - You can probably do it with a single SQL query.
+// Look up how.
+async function get_day_id(user_id: string, date: String) {
+    // SELECT
+    const pool = await getPool();
+    let result = await pool
+        .request()
+        .input("user_id", user_id)
+        .input("date", date)
+        .query("SELECT id FROM days WHERE user_id = @user_id AND date = @date");
 
-    if (result.rowCount != 0) {
-        return result.rows[0].id
+    if (result.recordset.length !== 0) {
+        return result.recordset[0].id;
     } else {
-        text = "INSERT INTO days(user_id, date) VALUES($1, $2) RETURNING id"
-        values = [user_id, date]
-        result = await pool.query(text, values)
-        return result.rows[0].id
+        // INSERT
+        let insertResult = await pool
+            .request()
+            .input("user_id", user_id)
+            .input("date", date)
+            .query("INSERT INTO days(user_id, date) OUTPUT INSERTED.id VALUES(@user_id, @date)");
+        return insertResult.recordset[0].id;
     }
 }
 
 // Make a new day
-router.post('/', requireAuthentication, async function(req, res) {
+router.post("/", requireAuthentication, async function (req, res) {
     try {
         // Ensure user_id and date provided
-        if (! req.body || !req.body.date) {
-            res.status(400).send({err: "Missing date in request body"})
-
-        } else {
-            // Checks to see if the date already exists in the database
-            var text = "SELECT id FROM days WHERE date = $1";
-            var values = [req.body.date];
-            var result = await pool.query(text, values);
-
-            if (result.rowCount != 0) {
-                // Date already exists.
-                res.status(400).send({err: "Date already exists for user"})
-                return
-
-            } else {
-                // Adds the day into the database
-                text = "INSERT INTO days(user_id, date) VALUES($1, $2) RETURNING id, user_id, date"
-                values = [req.user, req.body.date]
-                result = await pool.query(text, values)
-
-                // Returns day information
-                res.status(201).send({
-                    id: result.rows[0].id,
-                    user_id: result.rows[0].user_id,
-                    date: result.rows[0].date
-                })
-            }  
+        if (!req.body || !req.body.date) {
+            res.status(400).send({ err: "Missing date in request body" });
+            return;
         }
 
-        
-    } catch( err ) {
-        console.log("error in days:", err)
+        const pool = await getPool();
+
+        // Check if the date already exists for this user
+        const checkResult = await pool
+            .request()
+            .input("user_id", req.user)
+            .input("date", req.body.date)
+            .query("SELECT id FROM days WHERE user_id = @user_id AND date = @date");
+
+        if (checkResult.recordset.length !== 0) {
+            // Date already exists.
+            res.status(400).send({ err: "Date already exists for user" });
+            return;
+        } else {
+            // Adds the day into the database and returns the new row
+            const insertResult = await pool
+                .request()
+                .input("user_id", req.user)
+                .input("date", req.body.date)
+                .query(
+                    "INSERT INTO days(user_id, date) OUTPUT INSERTED.id, INSERTED.user_id, INSERTED.date VALUES(@user_id, @date)",
+                );
+
+            const row = insertResult.recordset[0];
+            res.status(201).send({
+                id: row.id,
+                user_id: row.user_id,
+                date: row.date,
+            });
+        }
+    } catch (err) {
+        console.log("error in days:", err);
         res.status(500).send({
-            error: err
-        })
+            error: err,
+        });
     }
-})
+});
 
 // Add a food to a day
-router.post('/:date/food', requireAuthentication, async function(req, res) {
+router.post("/:date/food", requireAuthentication, async function (req, res) {
     try {
-        if (!req.body || req.body.calories===null) {
-            res.status(400).send({err: "entry must have request body with calories"})
-        } else {
-            let day_id = await get_day_id(req.user, req.params.date)
-            let text = `
-                INSERT INTO Foods(day_id, name, calories, amount, carbs, fat, protein, position)
-                VALUES($1, $2, $3, $4, $5, $6, $7, $8)
-                RETURNING id
-            `
-            let values = [
-                day_id,
-                req.body.name,
-                req.body.calories,
-                req.body.amount || 1,
-                req.body.carbs || 0,
-                req.body.fat || 0,
-                req.body.protein || 0,
-                0 // TODO: Calculate position instead of 0
-            ] 
-            let result = await pool.query(text, values)
-
-            res.status(201).send({
-                id: result.rows[0].id
-            })
+        if (!req.body || req.body.calories === null) {
+            res.status(400).send({ err: "entry must have request body with calories" });
+            return;
         }
-    } catch (err) { 
+
+        const pool = await getPool();
+        let day_id = await get_day_id(req.user, req.params.date);
+
+        const insertResult = await pool
+            .request()
+            .input("day_id", day_id)
+            .input("name", req.body.name)
+            .input("calories", req.body.calories)
+            .input("amount", req.body.amount || 1)
+            .input("carbs", req.body.carbs || 0)
+            .input("fat", req.body.fat || 0)
+            .input("protein", req.body.protein || 0)
+            .input("position", 0) // TODO: Calculate position instead of 0
+            .query(`
+                INSERT INTO Foods(day_id, name, calories, amount, carbs, fat, protein, position)
+                OUTPUT INSERTED.id
+                VALUES(@day_id, @name, @calories, @amount, @carbs, @fat, @protein, @position)
+            `);
+
+        res.status(201).send({
+            id: insertResult.recordset[0].id,
+        });
+    } catch (err) {
         res.status(500).send({
-            err: err
-        })
+            err: err,
+        });
     }
-})
+});
 
 // Gets the contents of a day
-router.get('/:date', requireAuthentication, async function(req, res) {
+router.get("/:date", requireAuthentication, async function (req, res) {
     try {
-        let day_id = await get_day_id(req.user, req.params.date)
+        let day_id = await get_day_id(req.user, req.params.date);
 
-        let text = "SELECT id, name, calories, amount, carbs, fat, protein FROM foods WHERE day_id = $1"
-        let values = [day_id]
-        let result = await pool.query(text, values)
+        const pool = await getPool();
+        const result = await pool
+            .request()
+            .input("day_id", day_id)
+            .query("SELECT id, name, calories, amount, carbs, fat, protein FROM foods WHERE day_id = @day_id");
 
-        // Parse returned db numerics from string to floats       
-
-        // Calculate total from food
-        let totalCalories = 0, totalCarbs = 0, totalProtein = 0, totalFat = 0
-        for (let i = 0; i < result.rows.length; i++) {
-            totalCalories += (result.rows[i].calories * result.rows[i].amount)
-            totalCarbs += (result.rows[i].carbs * result.rows[i].amount)
-            totalProtein += (result.rows[i].protein * result.rows[i].amount)
-            totalFat += (result.rows[i].fat * result.rows[i].amount)
+        // Calculate totals
+        let totalCalories = 0,
+            totalCarbs = 0,
+            totalProtein = 0,
+            totalFat = 0;
+        for (let i = 0; i < result.recordset.length; i++) {
+            totalCalories += result.recordset[i].calories * result.recordset[i].amount;
+            totalCarbs += result.recordset[i].carbs * result.recordset[i].amount;
+            totalProtein += result.recordset[i].protein * result.recordset[i].amount;
+            totalFat += result.recordset[i].fat * result.recordset[i].amount;
         }
 
-
-        // TODO: Implement recipe getting
         res.status(200).send({
             totalCalories: totalCalories,
             totalCarbs: totalCarbs,
             totalProtein: totalProtein,
             totalFat: totalFat,
-            food: result.rows
-        })
-
-
-    } catch(err) {
-        console.log("DATE get error:", err)
+            food: result.recordset,
+        });
+    } catch (err) {
+        console.log("DATE get error:", err);
         res.status(500).send({
-            err: err
-        })
+            err: err,
+        });
     }
-})
+});
 
-router.delete('/:date/food/:food_id', requireAuthentication, async function(req, res) {
+router.delete("/:date/food/:food_id", requireAuthentication, async function (req, res) {
     try {
-        let day_id = await get_day_id(req.user, req.params.date)
+        let day_id = await get_day_id(req.user, req.params.date);
+        const pool = await getPool();
 
-        let text = `
-            DELETE FROM foods
-            WHERE id = $1 AND day_id = $2
-        `
-        let values = [req.params.food_id, day_id]
-        let result = await pool.query(text, values)
+        const result = await pool.request().input("food_id", req.params.food_id).input("day_id", day_id).query(`
+                DELETE FROM foods
+                WHERE id = @food_id AND day_id = @day_id
+            `);
 
-        // On successful delete, result.rows contains the number of items deleted.
-        if (result.rowCount === 0) {
+        // result.rowsAffected[0] contains the number of rows deleted
+        if (result.rowsAffected[0] === 0) {
             res.status(404).send({
-                err: "Food not found"
-            })
+                err: "Food not found",
+            });
         } else {
-            res.status(204).send()
+            res.status(204).send();
         }
-    } catch(err){
+    } catch (err) {
         res.status(500).send({
-            err: err
-        })
+            err: err,
+        });
     }
-})
+});
 
-module.exports = router
+module.exports = router;

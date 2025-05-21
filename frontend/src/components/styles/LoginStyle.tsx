@@ -9,7 +9,6 @@ export const LoginStyle = styled.div`
         width: 100%;
     }
 
-    
     background-color: ${appWindowColor};
     padding-top: 10px;
     padding-bottom: 50px;
@@ -46,7 +45,7 @@ export const LoginStyle = styled.div`
         box-sizing: border-box;
     }
 
-    input.error{
+    input.error {
         border: 1px solid red;
         background-color: #ffe4e4;
     }
@@ -109,10 +108,12 @@ export const LoginStyle = styled.div`
     button.loading {
         background-color: #41be38;
         color: black;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        transition:
+            background-color 0.3s ease,
+            color 0.3s ease;
     }
 
     h1 {
         margin-bottom: 20px;
     }
-`
+`;

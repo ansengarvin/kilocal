@@ -1,15 +1,15 @@
-import {useState, ReactNode, useEffect} from 'react'
-import styled from '@emotion/styled'
-import { Header } from './Header'
-import { Footer } from './Footer'
-import { Outlet, useLocation } from "react-router-dom"
-import { firebaseAuth } from '../../lib/firebase'
-import { onAuthStateChanged } from 'firebase/auth'
-import { tabletView } from '../../lib/defines'
+import { useState, ReactNode, useEffect } from "react";
+import styled from "@emotion/styled";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { Outlet, useLocation } from "react-router-dom";
+import { firebaseAuth } from "../../lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { tabletView } from "../../lib/defines";
 //import { useQuery } from '@tanstack/react-query'
 
 interface RootProps {
-    children?: ReactNode
+    children?: ReactNode;
 }
 
 const Grid = styled.div`
@@ -35,71 +35,73 @@ const Grid = styled.div`
         flex-direction: column;
         align-items: center;
     }
-`
+`;
 
 export function Root(props: RootProps) {
-    const {children} = props
+    const { children } = props;
 
-    const [isLoadingInitial, setIsLoadingInitial] = useState(true)
-    const [loggedIn, setLoggedIn] = useState(false)
-    const [verified, setVerified] = useState(false)
-    
-    const location = useLocation()
+    const [isLoadingInitial, setIsLoadingInitial] = useState(true);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [verified, setVerified] = useState(false);
+
+    const location = useLocation();
 
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
             if (user) {
                 if (user.emailVerified) {
-                    setVerified(true)
+                    setVerified(true);
                 } else {
-                    setVerified(false)
+                    setVerified(false);
                 }
-                setLoggedIn(true)
+                setLoggedIn(true);
             } else {
-                setLoggedIn(false)
+                setLoggedIn(false);
             }
-            setIsLoadingInitial(false)
-        })
-        return () => unsubscribe()
-    }, [firebaseAuth])
+            setIsLoadingInitial(false);
+        });
+        return () => unsubscribe();
+    }, [firebaseAuth]);
 
     useEffect(() => {
-        console.log("Location change alert: ", location.pathname)
-    }, [location])
+        console.log("Location change alert: ", location.pathname);
+    }, [location]);
 
-    useEffect(() => {
+    useEffect(() => {}, []);
 
-    }, [])
-    
     if (isLoadingInitial) {
         return (
             <>
                 <Grid>
-                    <Header loggedIn={loggedIn}/>
-                        <main>
-                            LOADING
-                        </main>
-                    <Footer/>
+                    <Header loggedIn={loggedIn} />
+                    <main>LOADING</main>
+                    <Footer />
                 </Grid>
             </>
-        )
+        );
     } else {
         return (
             <>
                 <Grid>
-                    <Header loggedIn={loggedIn}/>
+                    <Header loggedIn={loggedIn} />
                     <main>
-                        {children || <Outlet context={{
-                            loggedIn, setLoggedIn,
-                            verified, setVerified,
-                            isLoadingInitial, setIsLoadingInitial
-                        }}/>}
+                        {children || (
+                            <Outlet
+                                context={{
+                                    loggedIn,
+                                    setLoggedIn,
+                                    verified,
+                                    setVerified,
+                                    isLoadingInitial,
+                                    setIsLoadingInitial,
+                                }}
+                            />
+                        )}
                     </main>
-                    <Footer/>
+                    <Footer />
                 </Grid>
             </>
-        )
+        );
     }
-    
 }

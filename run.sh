@@ -1,6 +1,6 @@
 # Builds the database
 function build () {
-	docker compose up --build -d
+	docker compose -f docker-compose.yaml up --build -d
 }
 
 # Destroys the database
@@ -16,10 +16,17 @@ function rebuild () {
 	sleep 8
 }
 
+function dev() {
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build -d
+	#docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+}
+
 # Starts the database
 function start() {
     echo "Starting App"
-    docker-compose up -d
+    docker compose -f docker-compose.yaml up --build -d
 }
 
 # Stops the database

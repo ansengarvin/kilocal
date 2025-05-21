@@ -1,5 +1,5 @@
 # Load node image
-FROM node:latest
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app

@@ -4,8 +4,8 @@ import { ReactNode } from "react";
 import { appAccentColor, tabletView } from "../../lib/defines";
 
 interface HeaderProps {
-    children?: ReactNode
-    loggedIn: boolean
+    children?: ReactNode;
+    loggedIn: boolean;
 }
 
 const Headerbar = styled.nav`
@@ -37,26 +37,34 @@ const Headerbar = styled.nav`
         text-decoration: underline;
     }
 
-    a.navItem{}
-`
+    a.navItem {
+    }
+`;
 
 export function Header(props: HeaderProps) {
-    const {loggedIn} = props
+    const { loggedIn } = props;
 
     return (
         <Headerbar>
-            {
-                loggedIn ?
+            {loggedIn ? (
                 <>
-                    <NavLink className="title" to="/" aria-label="Home">KiloCal</NavLink>
-                    <NavLink className="navitem" to="/profile" aria-label="Profile">Profile</NavLink>
-                </> :
-                <>
-                    <NavLink className="title" to="/" aria-label="Home">KiloCal</NavLink>
-                    <NavLink className="navitem" to="/login" aria-label="Login">Login</NavLink>
+                    <NavLink className="title" to="/" aria-label="Home">
+                        KiloCal
+                    </NavLink>
+                    <NavLink className="navitem" to="/profile" aria-label="Profile">
+                        Profile
+                    </NavLink>
                 </>
-                
-            }
+            ) : (
+                <>
+                    <NavLink className="title" to="/" aria-label="Home">
+                        KiloCal
+                    </NavLink>
+                    <NavLink className="navitem" to="/login" aria-label="Login">
+                        Login
+                    </NavLink>
+                </>
+            )}
         </Headerbar>
-    )
+    );
 }

@@ -10,7 +10,6 @@ export const FoodEntryStyle = styled.div`
     align-items: center;
 
     table {
-
     }
 
     td {
@@ -38,13 +37,13 @@ export const FoodEntryStyle = styled.div`
     // Remove arrow buttons from number inputs across platforms
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
+        -webkit-appearance: none;
+        margin: 0;
     }
-    input[type=number] {
-      -webkit-appearance: textfield;
-      -moz-appearance: textfield;
-      appearance: textfield;
+    input[type="number"] {
+        -webkit-appearance: textfield;
+        -moz-appearance: textfield;
+        appearance: textfield;
     }
 
     // Remove default styling from inputs
@@ -60,7 +59,7 @@ export const FoodEntryStyle = styled.div`
         @media (max-width: ${mobileView}) {
             height: 40px;
         }
-        
+
         display: flex;
         justify-content: center;
         align-items: center;
@@ -68,11 +67,11 @@ export const FoodEntryStyle = styled.div`
 
     input.stat {
         // Add own styling
-        background-color:white;
+        background-color: white;
         text-align: center;
         outline: solid 1px #dbd8cc;
     }
-    
+
     div.stat {
         background-color: #dbd8cc;
     }
@@ -81,7 +80,8 @@ export const FoodEntryStyle = styled.div`
         height: 20px;
     }
 
-    td.foodName, th.foodName {
+    td.foodName,
+    th.foodName {
         width: 100%;
     }
 
@@ -92,7 +92,8 @@ export const FoodEntryStyle = styled.div`
         margin-bottom: 3px;
     }
 
-    label.foodName, input.foodName {
+    label.foodName,
+    input.foodName {
         flex-grow: 1;
         flex-shrink: 1;
     }
@@ -125,7 +126,6 @@ export const FoodEntryStyle = styled.div`
     }
 
     button {
-        
         height: 35px;
         width: 35px;
 
@@ -150,7 +150,7 @@ export const FoodEntryStyle = styled.div`
     button.submit:hover {
         background-color: #43d043;
     }
-    
+
     button.delete {
         background-color: #db3e3e;
         padding: 5px;
@@ -168,4 +168,4 @@ export const FoodEntryStyle = styled.div`
     button.edit:hover {
         background-color: #626262;
     }
-`
+`;
