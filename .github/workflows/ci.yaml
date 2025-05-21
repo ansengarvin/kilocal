@@ -29,9 +29,6 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Switch Directory
-              run: cd frontend
-
             - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
@@ -39,9 +36,11 @@ jobs:
 
             - name: Install dependencies
               run: npm install
+              working-directory: frontend
 
             - name: Run Build
               run: npm run build
+              working-directory: frontend
     # TODO: Add a step that speficially verifies the backend.
     # To do so, we'd need to have a local instance of the database.
 
