@@ -1,5 +1,5 @@
 import express from "express";
-import { pool } from "./lib/database";
+import { poolPromise } from "./lib/database";
 const isDev = 0;
 
 var api = require("./api");
@@ -46,6 +46,16 @@ app.use("*", function (req, res) {
     res.status(404).json({ error: "Requested resource '" + req.originalUrl + "' Not Found" });
 });
 
-app.listen(port, function () {
-    console.log("== server is running on PORT:", port);
-});
+async function startServer() {
+    try {
+        await poolPromise;
+        app.listen(port, function () {
+            console.log("== server is running on PORT:", port);
+        });
+    } catch (err) {
+        console.log("Error connecting to database: ", err);
+        throw err;
+    }
+}
+
+startServer();

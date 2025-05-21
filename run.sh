@@ -17,9 +17,9 @@ function rebuild () {
 }
 
 function dev() {
-	docker compose down
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build -d
-	#docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrong!Passw0rd' -d master -i /path/to/dev.sql
+	docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -d master -i /docker-entrypoint-devdb.d/dev.sql
 }
 
 # Starts the database

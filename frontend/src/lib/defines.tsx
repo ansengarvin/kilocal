@@ -1,5 +1,6 @@
 // Development Mode
 const is_dev = process.env.NODE_ENV === "development";
+console.log(process.env.NODE_ENV);
 export const apiURL = is_dev ? "http://localhost:8000" : "https://api.kcal.ansengarvin.com";
 
 // Screen Widths

@@ -37,7 +37,5 @@ services:
         networks:
             - apiserver
         command: "serve -s dist"
-        environment:
-            - NODE_ENV=development
 volumes:
     node_modules:

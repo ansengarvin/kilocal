@@ -2,27 +2,37 @@ import { Router } from "express";
 
 const router = Router();
 import { createUserIfNoneExists, requireAuthentication, syncFirebaseUserWithDB } from "../lib/authentication";
-import { pool } from "../lib/database";
+import { getPool, poolPromise } from "../lib/database";
 
 router.post("/", requireAuthentication, async function (req, res) {
     syncFirebaseUserWithDB(req, res);
 });
 
 router.post("/login", requireAuthentication, async function (req, res) {
-    const uid = req.user;
-    var text = "SELECT id FROM users WHERE id = $1";
-    var values = [uid];
-    var result = await pool.query(text, values);
-    if (result.rowCount) {
-        // User ID exists, free to proceed.
-        res.status(200).send(result.rows[0]);
-        return;
-    } else {
-        // User ID doesn't exist, need to perform a sync.
-        syncFirebaseUserWithDB(req, res);
+    try {
+        const pool = await getPool();
+
+        console.log("in login");
+        const uid = req.user;
+        const result = await pool.request().input("id", uid).query("SELECT id FROM users WHERE id = @id");
+        console.log("after result");
+        if (result.recordset.length) {
+            // User ID exists, free to proceed.
+            res.status(200).send(result.recordset[0]);
+            return;
+        } else {
+            // User ID doesn't exist, need to perform a sync.
+            await syncFirebaseUserWithDB(req, res);
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(400).send({
+            err: err.message,
+        });
     }
 });
 
+/*
 router.delete("/:user_id", requireAuthentication, async function (req, res) {
     try {
         const text = "DELETE FROM users WHERE id = $1";
@@ -54,5 +64,6 @@ router.get("/", requireAuthentication, async function (req, res) {
         });
     }
 });
+*/
 
 module.exports = router;

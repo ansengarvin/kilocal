@@ -1,23 +1,32 @@
 import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
-import { pool } from "../lib/database";
+import { poolPromise } from "../lib/database";
 
 const router = Router();
 
+/*
 // Gets a day ID if the day entry exists.
 // If the day entry does not exist, creates then returns ID.
-async function get_day_id(user_id, date: String) {
-    let text = "SELECT id FROM days WHERE user_id = $1 AND date = $2";
-    let values = [user_id, date];
-    let result = await pool.query(text, values);
+//TODO: Using multiple SQL queries is probably not the way to do this - You can probably do it with a single SQL query.
+// Look up how.
+async function get_day_id(user_id: string, date: String) {
+    // SELECT
+    let result = await pool
+        .request()
+        .input("user_id", user_id)
+        .input("date", date)
+        .query("SELECT id FROM days WHERE user_id = @user_id AND date = @date");
 
-    if (result.rowCount != 0) {
-        return result.rows[0].id;
+    if (result.recordset.length !== 0) {
+        return result.recordset[0].id;
     } else {
-        text = "INSERT INTO days(user_id, date) VALUES($1, $2) RETURNING id";
-        values = [user_id, date];
-        result = await pool.query(text, values);
-        return result.rows[0].id;
+        // INSERT
+        let insertResult = await pool
+            .request()
+            .input("user_id", user_id)
+            .input("date", date)
+            .query("INSERT INTO days(user_id, date) OUTPUT INSERTED.id VALUES(@user_id, @date)");
+        return insertResult.recordset[0].id;
     }
 }
 
@@ -158,5 +167,6 @@ router.delete("/:date/food/:food_id", requireAuthentication, async function (req
         });
     }
 });
+*/
 
 module.exports = router;
