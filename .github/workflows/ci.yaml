@@ -1,0 +1,56 @@
+name: ci
+
+on:
+    pull_request:
+
+jobs:
+    lint:
+        name: lint(prettier)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Check code formatting with prettier
+              run: npx prettier . --check
+
+    build_frontend:
+        name: validate frontend
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Switch Directory
+              run: cd frontend
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run Build
+              run: npm run build
+    # TODO: Add a step that speficially verifies the backend.
+    # To do so, we'd need to have a local instance of the database.
+
+    docker_compose:
+        name: validate docker build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Build docker image
+              run: docker compose -f docker-compose.yaml build
