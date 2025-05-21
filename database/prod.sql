@@ -5,13 +5,6 @@ CREATE TABLE Users (
     weight FLOAT
 );
 
-CREATE TABLE Recipes (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id NVARCHAR(255) NOT NULL,
-    name NVARCHAR(255) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
-);
-
 CREATE TABLE Days (
     id INT IDENTITY(1,1) PRIMARY KEY,
     user_id NVARCHAR(255) NOT NULL,
@@ -34,14 +27,5 @@ CREATE TABLE Foods (
         (day_id IS NOT NULL AND recipe_id IS NULL) OR
         (day_id IS NULL AND recipe_id IS NOT NULL)
     ),
-    FOREIGN KEY (day_id) REFERENCES Days(id) ON DELETE CASCADE,
-    FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE
-);
-
-CREATE TABLE Days_Recipes (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    date DATE NOT NULL,
-    recipe_id INT NOT NULL,
-    position INT NOT NULL,
-    FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE
+    FOREIGN KEY (day_id) REFERENCES Days(id) ON DELETE CASCADE
 );
