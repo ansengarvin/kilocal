@@ -14,4 +14,4 @@ services:
         ports:
             - 1433:1433
         volumes:
-            - ./database/dev.sql:/docker-entrypoint-devdb.d/dev.sql
+            - ./database/dev.sql:/docker-entrypoint-initdb.d/dev.sql
