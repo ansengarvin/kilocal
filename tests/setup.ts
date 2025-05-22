@@ -9,7 +9,7 @@ admin.initializeApp({
     credential: admin.credential.cert("./backend/etc/keys/service.json"),
 });
 
-export async function createVerifiedTestUser(email: string, password: string) {
+export async function createFirebaseTestUser(email: string, password: string) {
     // Delete if exists
     try {
         await admin
@@ -22,7 +22,7 @@ export async function createVerifiedTestUser(email: string, password: string) {
     return user;
 }
 
-export async function deleteVerifiedTestUser(email: string) {
+export async function deleteFirebaseTestUser(email: string) {
     // Delete if exists
     try {
         await admin

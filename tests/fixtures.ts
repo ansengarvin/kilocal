@@ -1,20 +1,22 @@
-import { APIRequest, APIRequestContext, test as base, TestType } from "@playwright/test";
+import { APIRequestContext, test as base, TestType } from "@playwright/test";
+import playwright from "playwright";
 import { TestUser } from "./TestUser";
 
+// Loosely follows https://playwright.dev/docs/test-fixtures
 export function createTestWithUser(
-    email: string,
-    password: string,
-): TestType<{ user: TestUser; kcalApiContext: APIRequestContext; apiRequest: APIRequest }, {}> {
-    return base.extend<{ user: TestUser; kcalApiContext: APIRequestContext; apiRequest: APIRequest }>({
+    testName: string,
+): TestType<{ user: TestUser; kcalApiContext: APIRequestContext }, {}> {
+    return base.extend<{ user: TestUser; kcalApiContext: APIRequestContext }>({
         user: async ({}, use) => {
-            const user = new TestUser(email, password);
+            const email = testName + "@ansengarvin.com";
+            const user = new TestUser(email, "BigTest1111!!!!");
             await user.createFirebaseUser();
             await user.getFirebaseToken();
             await use(user);
             await user.cleanup();
         },
-        kcalApiContext: async ({ user, apiRequest }, use) => {
-            const kcalApiContext = await apiRequest.newContext({
+        kcalApiContext: async ({ user }, use) => {
+            const kcalApiContext = await playwright.request.newContext({
                 baseURL: "http://localhost:8000/",
                 extraHTTPHeaders: {
                     "Content-Type": "application/json",

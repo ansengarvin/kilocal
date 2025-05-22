@@ -1,11 +1,11 @@
 import { test as base, APIRequestContext } from "@playwright/test";
-import { createVerifiedTestUser, deleteVerifiedTestUser, getUserIdToken } from "./setup";
+import { createFirebaseTestUser, deleteFirebaseTestUser, getUserIdToken } from "./setup";
 
 export class TestUser {
     public email: string;
     public password: string;
     public uid: string | null;
-    public token: null;
+    public token: string | null;
 
     constructor(email: string, password: string) {
         this.email = email;
@@ -15,21 +15,23 @@ export class TestUser {
     }
 
     async createFirebaseUser() {
-        await createVerifiedTestUser(this.email, this.password);
+        const userInfo = await createFirebaseTestUser(this.email, this.password);
+        this.uid = userInfo.uid;
     }
 
-    async getFirebaseToken(): Promise<string> {
-        return getUserIdToken(this.email, this.password);
+    async getFirebaseToken() {
+        this.token = await getUserIdToken(this.email, this.password);
     }
 
     async syncDatabase(kcalApiContext: APIRequestContext) {
         const response = await kcalApiContext.post("/users/login");
-        if (response.status() !== 201) {
-            throw new Error("Failed to create user");
+        console.log(response.status());
+        if (response.status() !== 200) {
+            throw new Error(`Failed to create user: Status ${response.status()}`);
         }
     }
 
     async cleanup() {
-        await deleteVerifiedTestUser(this.email);
+        await deleteFirebaseTestUser(this.email);
     }
 }
