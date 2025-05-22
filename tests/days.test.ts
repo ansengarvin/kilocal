@@ -68,4 +68,10 @@ test.describe("Days API", () => {
         });
         expect(response.status()).toBe(400);
     });
+
+    test("POST days/:date/food - no request body", async ({ kcalApiContext }) => {
+        console.log(`/${today}/food`);
+        const response = await kcalApiContext.post(`/days/${today}/food`, {});
+        expect(response.status()).toBe(400);
+    });
 });
