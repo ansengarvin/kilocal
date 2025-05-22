@@ -23,12 +23,31 @@ function dev() {
 	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 }
 
-function test() {
-	dev
-	echo "wait 8 seconds for db setup"
-	sleep 8
-	npx playwright test
+function down() {
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
 }
+
+function test() {
+    # Start Firebase emulators in background
+    npx firebase emulators:start &
+    
+    echo "Waiting 8 seconds for db and emulator setup..."
+    sleep 8
+    
+    # Run Playwright tests
+    npx playwright test
+    
+    # Find and kill Firebase emulator process on port 9099
+    PID=$(netstat -ano | grep 9099 | grep LISTENING | awk '{print $5}' | head -1)
+    
+    if [ ! -z "$PID" ]; then
+        echo "Stopping firebase emulator at PID $PID..."
+        taskkill //PID $PID //F
+    else
+        echo "No Firebase emulator process found on port 9099"
+    fi
+}
+
 
 # Starts the database
 function start() {
