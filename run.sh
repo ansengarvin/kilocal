@@ -23,6 +23,13 @@ function dev() {
 	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 }
 
+function test() {
+	dev
+	echo "wait 8 seconds for db setup"
+	sleep 8
+	npx playwright test
+}
+
 # Starts the database
 function start() {
     echo "Starting App"
@@ -43,18 +50,6 @@ function psql() {
 
 function psql_dump() {
 	docker exec -t postgres pg_dump --dbname=postgresql://dev:dev@localhost:5432/kilocal_api --inserts > database/backups/dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
-}
-
-function test_short() {
-	python -m pytest -s --tb=short tests/*.py
-}
-
-function test() {
-	destroy
-	build
-	echo "Waiting 8 seconds for database to set up."
-	sleep 8
-	test_short
 }
 
 function scrape_func_names() {

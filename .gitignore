@@ -2,3 +2,4 @@ postgres-data/
 backups/
 .env
 node_modules
+test-results/

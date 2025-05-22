@@ -139,7 +139,7 @@ export async function replaceUser(deleteUID: string, req: Request, res: Response
             .input("weight", req.body.weight)
             .query(upsertQuery);
 
-        res.status(200).send(result.recordset[0]);
+        res.status(201).send(result.recordset[0]);
         return;
     } catch (err: any) {
         res.status(400).send({

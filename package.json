@@ -1,5 +1,11 @@
 {
-    "dependencies": {
+    "devDependencies": {
+        "npx": "^10.2.2",
         "prettier": "^3.5.3"
+    },
+    "dependencies": {
+        "@playwright/test": "^1.52.0",
+        "firebase": "^11.8.1",
+        "firebase-admin": "^13.4.0"
     }
 }

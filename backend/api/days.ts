@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
 import { getPool, poolPromise } from "../lib/database";
+import { RequestError } from "mssql";
 
 const router = Router();
 
 // Gets a day ID if the day entry exists.
 // If the day entry does not exist, creates then returns ID.
 //TODO: Using multiple SQL queries is probably not the way to do this - You can probably do it with a single SQL query.
-// Look up how.
 async function get_day_id(user_id: string, date: String) {
     // SELECT
     const pool = await getPool();
@@ -66,7 +66,7 @@ router.post("/", requireAuthentication, async function (req, res) {
             res.status(201).send({
                 id: row.id,
                 user_id: row.user_id,
-                date: row.date,
+                date: row.date.toISOString().split("T")[0], // split date or it will be in format yyyy-mm-ddT00:00:00
             });
         }
     } catch (err) {
@@ -80,7 +80,7 @@ router.post("/", requireAuthentication, async function (req, res) {
 // Add a food to a day
 router.post("/:date/food", requireAuthentication, async function (req, res) {
     try {
-        if (!req.body || req.body.calories === null) {
+        if (!req.body || req.body.calories == null || req.body.name == null) {
             res.status(400).send({ err: "entry must have request body with calories" });
             return;
         }
@@ -108,9 +108,15 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             id: insertResult.recordset[0].id,
         });
     } catch (err) {
-        res.status(500).send({
-            err: err,
-        });
+        if (err instanceof RequestError) {
+            console.log("RequestError:", err);
+            res.status(400).send({
+                err: err.message,
+            });
+            return;
+        } else {
+            res.status(500).send({ err: "Internal server error" });
+        }
     }
 });
 
