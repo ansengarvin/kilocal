@@ -8,6 +8,11 @@ router.post("/", requireAuthentication, async function (req, res) {
     syncFirebaseUserWithDB(req, res);
 });
 
+/**
+ * This API call is a misnomer; what it really is is a firebase-database sync.
+ * It checks if a user exists, and if they don't, create a user with the firebase UID.
+ * # TODO: Consolidate this process of function calls into a single SQL query
+ */
 router.post("/login", requireAuthentication, async function (req, res) {
     try {
         const pool = await getPool();
@@ -18,7 +23,7 @@ router.post("/login", requireAuthentication, async function (req, res) {
         console.log("after result");
         if (result.recordset.length) {
             // User ID exists, free to proceed.
-            res.status(200).send(result.recordset[0]);
+            res.status(201).send(result.recordset[0]);
             return;
         } else {
             // User ID doesn't exist, need to perform a sync.
