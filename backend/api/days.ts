@@ -65,7 +65,7 @@ router.post("/", requireAuthentication, async function (req, res) {
             res.status(201).send({
                 id: row.id,
                 user_id: row.user_id,
-                date: row.date,
+                date: row.date.toISOString().split("T")[0], // split date or it will be in format yyyy-mm-ddT00:00:00
             });
         }
     } catch (err) {
