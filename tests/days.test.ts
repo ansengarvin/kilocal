@@ -35,4 +35,17 @@ test.describe("Days API", () => {
         const json = await response.json();
         expect(json.id).toBeDefined();
     });
+
+    test("POST days/:date/food - nullable values excluded", async ({ kcalApiContext }) => {
+        console.log(`/${today}/food`);
+        const response = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Banana",
+                calories: 80,
+            },
+        });
+        expect(response.status()).toBe(201);
+        const json = await response.json();
+        expect(json.id).toBeDefined();
+    });
 });
