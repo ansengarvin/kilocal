@@ -7,6 +7,7 @@ console.log(process.env.DB_HOST);
 console.log(process.env.DB_PORT);
 console.log(process.env.DB_NAME);
 console.log(process.env.DB_DRIVER);
+console.log(process.env.NODE_ENV);
 
 const sqlConfig = {
     user: process.env.DB_USER,
@@ -17,7 +18,7 @@ const sqlConfig = {
     driver: process.env.DB_DRIVER,
     options: {
         encrypt: true,
-        trustServerCertificate: false,
+        trustServerCertificate: process.env.NODE_ENV == "development",
         connectionTimeout: 30000, // 30 seconds
     },
 };
