@@ -80,7 +80,7 @@ router.post("/", requireAuthentication, async function (req, res) {
 // Add a food to a day
 router.post("/:date/food", requireAuthentication, async function (req, res) {
     try {
-        if (!req.body || req.body.calories === null) {
+        if (!req.body || req.body.calories == null || req.body.name == null) {
             res.status(400).send({ err: "entry must have request body with calories" });
             return;
         }
