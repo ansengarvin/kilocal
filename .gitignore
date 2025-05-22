@@ -3,3 +3,4 @@ backups/
 .env
 node_modules
 test-results/
+**/.last-run.json
