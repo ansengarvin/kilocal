@@ -2,6 +2,10 @@ import { expect } from "@playwright/test";
 import { createTestWithUser } from "./fixtures/TestUser";
 
 const test = createTestWithUser("days");
+let date = new Date();
+// set date to doay in "yyyy-mm-dd" format
+const today = date.toISOString().split("T")[0];
+console.log(today);
 
 test("POST /days/", async ({ user, kcalApiContext }) => {
     const response = await kcalApiContext.post("/days/", {
