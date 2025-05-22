@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { createTestWithUser } from "./fixtures";
+import { createTestWithUser } from "./fixtures/TestUser";
 
 const test = createTestWithUser("resync");
 

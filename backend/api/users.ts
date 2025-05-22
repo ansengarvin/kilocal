@@ -23,7 +23,7 @@ router.post("/login", requireAuthentication, async function (req, res) {
         console.log("after result");
         if (result.recordset.length) {
             // User ID exists, free to proceed.
-            res.status(201).send(result.recordset[0]);
+            res.status(200).send(result.recordset[0]);
             return;
         } else {
             // User ID doesn't exist, need to perform a sync.

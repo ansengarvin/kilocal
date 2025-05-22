@@ -7,7 +7,6 @@ const router = Router();
 // Gets a day ID if the day entry exists.
 // If the day entry does not exist, creates then returns ID.
 //TODO: Using multiple SQL queries is probably not the way to do this - You can probably do it with a single SQL query.
-// Look up how.
 async function get_day_id(user_id: string, date: String) {
     // SELECT
     const pool = await getPool();
