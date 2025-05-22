@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
 import { getPool, poolPromise } from "../lib/database";
+import { RequestError } from "mssql";
 
 const router = Router();
 
@@ -107,9 +108,15 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             id: insertResult.recordset[0].id,
         });
     } catch (err) {
-        res.status(500).send({
-            err: err,
-        });
+        if (err instanceof RequestError) {
+            console.log("RequestError:", err);
+            res.status(400).send({
+                err: err.message,
+            });
+            return;
+        } else {
+            res.status(500).send({ err: "Internal server error" });
+        }
     }
 });
 
