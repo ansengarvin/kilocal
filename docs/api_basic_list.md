@@ -57,18 +57,3 @@ All of these operations are authenticated and will take the user's ID from the t
     * DELETE
         * Deletes the recipe from the day.
         * Requires the id of the day_recipes table, NOT the recipe itself.
-
-### Recipes
-* /recipes
-    * POST (post a new recipe to a user's book)
-
-* /recipes/{recipe_id}
-    * GET (get all foods for a single recipe)q
-    * PUT (edit the name of a single recipe)
-
-* /recipes/{recipe_id}/foods
-    * POST (post a food in an existing recipe)
-
-* /recipes/{recipe_id}/foods/{food_id}
-    * PUT (edit the recipe for a single food)
-    * DELETE (delete a food from a recipe book)

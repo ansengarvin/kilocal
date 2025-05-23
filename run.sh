@@ -16,18 +16,63 @@ function rebuild () {
 	sleep 8
 }
 
-function dev() {
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build -d
-	#docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql
+
+## Environment for local testing with firebase emulator access
+function up() {
+	npx firebase emulators:start &
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
 	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 }
 
+## Take down environment for local emulator testing
+function down() {
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml down
+	# Find and kill firebase emulator process (windows)
+    PID=$(netstat -ano | grep 9099 | grep LISTENING | awk '{print $5}' | head -1)
+    if [ ! -z "$PID" ]; then
+        echo "Stopping firebase emulator at PID $PID..."
+        taskkill //PID $PID //F
+		echo "Sleeping while process dies"
+		sleep 2
+    else
+        echo "No Firebase emulator process found on port 9099"
+    fi
+}
+
+## Shorthand for tearing down previous dev enviornment and setting up
+function dev() {
+	down
+	up
+}
+
+## Run test suite locally
 function test() {
 	dev
-	echo "wait 8 seconds for db setup"
-	sleep 8
-	npx playwright test
+    
+    echo "Waiting 8 seconds for db and emulator setup..."
+    sleep 8
+    
+    # Run Playwright tests
+    npx playwright test
+}
+
+#####
+# Fake Prod:
+# Starts a local instance for development, which connects to the real firebase server with a local database.
+# Used in niche cases where we're working on tests and want to manually make sure that we didn't break prod firebase
+####
+function fakeprodup() {
+	docker compose -f docker-compose.yaml -f docker-compose.db.yaml up --build -d
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+}
+
+function fakeproddown(){
+	docker compose -f docker-compose.yaml -f docker-compose.db.yaml down
+}
+
+function fakeproddev() {
+	fakeproddown
+	fakeprodup
 }
 
 # Starts the database

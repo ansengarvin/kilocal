@@ -3,3 +3,6 @@ backups/
 .env
 node_modules
 test-results/
+**/.last-run.json
+firebase-debug.log
+firebase-emulator.log

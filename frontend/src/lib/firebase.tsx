@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD0sR_vCnUWa1ZkuhvyTCwYD6P70e3qGFA",
@@ -11,5 +11,16 @@ const firebaseConfig = {
     measurementId: "G-7XYMCE191N",
 };
 
-const app = initializeApp(firebaseConfig);
+const firebaseLocalEmulatorConfig = {
+    apiKey: "fakeKey",
+    authDomain: "localhost",
+    projectId: "ag-kilocal",
+};
+const isLocalDev = import.meta.env.MODE == "development";
+const app = initializeApp(isLocalDev ? firebaseLocalEmulatorConfig : firebaseConfig);
 export const firebaseAuth = getAuth(app);
+if (isLocalDev) {
+    connectAuthEmulator(firebaseAuth, "http://localhost:9099");
+}
+
+console.log(import.meta.env.MODE);

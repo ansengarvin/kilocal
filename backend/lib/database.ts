@@ -18,7 +18,7 @@ const sqlConfig = {
     driver: process.env.DB_DRIVER,
     options: {
         encrypt: true,
-        trustServerCertificate: process.env.NODE_ENV == "development",
+        trustServerCertificate: process.env.LOCAL_DB == "true",
         connectionTimeout: 30000, // 30 seconds
     },
 };
