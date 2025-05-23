@@ -2,7 +2,7 @@ import { useState, ReactNode, useEffect } from "react";
 import styled from "@emotion/styled";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { firebaseAuth } from "../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { tabletView } from "../../lib/defines";
@@ -43,8 +43,6 @@ export function Root(props: RootProps) {
     const [isLoadingInitial, setIsLoadingInitial] = useState(true);
     const [loggedIn, setLoggedIn] = useState(false);
     const [verified, setVerified] = useState(false);
-
-    const location = useLocation();
 
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
