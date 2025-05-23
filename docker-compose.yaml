@@ -1,4 +1,4 @@
-# docker compose for local
+# Production Docker Compose
 networks:
     apiserver:
         driver: bridge

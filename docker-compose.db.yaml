@@ -1,3 +1,5 @@
+# Database Docker Compose
+# Runs a dockerized MSSQL database and instantiates the backend with necessary variables to use it
 services:
     mssql:
         image: mcr.microsoft.com/mssql/server:2022-latest
