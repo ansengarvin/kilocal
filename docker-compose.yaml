@@ -17,13 +17,6 @@ services:
             - 8000:8000
         networks:
             - apiserver
-        environment:
-            - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
-            - DB_HOST=${DB_HOST}
-            - DB_PORT=${DB_PORT}
-            - DB_USER=${DB_USER}
-            - DB_PASS=${DB_PASS}
-            - DB_NAME=${DB_NAME}
         command: "npm start"
     frontend:
         build:
