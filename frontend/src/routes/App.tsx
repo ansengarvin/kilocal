@@ -198,7 +198,8 @@ function App() {
         },
     });
 
-    const foodDelete = useQuery({
+    // Food Delete Query
+    useQuery({
         enabled: deleteReady ? true : false,
         queryKey: ["foodDelete", deleteID],
         queryFn: async () => {
