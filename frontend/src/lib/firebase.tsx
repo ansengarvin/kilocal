@@ -17,7 +17,7 @@ const firebaseLocalEmulatorConfig = {
     projectId: "ag-kilocal",
 };
 const isLocalDev = import.meta.env.MODE == "development";
-const app = initializeApp(isLocalDev ? firebaseConfig : firebaseLocalEmulatorConfig);
+const app = initializeApp(isLocalDev ? firebaseLocalEmulatorConfig : firebaseConfig);
 export const firebaseAuth = getAuth(app);
 if (isLocalDev) {
     connectAuthEmulator(firebaseAuth, "http://localhost:9099");

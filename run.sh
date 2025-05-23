@@ -16,15 +16,6 @@ function rebuild () {
 	sleep 8
 }
 
-# Up and down without emulator access
-function fakeprodup() {
-	docker compose -f docker-compose.yaml -f docker-compose.db.yaml up --build -d
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
-}
-
-function fakeproddown(){
-	docker compose -f docker-compose.yaml -f docker-compose.db.yaml down
-}
 
 ## Environment for local testing with firebase emulator access
 function up() {
@@ -65,6 +56,24 @@ function test() {
     npx playwright test
 }
 
+#####
+# Fake Prod:
+# Starts a local instance for development, which connects to the real firebase server with a local database.
+# Used in niche cases where we're working on tests and want to manually make sure that we didn't break prod firebase
+####
+function fakeprodup() {
+	docker compose -f docker-compose.yaml -f docker-compose.db.yaml up --build -d
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+}
+
+function fakeproddown(){
+	docker compose -f docker-compose.yaml -f docker-compose.db.yaml down
+}
+
+function fakeproddev() {
+	fakeproddown
+	fakeprodup
+}
 
 # Starts the database
 function start() {
