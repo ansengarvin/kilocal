@@ -2,9 +2,16 @@ import express, { Request, Response, NextFunction } from "express";
 import admin from "firebase-admin";
 import { getPool, poolPromise } from "./database";
 
-admin.initializeApp({
-    credential: admin.credential.cert("./etc/keys/service.json"),
-});
+if (process.env.FIREBASE_AUTH_EMULATOR_HOST == "localhost:9099") {
+    console.log("Firebase emulator activated");
+    admin.initializeApp({
+        projectId: "ag-kilocal",
+    });
+} else {
+    admin.initializeApp({
+        credential: admin.credential.cert("./etc/keys/service.json"),
+    });
+}
 
 export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get("Authorization") || "";
@@ -36,6 +43,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                     res.status(401).send({
                         err: "invalid auth token",
                     });
+                    console.log("Invalid token:", err);
                 });
         }
     }

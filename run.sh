@@ -23,6 +23,8 @@ function down() {
     if [ ! -z "$PID" ]; then
         echo "Stopping firebase emulator at PID $PID..."
         taskkill //PID $PID //F
+		echo "Sleeping while process dies"
+		sleep 2
     else
         echo "No Firebase emulator process found on port 9099"
     fi
@@ -47,8 +49,6 @@ function test() {
     
     # Run Playwright tests
     npx playwright test
-
-	down
 }
 
 

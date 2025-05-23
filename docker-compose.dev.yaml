@@ -5,6 +5,7 @@ services:
     backend:
         environment:
             - NODE_ENV=development
+            - FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
     mssql:
         image: mcr.microsoft.com/mssql/server:2022-latest
         container_name: mssql
