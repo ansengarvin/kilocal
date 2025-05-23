@@ -64,12 +64,6 @@ export function Root(props: RootProps) {
         return () => unsubscribe();
     }, [firebaseAuth]);
 
-    useEffect(() => {
-        console.log("Location change alert: ", location.pathname);
-    }, [location]);
-
-    useEffect(() => {}, []);
-
     if (isLoadingInitial) {
         return (
             <>
