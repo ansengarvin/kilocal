@@ -16,36 +16,39 @@ function rebuild () {
 	sleep 8
 }
 
-function dev() {
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build -d
-	#docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
-}
-
 function down() {
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
-}
-
-function test() {
-    # Start Firebase emulators in background
-    npx firebase emulators:start &
-    
-    echo "Waiting 8 seconds for db and emulator setup..."
-    sleep 8
-    
-    # Run Playwright tests
-    npx playwright test
-    
-    # Find and kill Firebase emulator process on port 9099
+	# Find and kill firebase emulator process (windows)
     PID=$(netstat -ano | grep 9099 | grep LISTENING | awk '{print $5}' | head -1)
-    
     if [ ! -z "$PID" ]; then
         echo "Stopping firebase emulator at PID $PID..."
         taskkill //PID $PID //F
     else
         echo "No Firebase emulator process found on port 9099"
     fi
+}
+
+function up() {
+	npx firebase emulators:start &
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build -d
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+}
+
+function dev() {
+	down
+	up
+}
+
+function test() {
+	dev
+    
+    echo "Waiting 8 seconds for db and emulator setup..."
+    sleep 8
+    
+    # Run Playwright tests
+    npx playwright test
+
+	down
 }
 
 

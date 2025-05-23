@@ -1,53 +1,21 @@
-[debug] [2025-05-22T23:53:13.832Z] ----------------------------------------------------------------------
-[debug] [2025-05-22T23:53:13.834Z] Command:       E:\Applications\Node.js\node.exe C:\Users\Supernova\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
-[debug] [2025-05-22T23:53:13.834Z] CLI Version:   14.4.0
-[debug] [2025-05-22T23:53:13.834Z] Platform:      win32
-[debug] [2025-05-22T23:53:13.834Z] Node Version:  v20.16.0
-[debug] [2025-05-22T23:53:13.834Z] Time:          Thu May 22 2025 16:53:13 GMT-0700 (Pacific Daylight Time)
-[debug] [2025-05-22T23:53:13.834Z] ----------------------------------------------------------------------
+[debug] [2025-05-23T00:05:02.607Z] ----------------------------------------------------------------------
+[debug] [2025-05-23T00:05:02.609Z] Command:       E:\Applications\Node.js\node.exe C:\Users\Supernova\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
+[debug] [2025-05-23T00:05:02.609Z] CLI Version:   14.4.0
+[debug] [2025-05-23T00:05:02.609Z] Platform:      win32
+[debug] [2025-05-23T00:05:02.609Z] Node Version:  v20.16.0
+[debug] [2025-05-23T00:05:02.609Z] Time:          Thu May 22 2025 17:05:02 GMT-0700 (Pacific Daylight Time)
+[debug] [2025-05-23T00:05:02.609Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2025-05-22T23:53:13.947Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2025-05-22T23:53:13.947Z] > authorizing via signed-in user (garvinuserinterface@gmail.com)
+[debug] [2025-05-23T00:05:02.769Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-23T00:05:02.769Z] > authorizing via signed-in user (garvinuserinterface@gmail.com)
 [info] i  emulators: Starting emulators: auth {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth"}}
-[debug] [2025-05-22T23:53:13.956Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-05-22T23:53:13.957Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-05-22T23:53:13.957Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}]},"metadata":{"message":"assigned listening specs for emulators"}}
-[debug] [2025-05-22T23:53:13.959Z] [hub] writing locator at C:\Users\SUPERN~1\AppData\Local\Temp\hub-ag-kilocal.json
-[warn] !  emulators: The Emulator UI is not starting, either because none of the running emulators have a UI component or the Emulator UI cannot determine the Project ID. Pass the --project flag to specify a project. {"metadata":{"emulator":{"name":"hub"},"message":"The Emulator UI is not starting, either because none of the running emulators have a UI component or the Emulator UI cannot determine the Project ID. Pass the --project flag to specify a project."}}
-[debug] [2025-05-22T23:53:17.069Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
-[info] 
-┌─────────────────────────────────────────────────────────────┐
-│ ✔  All emulators ready! It is now safe to connect your app. │
-└─────────────────────────────────────────────────────────────┘
-
-┌────────────────┬────────────────┐
-│ Emulator       │ Host:Port      │
-├────────────────┼────────────────┤
-│ Authentication │ 127.0.0.1:9099 │
-└────────────────┴────────────────┘
-  Emulator Hub host: 127.0.0.1 port: 4400
-  Other reserved ports: 4500
-
-Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
- 
-[debug] [2025-05-22T23:55:00.117Z] ----------------------------------------------------------------------
-[debug] [2025-05-22T23:55:00.119Z] Command:       E:\Applications\Node.js\node.exe C:\Users\Supernova\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
-[debug] [2025-05-22T23:55:00.119Z] CLI Version:   14.4.0
-[debug] [2025-05-22T23:55:00.119Z] Platform:      win32
-[debug] [2025-05-22T23:55:00.119Z] Node Version:  v20.16.0
-[debug] [2025-05-22T23:55:00.119Z] Time:          Thu May 22 2025 16:55:00 GMT-0700 (Pacific Daylight Time)
-[debug] [2025-05-22T23:55:00.120Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2025-05-22T23:55:00.229Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2025-05-22T23:55:00.229Z] > authorizing via signed-in user (garvinuserinterface@gmail.com)
-[info] i  emulators: Starting emulators: auth {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth"}}
-[debug] [2025-05-22T23:55:00.239Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-05-22T23:55:00.239Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-05-22T23:55:00.239Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-05-23T00:05:02.780Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-05-23T00:05:02.780Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-05-23T00:05:02.780Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}]},"metadata":{"message":"assigned listening specs for emulators"}}
 [warn] !  emulators: It seems that you are running multiple instances of the emulator suite for project ag-kilocal. This may result in unexpected behavior. 
-[debug] [2025-05-22T23:55:00.241Z] [hub] writing locator at C:\Users\SUPERN~1\AppData\Local\Temp\hub-ag-kilocal.json
+[debug] [2025-05-23T00:05:02.782Z] [hub] writing locator at C:\Users\SUPERN~1\AppData\Local\Temp\hub-ag-kilocal.json
 [warn] !  emulators: The Emulator UI is not starting, either because none of the running emulators have a UI component or the Emulator UI cannot determine the Project ID. Pass the --project flag to specify a project. {"metadata":{"emulator":{"name":"hub"},"message":"The Emulator UI is not starting, either because none of the running emulators have a UI component or the Emulator UI cannot determine the Project ID. Pass the --project flag to specify a project."}}
-[debug] [2025-05-22T23:55:03.473Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2025-05-23T00:05:06.316Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
 [info] 
 ┌─────────────────────────────────────────────────────────────┐
 │ ✔  All emulators ready! It is now safe to connect your app. │
