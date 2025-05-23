@@ -1,6 +1,6 @@
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import admin from "firebase-admin";
-import { getPool, poolPromise } from "./database";
+import { getPool } from "./database";
 
 if (process.env.FIREBASE_AUTH_EMULATOR_HOST == "localhost:9099") {
     console.log("Firebase emulator activated");

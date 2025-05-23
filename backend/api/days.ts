@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
-import { getPool, poolPromise } from "../lib/database";
+import { getPool } from "../lib/database";
 import { RequestError } from "mssql";
 
 const router = Router();
