@@ -71,7 +71,7 @@ function Profile() {
                 {error ? <>Error</> : <></>}
                 {data && (
                     <>
-                        <h1>{data.name}'s Profile</h1>
+                        <h1>Your Profile</h1>
                         <p>
                             Email: {data.email}
                             <br />
