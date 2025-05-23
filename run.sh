@@ -16,8 +16,26 @@ function rebuild () {
 	sleep 8
 }
 
+# Up and down without emulator access
+function fakeprodup() {
+	docker compose -f docker-compose.yaml -f docker-compose.db.yaml up --build -d
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+}
+
+function fakeproddown(){
+	docker compose -f docker-compose.yaml -f docker-compose.db.yaml down
+}
+
+## Environment for local testing with firebase emulator access
+function up() {
+	npx firebase emulators:start &
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+}
+
+## Take down environment for local emulator testing
 function down() {
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml down
 	# Find and kill firebase emulator process (windows)
     PID=$(netstat -ano | grep 9099 | grep LISTENING | awk '{print $5}' | head -1)
     if [ ! -z "$PID" ]; then
@@ -30,17 +48,13 @@ function down() {
     fi
 }
 
-function up() {
-	npx firebase emulators:start &
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build -d
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
-}
-
+## Shorthand for tearing down previous dev enviornment and setting up
 function dev() {
 	down
 	up
 }
 
+## Run test suite locally
 function test() {
 	dev
     
