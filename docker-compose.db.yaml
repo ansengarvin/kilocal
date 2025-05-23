@@ -12,3 +12,7 @@ services:
             - 1433:1433
         volumes:
             - ./database/dev.sql:/docker-entrypoint-initdb.d/dev.sql
+    backend:
+        environment:
+            - LOCAL_DB=true
+            - FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
