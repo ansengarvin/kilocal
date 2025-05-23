@@ -23,6 +23,9 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Write service.json from secret
+              run: echo "${{ secrets.FIREBASE_SERVICE_JSON }}" > backend/etc/keys/service.json
+
             - name: Build and push docker images
               run: |
                   docker compose -f docker-compose.yaml build
