@@ -4,5 +4,11 @@ services:
             - NODE_ENV=development
     backend:
         environment:
+            - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
+            - DB_HOST=${DB_HOST}
+            - DB_PORT=${DB_PORT}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - DB_NAME=${DB_NAME}
             - NODE_ENV=development
             - FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
