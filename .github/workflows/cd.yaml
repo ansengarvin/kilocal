@@ -10,7 +10,7 @@ permissions:
 
 jobs:
     docker:
-        name: Build and Push Images
+        name: Update docker images
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
