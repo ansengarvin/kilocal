@@ -32,15 +32,12 @@ export function Login() {
     const loginMutation = useMutation({
         mutationFn: async (loginInfo: LoginInfo) => {
             setStage(0);
-            setStageName("Signing In");
+            setStageName("Signing in...");
             await signInWithEmailAndPassword(firebaseAuth, loginInfo.email, loginInfo.password);
             // Log into our backend (e.g. create database if none exists)
-            console.log("Create account if none exists");
             const token = await firebaseAuth.currentUser?.getIdToken();
-
             setStage(1);
-            setStageName("Syncing data");
-
+            setStageName("Syncing data...");
             var retries = 0;
             while (retries < 3) {
                 try {

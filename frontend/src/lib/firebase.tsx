@@ -22,5 +22,3 @@ export const firebaseAuth = getAuth(app);
 if (isLocalDev) {
     connectAuthEmulator(firebaseAuth, "http://localhost:9099");
 }
-
-console.log(import.meta.env.MODE);

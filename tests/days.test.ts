@@ -20,7 +20,6 @@ test.describe("Days API", () => {
     });
 
     test("POST days/:date/food - all valid inputs", async ({ kcalApiContext }) => {
-        console.log(`/${today}/food`);
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Banana",
@@ -37,7 +36,6 @@ test.describe("Days API", () => {
     });
 
     test("POST days/:date/food - nullable values excluded", async ({ kcalApiContext }) => {
-        console.log(`/${today}/food`);
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Banana",
@@ -50,7 +48,6 @@ test.describe("Days API", () => {
     });
 
     test("POST days/:date/food - calories excluded", async ({ kcalApiContext }) => {
-        console.log(`/${today}/food`);
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Banana",
@@ -60,7 +57,6 @@ test.describe("Days API", () => {
     });
 
     test("POST days/:date/food - name excluded", async ({ kcalApiContext }) => {
-        console.log(`/${today}/food`);
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 calories: 80,
@@ -70,7 +66,6 @@ test.describe("Days API", () => {
     });
 
     test("POST days/:date/food - no request body", async ({ kcalApiContext }) => {
-        console.log(`/${today}/food`);
         const response = await kcalApiContext.post(`/days/${today}/food`, {});
         expect(response.status()).toBe(400);
     });

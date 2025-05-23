@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
-import { getPool, poolPromise } from "../lib/database";
+import { getPool } from "../lib/database";
 import { RequestError } from "mssql";
 
 const router = Router();
@@ -70,7 +70,6 @@ router.post("/", requireAuthentication, async function (req, res) {
             });
         }
     } catch (err) {
-        console.log("error in days:", err);
         res.status(500).send({
             error: err,
         });
@@ -151,7 +150,6 @@ router.get("/:date", requireAuthentication, async function (req, res) {
             food: result.recordset,
         });
     } catch (err) {
-        console.log("DATE get error:", err);
         res.status(500).send({
             err: err,
         });

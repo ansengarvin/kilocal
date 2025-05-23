@@ -26,7 +26,6 @@ export class TestUser {
 
     async syncDatabase(kcalApiContext: APIRequestContext) {
         const response = await kcalApiContext.post("/users/login");
-        console.log(response.status());
         if (response.status() !== 201) {
             throw new Error(`Failed to create user: Status ${response.status()}`);
         }
@@ -44,7 +43,6 @@ export function createTestWithUser(
     return base.extend<{ user: TestUser; kcalApiContext: APIRequestContext }>({
         user: async ({}, use) => {
             const email = testName + "@ansengarvin.com";
-            console.log(email);
             const user = new TestUser(email, "BigTest1111!!!!");
             await user.createFirebaseUser();
             await user.getFirebaseToken();

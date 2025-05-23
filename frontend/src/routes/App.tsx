@@ -198,7 +198,8 @@ function App() {
         },
     });
 
-    const foodDelete = useQuery({
+    // Food Delete Query
+    useQuery({
         enabled: deleteReady ? true : false,
         queryKey: ["foodDelete", deleteID],
         queryFn: async () => {
@@ -225,12 +226,6 @@ function App() {
             setIsCurrentDay(false);
         }
     }, [formattedDate]);
-
-    useEffect(() => {
-        if (foodDelete.error) {
-            console.log(foodDelete.error);
-        }
-    });
 
     if (!loggedIn) {
         return <Landing />;

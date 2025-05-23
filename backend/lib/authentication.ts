@@ -1,6 +1,6 @@
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import admin from "firebase-admin";
-import { getPool, poolPromise } from "./database";
+import { getPool } from "./database";
 
 if (process.env.FIREBASE_AUTH_EMULATOR_HOST == "localhost:9099") {
     console.log("Firebase emulator activated");
@@ -43,7 +43,6 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                     res.status(401).send({
                         err: "invalid auth token",
                     });
-                    console.log("Invalid token:", err);
                 });
         }
     }
@@ -110,7 +109,6 @@ export async function createUserIfNoneExists(req: Request, res: Response) {
             weight: insertResult.recordset[0].weight,
         });
     } catch (err: any) {
-        console.log(err.message);
         res.status(400).send({
             err: err.message,
         });

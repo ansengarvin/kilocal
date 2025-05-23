@@ -1,6 +1,6 @@
 import sql from "mssql";
 
-console.log("All env stuff:");
+console.log("Environment initialized:");
 console.log(process.env.DB_USER);
 console.log(process.env.DB_PASS);
 console.log(process.env.DB_HOST);
