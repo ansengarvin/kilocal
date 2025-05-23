@@ -23,18 +23,8 @@ jobs:
                   username: ${{ github.actor }}
                   token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Build and push backend image
-              uses: docker/build-push-action@v4
-              with:
-                  context: ./backend
-                  file: Dockerfile
-                  push: true
-                  tags: ghcr.io/ansengarvin/backend:${{ github.sha }}
-
-            - name: Build and push frontend image
-              uses: docker/build-push-action@v4
-              with:
-                  context: ./frontend
-                  file: Dockerfile
-                  push: true
-                  tags: ghcr.io/ansengarvin/frontend:${{github.sha}}
+            - name: Build and push docker images
+              run: |
+                  docker compose -f docker-compose.yaml build
+                  docker push ghcr.io/ansengarvin/frontend:${{ github.sha }}
+                  docker push ghcr.io/ansengarvin/backend:${{ github.sha }}
