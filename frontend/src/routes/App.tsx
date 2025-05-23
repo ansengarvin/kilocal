@@ -226,12 +226,6 @@ function App() {
         }
     }, [formattedDate]);
 
-    useEffect(() => {
-        if (foodDelete.error) {
-            console.log(foodDelete.error);
-        }
-    });
-
     if (!loggedIn) {
         return <Landing />;
     } else {
