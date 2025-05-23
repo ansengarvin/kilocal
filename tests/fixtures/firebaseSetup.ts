@@ -40,12 +40,6 @@ export async function deleteFirebaseTestUser(email: string) {
 let clientAppInitialized = false;
 
 export async function getUserIdToken(email: string, password: string): Promise<string> {
-    console.log("listing users now:");
-    const list = await admin.auth().listUsers();
-    console.log(
-        "Users in emulator:",
-        list.users.map((u) => u.email),
-    );
     if (!clientAppInitialized) {
         initializeClientApp({
             apiKey: "fakeKey",
@@ -57,6 +51,5 @@ export async function getUserIdToken(email: string, password: string): Promise<s
     const auth = getAuth();
     connectAuthEmulator(auth, "http://localhost:9099");
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log("The credential is", userCredential);
     return userCredential.user.getIdToken();
 }
