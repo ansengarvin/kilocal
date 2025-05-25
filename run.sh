@@ -47,13 +47,19 @@ function dev() {
 
 ## Run test suite locally
 function test() {
-	dev
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
     
     echo "Waiting 8 seconds for db and emulator setup..."
     sleep 8
     
     # Run Playwright tests
-    npx playwright test
+    firebase emulators:exec --project ag-kilocal "npx playwright test | tee ./tests/logs/playwright/playwright.log"
+
+	docker logs frontend > ./tests/logs/docker/frontend.log
+	docker logs backend > ./tests/logs/docker/backend.log
+	docker logs mssql > ./tests/logs/docker/mssql.log
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml down
 }
 
 #####
