@@ -10,10 +10,10 @@ console.log(process.env.DB_DRIVER);
 console.log(process.env.NODE_ENV);
 
 const sqlConfig = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    server: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
+    user: process.env.DB_USER || "sa",
+    password: process.env.DB_PASS || "YourStrong!Passw0rd",
+    server: process.env.DB_HOST || "mssql",
+    port: Number(process.env.DB_PORT) || 1433,
     database: process.env.DB_NAME,
     driver: process.env.DB_DRIVER,
     options: {
