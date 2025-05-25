@@ -30,7 +30,11 @@ I built this project for a few reasons:
 
 ## The System
 
-The system I'm using for this project is fairly simple
+### High-level system diagram
+
+<img src="./docs/images/system-high-level.svg"/>
+
+### Azure Architecture
 
 ## What I learned
 
