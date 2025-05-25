@@ -53,3 +53,13 @@ jobs:
 
             - name: Build docker image
               run: docker compose -f docker-compose.yaml build
+
+    api_test:
+        name: run api tests (playwright)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Build dev docker image
+              run: docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml
