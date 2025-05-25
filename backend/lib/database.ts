@@ -1,13 +1,13 @@
 import sql from "mssql";
+import assert from "assert";
 
-console.log("Environment initialized:");
-console.log(process.env.DB_USER);
-console.log(process.env.DB_PASS);
-console.log(process.env.DB_HOST);
-console.log(process.env.DB_PORT);
-console.log(process.env.DB_NAME);
-console.log(process.env.DB_DRIVER);
-console.log(process.env.NODE_ENV);
+// If a local database isn't being used, these environment variables must be set.
+if (process.env.LOCAL_DB !== "true") {
+    assert(process.env.DB_USER);
+    assert(process.env.DB_PASS);
+    assert(process.env.DB_HOST);
+    assert(process.env.DB_PORT);
+}
 
 const sqlConfig = {
     user: process.env.DB_USER || "sa",
