@@ -2,7 +2,7 @@
 
 A lightweight, cloud-based nutrition dashboard designed to make calorie counting and macronutrient tracking as simple and easy as possible.
 
-[Live Demo](https://kcal.ansengarvin.com/) (Note: It can be slow to load initially)
+[Live Demo](https://kcal.ansengarvin.com/) (Note: It can be slow to load initially, see [#30](https://github.com/ansengarvin/kilocal/issues/30)).
 
 ## The Motivation
 
