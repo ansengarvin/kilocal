@@ -49,6 +49,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                         res.status(401).send({
                             err: "invalid auth token",
                             details: err.message,
+                            code: err.code,
                         });
                     }
                 });
