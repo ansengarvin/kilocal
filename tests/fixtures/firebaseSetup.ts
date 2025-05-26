@@ -22,6 +22,10 @@ export async function createFirebaseTestUser(email: string, password: string) {
     } catch {}
     // Create user
     const user = await admin.auth().createUser({ email, password, emailVerified: true });
+    if (!user) {
+        console.error("Failed to create user");
+        throw new Error("Failed to create user");
+    }
     return user;
 }
 
