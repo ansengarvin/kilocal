@@ -50,11 +50,11 @@ function test() {
 	# Build docker images and run them in Docker Desktop
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
 
+	echo "Waiting 8 seconds for database setup..."
+    sleep 8
+
 	# Initialize the local database with tables and some test values
 	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
-    
-    echo "Waiting 8 seconds for database setup..."
-    sleep 8
     
     # Start emulator, run playwright tests, and stop emulator
     firebase emulators:exec --project ag-kilocal "npx playwright test | tee ./tests/logs/playwright/playwright.log"
