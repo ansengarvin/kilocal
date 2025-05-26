@@ -13,3 +13,5 @@ services:
             - DB_PASS=YourStrong!Passw0rd
             - NODE_ENV=development
             - FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
