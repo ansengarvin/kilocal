@@ -45,11 +45,12 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                             err: "Firebase Auth service not found (ENOTFOUND)",
                             details: err.message,
                         });
+                    } else {
+                        res.status(401).send({
+                            err: "invalid auth token",
+                            details: err.message,
+                        });
                     }
-                    res.status(401).send({
-                        err: "invalid auth token",
-                        details: err.message,
-                    });
                 });
         }
     }
