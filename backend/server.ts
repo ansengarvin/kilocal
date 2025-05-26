@@ -6,7 +6,7 @@ var api = require("./api");
 var cors = require("cors");
 
 const app = express();
-const port = Number(process.env.PORT) || 8000;
+const port = process.env.PORT || 8000;
 app.use(express.json());
 
 // TODO: Change origin to prod origin
@@ -49,7 +49,7 @@ app.use("*", function (req, res) {
 async function startServer() {
     try {
         await poolPromise;
-        app.listen(port, "::", function () {
+        app.listen(port, function () {
             console.log("== server is running on PORT:", port);
         });
     } catch (err) {
