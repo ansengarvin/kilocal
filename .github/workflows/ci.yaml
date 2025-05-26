@@ -64,6 +64,9 @@ jobs:
             - name: Install test prerequisites
               run: npm install
 
+            - name: Write Firebase services.json file from secret
+              run: echo "${{ secrets.FIREBASE_SERVICE_JSON }}" > backend/etc/keys/service.json
+
             - name: Build dev docker image
               run: docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
 
