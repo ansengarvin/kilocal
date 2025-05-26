@@ -51,5 +51,16 @@ export async function getUserIdToken(email: string, password: string): Promise<s
     const auth = getAuth();
     connectAuthEmulator(auth, "http://localhost:9099");
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    if (!userCredential.user) {
+        console.error("User credential is null");
+        throw new Error("User credential is null");
+    }
+    const token = await userCredential.user.getIdToken();
+    if (!token) {
+        console.error("Token is null");
+        throw new Error("Token is null");
+    } else {
+        console.log("Token:", token);
+    }
     return userCredential.user.getIdToken();
 }
