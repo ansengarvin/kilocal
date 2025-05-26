@@ -40,6 +40,12 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                     next();
                 })
                 .catch((err) => {
+                    if (err.code === "ENOTFOUND") {
+                        res.status(503).send({
+                            err: "Firebase Auth service not found (ENOTFOUND)",
+                            details: err.message,
+                        });
+                    }
                     res.status(401).send({
                         err: "invalid auth token",
                         details: err.message,
