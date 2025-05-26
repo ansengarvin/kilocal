@@ -47,6 +47,9 @@ function dev() {
 
 ## Run test suite locally
 function test() {
+	# Take down any existing docker images prior to runnign test
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml down
+	
 	# Build docker images and run them in Docker Desktop
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
 
