@@ -91,5 +91,8 @@ jobs:
             - name: Start firebase emulators
               run: npx firebase emulators:start &
 
+            - name: Wait for firebase emulator to start
+              run: sleep 10
+
             - name: Check firebase emulators
               run: curl http://localhost:9099
