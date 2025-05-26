@@ -49,7 +49,7 @@ app.use("*", function (req, res) {
 async function startServer() {
     try {
         await poolPromise;
-        app.listen(port, function () {
+        app.listen(port, "::", function () {
             console.log("== server is running on PORT:", port);
         });
     } catch (err) {
