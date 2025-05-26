@@ -14,4 +14,4 @@ services:
             - NODE_ENV=development
             - FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
         extra_hosts:
-            - host.docker.internal:localhost
+            - host.docker.internal:host-gateway
