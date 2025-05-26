@@ -40,9 +40,9 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                     next();
                 })
                 .catch((err) => {
-                    req.user = "";
                     res.status(401).send({
                         err: "invalid auth token",
+                        details: err.message,
                     });
                 });
         }

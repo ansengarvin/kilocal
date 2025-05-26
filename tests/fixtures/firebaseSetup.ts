@@ -23,8 +23,8 @@ export async function createFirebaseTestUser(email: string, password: string) {
     // Create user
     const user = await admin.auth().createUser({ email, password, emailVerified: true });
     if (!user) {
-        console.error("Failed to create user");
-        throw new Error("Failed to create user");
+        console.error("Failed to create firebase testuser");
+        throw new Error("Failed to create firebase test user");
     }
     return user;
 }
@@ -63,8 +63,6 @@ export async function getUserIdToken(email: string, password: string): Promise<s
     if (!token) {
         console.error("Token is null");
         throw new Error("Token is null");
-    } else {
-        console.log("Token:", token);
     }
     return userCredential.user.getIdToken();
 }
