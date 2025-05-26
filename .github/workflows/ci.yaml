@@ -64,6 +64,9 @@ jobs:
             - name: Install test prerequisites
               run: npm install
 
+            - name: Print docker version
+              run: docker --version
+
             - name: Build dev docker image
               run: docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
 
