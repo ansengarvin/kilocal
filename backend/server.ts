@@ -6,7 +6,7 @@ var api = require("./api");
 var cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 8000;
+const port = Number(process.env.PORT) || 8000;
 app.use(express.json());
 
 // TODO: Change origin to prod origin
