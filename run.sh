@@ -57,7 +57,7 @@ function test() {
 	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
     
     # Start emulator, run playwright tests, and stop emulator
-    firebase emulators:exec --project ag-kilocal "npx playwright test | tee ./tests/logs/playwright/playwright.log"
+    npx firebase emulators:exec --project ag-kilocal "npx playwright test | tee ./tests/logs/playwright/playwright.log"
 
 	# Transfer all docker logs to local folder and stop running images
 	docker logs frontend > ./tests/logs/docker/frontend.log
