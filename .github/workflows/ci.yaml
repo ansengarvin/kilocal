@@ -64,8 +64,14 @@ jobs:
             - name: Install test prerequisites
               run: npm install
 
-            - name: Print docker version
-              run: docker --version
+              # https://docs.docker.com/reference/cli/dockerd/#daemon-configuration-file
+            - name: Set up Docker
+              uses: docker/setup-docker-action@v4
+              with:
+                  daemon-config: |
+                      {
+                        "host-gateway-ip": "172.17.0.1"
+                      }
 
             - name: Build dev docker image
               run: docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
