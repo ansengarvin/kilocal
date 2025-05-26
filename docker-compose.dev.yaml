@@ -7,10 +7,11 @@ services:
     backend:
         environment:
             - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
-            - DB_HOST=${DB_HOST}
-            - DB_PORT=${DB_PORT}
-            - DB_USER=${DB_USER}
-            - DB_PASS=${DB_PASS}
-            - DB_NAME=${DB_NAME}
+            - DB_HOST=mssql
+            - DB_PORT=1433
+            - DB_USER=sa
+            - DB_PASS=YourStrong!Passw0rd
             - NODE_ENV=development
             - FIREBASE_AUTH_EMULATOR_HOST=host.docker.internal:9099
+        extra_hosts:
+            - host.docker.internal:host-gateway

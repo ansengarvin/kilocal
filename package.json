@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "firebase-tools": "^14.4.0",
         "npx": "^10.2.2",
         "prettier": "^3.5.3"
     },

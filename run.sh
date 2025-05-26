@@ -21,7 +21,7 @@ function rebuild () {
 function up() {
 	npx firebase emulators:start &
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 }
 
 ## Take down environment for local emulator testing
@@ -47,13 +47,23 @@ function dev() {
 
 ## Run test suite locally
 function test() {
-	dev
-    
-    echo "Waiting 8 seconds for db and emulator setup..."
+	# Build docker images and run them in Docker Desktop
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
+
+	echo "Waiting 8 seconds for database setup..."
     sleep 8
+
+	# Initialize the local database with tables and some test values
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
     
-    # Run Playwright tests
-    npx playwright test
+    # Start emulator, run playwright tests, and stop emulator
+    npx firebase emulators:exec --project ag-kilocal "npx playwright test | tee ./tests/logs/playwright/playwright.log"
+
+	# Transfer all docker logs to local folder and stop running images
+	docker logs frontend > ./tests/logs/docker/frontend.log
+	docker logs backend > ./tests/logs/docker/backend.log
+	docker logs mssql > ./tests/logs/docker/mssql.log
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml down
 }
 
 #####
@@ -63,7 +73,7 @@ function test() {
 ####
 function fakeprodup() {
 	docker compose -f docker-compose.yaml -f docker-compose.db.yaml up --build -d
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 }
 
 function fakeproddown(){

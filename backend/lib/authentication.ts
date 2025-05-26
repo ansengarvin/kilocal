@@ -2,12 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import admin from "firebase-admin";
 import { getPool } from "./database";
 
-if (process.env.FIREBASE_AUTH_EMULATOR_HOST == "localhost:9099") {
-    console.log("Firebase emulator activated");
+if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+    console.log("Firebase emulator activated at", process.env.FIREBASE_AUTH_EMULATOR_HOST);
     admin.initializeApp({
         projectId: "ag-kilocal",
     });
 } else {
+    console.log("Using production firebase server");
     admin.initializeApp({
         credential: admin.credential.cert("./etc/keys/service.json"),
     });
@@ -39,10 +40,17 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                     next();
                 })
                 .catch((err) => {
-                    req.user = "";
-                    res.status(401).send({
-                        err: "invalid auth token",
-                    });
+                    if (err.message.includes("ENOTFOUND")) {
+                        res.status(503).send({
+                            err: "Firebase Auth service not found (ENOTFOUND)",
+                            details: err.message,
+                        });
+                    } else {
+                        res.status(401).send({
+                            err: "invalid auth token",
+                            details: err.message,
+                        });
+                    }
                 });
         }
     }

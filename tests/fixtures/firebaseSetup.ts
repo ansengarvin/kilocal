@@ -22,6 +22,10 @@ export async function createFirebaseTestUser(email: string, password: string) {
     } catch {}
     // Create user
     const user = await admin.auth().createUser({ email, password, emailVerified: true });
+    if (!user) {
+        console.error("Failed to create firebase testuser");
+        throw new Error("Failed to create firebase test user");
+    }
     return user;
 }
 
@@ -51,5 +55,14 @@ export async function getUserIdToken(email: string, password: string): Promise<s
     const auth = getAuth();
     connectAuthEmulator(auth, "http://localhost:9099");
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    if (!userCredential.user) {
+        console.error("User credential is null");
+        throw new Error("User credential is null");
+    }
+    const token = await userCredential.user.getIdToken();
+    if (!token) {
+        console.error("Token is null");
+        throw new Error("Token is null");
+    }
     return userCredential.user.getIdToken();
 }
