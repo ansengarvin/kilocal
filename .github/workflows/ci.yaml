@@ -96,3 +96,6 @@ jobs:
 
             - name: Check firebase emulators
               run: curl http://localhost:9099
+
+            - name: See if tests run with emulators started and waiting
+              run: npx playwright test
