@@ -21,7 +21,7 @@ function rebuild () {
 function up() {
 	npx firebase emulators:start &
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 }
 
 ## Take down environment for local emulator testing
@@ -51,7 +51,7 @@ function test() {
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
 
 	# Initialize the local database with tables and some test values
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
     
     echo "Waiting 8 seconds for database setup..."
     sleep 8
@@ -73,7 +73,7 @@ function test() {
 ####
 function fakeprodup() {
 	docker compose -f docker-compose.yaml -f docker-compose.db.yaml up --build -d
-	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:localhost,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
+	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 }
 
 function fakeproddown(){
