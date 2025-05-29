@@ -60,6 +60,7 @@ jobs:
                       az storage blob delete-batch \
                       --account-name agkcal \
                       --source '$web' \
+                      --auth-mode login
 
             - name: Deploy front end
               uses: azure/cli@v2
@@ -69,5 +70,5 @@ jobs:
                       az storage blob upload-batch \
                       --account-name agkcal \
                       --destination '$web' \
-                      --source ./frontend/dist
+                      --source ./frontend/dist \
                       --auth-mode login
