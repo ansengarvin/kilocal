@@ -1,9 +1,6 @@
 # Dev Docker Compose
 # Instantiates the front and back end with environment variables used during development
 services:
-    frontend:
-        environment:
-            - NODE_ENV=development
     backend:
         environment:
             - GOOGLE_APPLICATION_CREDENTIALS="./keys/service.json"
