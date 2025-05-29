@@ -18,17 +18,5 @@ services:
         networks:
             - apiserver
         command: "npm start"
-    frontend:
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
-        image: ghcr.io/ansengarvin/frontend:latest
-        container_name: frontend
-        working_dir: /app
-        ports:
-            - 5000:3000
-        networks:
-            - apiserver
-        command: "serve -s dist"
 volumes:
     node_modules:

@@ -29,7 +29,6 @@ jobs:
             - name: Build and push docker images
               run: |
                   docker compose -f docker-compose.yaml build
-                  docker push ghcr.io/ansengarvin/frontend:latest
                   docker push ghcr.io/ansengarvin/backend:latest
     frontend:
         name: Deploy frontend
