@@ -37,6 +37,5 @@ jobs:
               with:
                   azure_static_web_apps_api_token: ${{ secrets.AZURE_FRONTEND_DEPLOYMENT_TOKEN }}
                   action: upload
-                  app_location: "./dist"
+                  app_location: "frontend/dist"
                   skip_app_build: true
-              working-directory: frontend
