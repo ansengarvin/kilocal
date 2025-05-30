@@ -65,6 +65,6 @@ Each Azure container app has access to a GitHub container registry. After a merg
 
 - **Containers take forever to spool up.** As I mention in [#30](https://github.com/ansengarvin/kilocal/issues/30), my container apps scale from 0 to 10. This is an important cost-saving measure, since container apps don't consume any free-tier resources when they're scaled down to 0. When a container app scales from 0 to 1, it does a "cold-start," where it has to download the images and start up the containers. It's time-consuming, and leaves the application hanging / loading for an unacceptable amount of time.
 
-- **General front-end improvements.** The website is pretty ugly right now. It doesn't display well on all mobile devices. The profile page is practically non-existant.
+- **General front-end improvements.** The website is pretty ugly right now. It doesn't display well on all mobile devices. The profile page is practically non-existant. There needs to be much better communication for loading.
 
 - ~~Container Apps are a poor choice for the frontend.~~ **(This has been resolved. See [#50](https://github.com/ansengarvin/kilocal/issues/50).)**
