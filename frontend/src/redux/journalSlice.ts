@@ -24,13 +24,13 @@ export interface JournalState {
     food: Food[];
 }
 
-const fetchDayByDate = createAsyncThunk("journal/fetchDayByDAte", async (_, thunkAPI) => {
+const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
     const response = await fetch(`${apiURL}/days/${state.journal.apiDate}`, {
         method: "GET",
         headers: {
-            Authorization: "Beader " + token,
+            Authorization: "Bearer " + token,
         },
     });
     return response.json();
@@ -59,6 +59,7 @@ export const journalSlice = createSlice({
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
             state.apiDate = getAPIDate(thisDay);
+            console.log("Daydunit");
         },
         prevDay(state) {
             const thisDay = new Date(state.day);
@@ -68,6 +69,7 @@ export const journalSlice = createSlice({
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
             state.apiDate = getAPIDate(thisDay);
+            console.log("Daypunit");
         },
     },
     extraReducers: (builder) => {
@@ -87,7 +89,13 @@ export const journalSlice = createSlice({
     },
 });
 
-export const { nextDay, prevDay } = journalSlice.actions;
+const { nextDay, prevDay } = journalSlice.actions;
+
+export const journalDispatch = {
+    nextDay,
+    prevDay,
+    fetchDayByDate,
+};
 export default journalSlice.reducer;
 
 /*

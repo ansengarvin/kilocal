@@ -11,8 +11,9 @@ import { Landing } from "../components/global/Landing";
 import { apiURL, appAccentColor, appAccentHover, mobileView } from "../lib/defines";
 import { ArrowBackiOSIcon } from "../lib/icons/ArrowBackiOSIcon";
 import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
-import { RootState } from "../redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "../redux/store";
+import { useSelector } from "react-redux";
+import { journalDispatch } from "../redux/journalSlice";
 
 export function Journal() {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ export function Journal() {
     }, [verified, loggedIn]);
 
     const journal = useSelector((state: RootState) => state.journal);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const [postReady, setPostReady] = useState(false);
     const [foodName, setFoodName] = useState("");
@@ -46,26 +47,6 @@ export function Journal() {
 
     const [deleteID, setDeleteID] = useState(0);
     const [deleteReady, setDeleteReady] = useState(false);
-
-    const foodGet = useQuery({
-        enabled: loggedIn ? true : false,
-        queryKey: ["day", journal.apiDate],
-        queryFn: async () => {
-            const token = await firebaseAuth.currentUser?.getIdToken();
-            const url = `${apiURL}/days/${journal.apiDate}`;
-            const response = await fetch(url, {
-                method: "GET",
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
-            });
-            // Print to console if 500
-            if (response.status == 500) {
-                console.log(response);
-            }
-            return response.json();
-        },
-    });
 
     const foodPost = useQuery({
         enabled: postReady ? true : false,
@@ -97,7 +78,7 @@ export function Journal() {
                 body: queryBody,
             });
 
-            foodGet.refetch();
+            dispatch(journalDispatch.fetchDayByDate());
             return response.json();
         },
     });
@@ -116,7 +97,7 @@ export function Journal() {
                 },
             });
             setDeleteReady(false);
-            foodGet.refetch();
+            dispatch(journalDispatch.fetchDayByDate());
             return response;
         },
     });
@@ -131,7 +112,8 @@ export function Journal() {
                         className="date left"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch({ type: "journal/prevDay" });
+                            dispatch(journalDispatch.prevDay());
+                            dispatch(journalDispatch.fetchDayByDate());
                             console.log("PREV DAY");
                         }}
                     >
@@ -145,35 +127,23 @@ export function Journal() {
                         disabled={journal.isToday}
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch({ type: "journal/nextDay" });
+                            dispatch(journalDispatch.nextDay());
+                            dispatch(journalDispatch.fetchDayByDate());
                         }}
                     >
                         <ArrowForwardiOSIcon color={"#ffffff"} />
                     </button>
                 </DateSection>
-                {foodGet.data ? (
-                    <GoalSection
-                        calorieTotal={foodGet.data?.totalCalories}
-                        calorieGoal={2000}
-                        carbTotal={foodGet.data?.totalCarbs}
-                        carbGoal={300}
-                        proteinTotal={foodGet.data?.totalProtein}
-                        proteinGoal={100}
-                        fatTotal={foodGet.data?.totalFat}
-                        fatGoal={50}
-                    />
-                ) : (
-                    <GoalSection
-                        calorieTotal={0}
-                        calorieGoal={2000}
-                        carbTotal={0}
-                        carbGoal={300}
-                        proteinTotal={0}
-                        proteinGoal={100}
-                        fatTotal={0}
-                        fatGoal={50}
-                    />
-                )}
+                <GoalSection
+                    calorieTotal={journal.totalCalories}
+                    calorieGoal={2000}
+                    carbTotal={journal.totalCarbs}
+                    carbGoal={300}
+                    proteinTotal={journal.totalCalories}
+                    proteinGoal={100}
+                    fatTotal={journal.totalFat}
+                    fatGoal={50}
+                />
                 <FoodJournal className="appWindow">
                     <h2>Add a Food</h2>
                     <PostSection
@@ -192,16 +162,16 @@ export function Journal() {
                     />
                     <br />
                     <h2>Food Journal</h2>
-                    {foodGet.data?.food && foodGet.data?.food.length == 0 && <span>No food for this day yet!</span>}
-
-                    {foodGet.data?.food && foodGet.data?.food.length != 0 && (
+                    {journal.food && journal.food.length > 0 ? (
                         <FoodEntries
-                            foodList={foodGet.data.food}
+                            foodList={journal.food}
                             setDeleteID={setDeleteID}
                             setDeleteReady={setDeleteReady}
                             hasRecipes={false}
                             hasTitles={true}
                         />
+                    ) : (
+                        <span>No food for this day yet!</span>
                     )}
                 </FoodJournal>
             </ContentWindow>
