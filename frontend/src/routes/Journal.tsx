@@ -1,14 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { ContentWindow } from "../components/styles/AppStyle";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
 import { PostSection } from "../components/appSections/PostSection";
-import { firebaseAuth } from "../lib/firebase";
 import { Landing } from "../components/global/Landing";
-import { apiURL, appAccentColor, appAccentHover, mobileView } from "../lib/defines";
+import { appAccentColor, appAccentHover, mobileView } from "../lib/defines";
 import { ArrowBackiOSIcon } from "../lib/icons/ArrowBackiOSIcon";
 import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
 import { RootState, useAppDispatch } from "../redux/store";
@@ -44,27 +42,27 @@ export function Journal() {
         }
     }, []);
 
-    const [deleteID, setDeleteID] = useState(0);
-    const [deleteReady, setDeleteReady] = useState(false);
-
-    // Food Delete Query
-    useQuery({
-        enabled: deleteReady ? true : false,
-        queryKey: ["foodDelete", deleteID],
-        queryFn: async () => {
-            const token = await firebaseAuth.currentUser?.getIdToken();
-            const url = `${apiURL}/days/${journal.apiDate}/food/${deleteID}`;
-            const response = await fetch(url, {
-                method: "DELETE",
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
-            });
-            setDeleteReady(false);
-            dispatch(journalDispatch.fetchDayByDate());
-            return response;
-        },
-    });
+    /*  
+        At the end of post/delete dispatches, fetch is called to refresh data.
+        This means isPosting/isDeleting is momentarily true at the same time as isFetching.
+        To avoid content shift / flickering, prioritize displaying isFetching.
+    */
+    let statusMessage = "";
+    if (journal.isFetching) {
+        statusMessage = "Loading journal data...";
+    } else if (journal.isPosting) {
+        statusMessage = "Posting food entry...";
+    } else if (journal.isDeleting) {
+        statusMessage = "Deleting food entry...";
+    } else if (journal.postError) {
+        statusMessage = `Error posting food entry: ${journal.postError}`;
+    } else if (journal.deleteError) {
+        statusMessage = `Error deleting food entry: ${journal.deleteError}`;
+    } else if (journal.fetchError) {
+        statusMessage = `Error fetching journal data: ${journal.fetchError}`;
+    } else {
+        statusMessage = "";
+    }
 
     if (!loggedIn) {
         return <Landing />;
@@ -114,19 +112,11 @@ export function Journal() {
                     <br />
                     <h2>Food Journal</h2>
                     {journal.isFetching && <span>Loading...</span>}
+                    {journal.isPosting && <span>Posting...</span>}
+                    {journal.isDeleting && <span>Deleting...</span>}
                     {journal.fetchError && <span>{journal.fetchError}</span>}
                     {!journal.isFetching && !journal.fetchError && <span></span>}
-                    {journal.food && journal.food.length > 0 ? (
-                        <FoodEntries
-                            foodList={journal.food}
-                            setDeleteID={setDeleteID}
-                            setDeleteReady={setDeleteReady}
-                            hasRecipes={false}
-                            hasTitles={true}
-                        />
-                    ) : (
-                        <span>No food for this day yet!</span>
-                    )}
+                    {journal.food && journal.food.length > 0 ? <FoodEntries /> : <span>No food for this day yet!</span>}
                 </FoodJournal>
             </ContentWindow>
         );

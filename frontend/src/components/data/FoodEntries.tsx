@@ -1,21 +1,16 @@
-import { RecipeEntry } from "./RecipeEntry";
 import { FoodEntryStyle } from "../styles/FoodEntryStyle";
 import { RemoveIcon } from "../../lib/icons/RemoveIcon";
+import { RootState, useAppDispatch } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { journalDispatch } from "../../redux/journalSlice";
 
-interface foodEntriesProps {
-    foodList: Array<Object>;
-    setDeleteID?: Function;
-    setDeleteReady?: Function;
-    hasRecipes: boolean;
-    hasTitles: boolean;
-}
-
-export function FoodEntries(props: foodEntriesProps) {
-    const { foodList, setDeleteID, setDeleteReady, hasRecipes, hasTitles } = props;
+export function FoodEntries() {
+    const food = useSelector((state: RootState) => state.journal.food);
+    const dispatch = useAppDispatch();
     return (
         <FoodEntryStyle>
             <table className="entryContainer" tabIndex={0}>
-                {hasTitles ? (
+                {true ? (
                     <thead>
                         <tr>
                             <th className="foodName">Food</th>
@@ -31,7 +26,7 @@ export function FoodEntries(props: foodEntriesProps) {
                 )}
 
                 <tbody>
-                    {foodList
+                    {food
                         .slice()
                         .reverse()
                         .map((food: any) => (
@@ -55,32 +50,22 @@ export function FoodEntries(props: foodEntriesProps) {
                                 <td className="macro" aria-label={`${food.fat} grams of fat`}>
                                     <div className="entry stat">{food.fat}</div>
                                 </td>
-
-                                {setDeleteID && setDeleteReady && (
-                                    <td className="buttons" aria-label="Buttons to edit food item ">
-                                        <div className="buttonContainer">
-                                            <button
-                                                className="delete"
-                                                tabIndex={-1}
-                                                aria-label={`Button: Delete ${food.name} from day`}
-                                                onClick={() => {
-                                                    setDeleteID(food.id);
-                                                    setDeleteReady(true);
-                                                }}
-                                            >
-                                                <RemoveIcon color={"#ffffff"} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                )}
-                                {(!setDeleteID || !setDeleteReady) && (
-                                    <td className="buttons" aria-hidden="true">
-                                        <div className="buttonContainer" />
-                                    </td>
-                                )}
+                                <td className="buttons" aria-label="Buttons to edit food item ">
+                                    <div className="buttonContainer">
+                                        <button
+                                            className="delete"
+                                            tabIndex={-1}
+                                            aria-label={`Button: Delete ${food.name} from day`}
+                                            onClick={() => {
+                                                dispatch(journalDispatch.deleteFoodEntry(food.id));
+                                            }}
+                                        >
+                                            <RemoveIcon color={"#ffffff"} />
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         ))}
-                    {hasRecipes && <RecipeEntry />}
                 </tbody>
             </table>
         </FoodEntryStyle>

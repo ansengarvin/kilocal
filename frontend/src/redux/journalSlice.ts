@@ -27,6 +27,8 @@ export interface JournalState {
     fetchError: string | null;
     isPosting: boolean;
     postError: string | null;
+    isDeleting: boolean;
+    deleteError: string | null;
 }
 
 const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
@@ -74,6 +76,8 @@ const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: N
         const error = await response.json();
         return thunkAPI.rejectWithValue(error);
     }
+    thunkAPI.dispatch(fetchDayByDate()); // Refresh the journal data after deleting
+    return response.json();
 });
 
 const initialState: JournalState = {
@@ -90,6 +94,8 @@ const initialState: JournalState = {
     fetchError: null,
     isPosting: false,
     postError: null,
+    isDeleting: false,
+    deleteError: null,
 };
 
 export const journalSlice = createSlice({
@@ -151,6 +157,19 @@ export const journalSlice = createSlice({
         builder.addCase(postFoodEntry.rejected, (state, action) => {
             state.isPosting = false;
             state.postError = action.error.message || "Failed to post food entry";
+        });
+        /* Delete food cases */
+        builder.addCase(deleteFoodEntry.pending, (state) => {
+            state.isDeleting = true;
+            state.deleteError = null;
+        });
+        builder.addCase(deleteFoodEntry.fulfilled, (state) => {
+            state.isDeleting = false;
+            state.deleteError = null;
+        });
+        builder.addCase(deleteFoodEntry.rejected, (state, action) => {
+            state.isDeleting = false;
+            state.deleteError = action.error.message || "Failed to delete food entry";
         });
     },
 });

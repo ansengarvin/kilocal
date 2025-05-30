@@ -1,8 +1,7 @@
 import { FoodEntryStyle } from "../styles/FoodEntryStyle";
 import { AddIcon } from "../../lib/icons/AddIcon";
 import { useState } from "react";
-import { RootState, useAppDispatch } from "../../redux/store";
-import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
 import { journalDispatch } from "../../redux/journalSlice";
 
 export function PostSection() {
@@ -12,12 +11,8 @@ export function PostSection() {
     const [protein, setProtein] = useState(0);
     const [fat, setFat] = useState(0);
     const dispatch = useAppDispatch();
-    const journal = useSelector((state: RootState) => state.journal);
     return (
         <FoodEntryStyle>
-            {journal.isPosting && <span>Posting Food...</span>}
-            {journal.postError && <span>Error: {journal.postError}</span>}
-            {!journal.isPosting && !journal.postError && <span></span>}
             <form
                 className="entryContainer"
                 onSubmit={(e) => {
