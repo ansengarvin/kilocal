@@ -33,7 +33,7 @@ To achieve my goal of learning more about cloud technology, I wanted to deploy t
 
 <img src="./docs/images/diagram-azure.svg"/>
 
-Both the front and back end are containerized and deployed as Azure container apps. They are each publically accessible: The front-end container serves static files, and the back end provides a RESTful API that interfaces with my database.
+The front-end is hosted as a Static Web Application that serves the files to the user. The backend is containerized in Docker and deployed as a Container App. Both the front and back end are respectively accessible at kcal.ansengarvin.com and api.kcal.ansengarvin.com, where the frontend interfaces with the backend's API server over HTTPS (using Firebase for authentication). The database is not publically accessible for security reasons; The API server communicates with it over a virtual network shared between its app environment and the SQL database.
 
 ## Development and CI/CD Pipeline
 
