@@ -24,7 +24,7 @@ jobs:
               uses: actions/cache@v4
               with:
                   key: cd-frontend-node-modules-${{ hashFiles('**/package-lock.json') }}
-                  path: frontendnode_modules
+                  path: frontend/node_modules
 
             - name: Build front end
               run: |
