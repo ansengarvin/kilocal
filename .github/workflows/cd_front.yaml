@@ -1,0 +1,42 @@
+name: cd_front
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - "frontend/**"
+            - ".github/workflows/cd_front.yaml"
+
+permissions:
+    id-token: write
+    contents: read
+
+jobs:
+    frontend:
+        name: Deploy frontend
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Cache dependencies
+              uses: actions/cache@v4
+              with:
+                  key: cd-frontend-node-modules-${{ hashFiles('**/package-lock.json') }}
+                  path: frontend/node_modules
+
+            - name: Build front end
+              run: |
+                  npm install
+                  npm run build
+              working-directory: frontend
+
+            - name: Deploy front end
+              uses: Azure/static-web-apps-deploy@v1
+              with:
+                  azure_static_web_apps_api_token: ${{ secrets.AZURE_FRONTEND_DEPLOYMENT_TOKEN }}
+                  action: upload
+                  app_location: "./dist"
+                  skip_app_build: true
+              working-directory: frontend
