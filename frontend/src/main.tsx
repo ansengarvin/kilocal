@@ -74,6 +74,7 @@ const globalStyle = css`
         @media (max-width: ${mobileView}) {
             font-size: 0.75em;
         }
+        height: 1em;
     }
 
     .appWindow {

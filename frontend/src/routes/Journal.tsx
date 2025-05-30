@@ -114,20 +114,19 @@ export function Journal() {
                     <br />
                     <h2>Food Journal</h2>
                     {journal.isFetching && <span>Loading...</span>}
-                    {!journal.isFetching && journal.fetchError && <span>{journal.fetchError}</span>}
-                    {!journal.isFetching &&
-                        !journal.fetchError &&
-                        (journal.food && journal.food.length > 0 ? (
-                            <FoodEntries
-                                foodList={journal.food}
-                                setDeleteID={setDeleteID}
-                                setDeleteReady={setDeleteReady}
-                                hasRecipes={false}
-                                hasTitles={true}
-                            />
-                        ) : (
-                            <span>No food for this day yet!</span>
-                        ))}
+                    {journal.fetchError && <span>{journal.fetchError}</span>}
+                    {!journal.isFetching && !journal.fetchError && <span></span>}
+                    {journal.food && journal.food.length > 0 ? (
+                        <FoodEntries
+                            foodList={journal.food}
+                            setDeleteID={setDeleteID}
+                            setDeleteReady={setDeleteReady}
+                            hasRecipes={false}
+                            hasTitles={true}
+                        />
+                    ) : (
+                        <span>No food for this day yet!</span>
+                    )}
                 </FoodJournal>
             </ContentWindow>
         );
