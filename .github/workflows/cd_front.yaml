@@ -24,7 +24,8 @@ jobs:
               uses: actions/cache@v4
               with:
                   key: frontend-node-modules-${{ hashFiles('**/package-lock.json') }}
-                  path: frontend/node_modules
+                  path: node_modules
+              working-directory: frontend
 
             - name: Build front end
               run: |
@@ -37,5 +38,6 @@ jobs:
               with:
                   azure_static_web_apps_api_token: ${{ secrets.AZURE_FRONTEND_DEPLOYMENT_TOKEN }}
                   action: upload
-                  app_location: "./frontend/dist"
+                  app_location: "./dist"
                   skip_app_build: true
+              working-directory: frontend
