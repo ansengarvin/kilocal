@@ -11,14 +11,8 @@ import { Landing } from "../components/global/Landing";
 import { apiURL, appAccentColor, appAccentHover, mobileView } from "../lib/defines";
 import { ArrowBackiOSIcon } from "../lib/icons/ArrowBackiOSIcon";
 import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
-
-function formatDate(date: Date) {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
-    return `${year}-${month}-${day}`;
-}
+import { RootState } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
     const navigate = useNavigate();
@@ -40,9 +34,8 @@ function App() {
         }
     }, [verified, loggedIn]);
 
-    const [dayDate, setDayDate] = useState(new Date());
-    const [formattedDate, setFormattedDate] = useState(formatDate(dayDate));
-    const [isCurrentDay, setIsCurrentDay] = useState(true);
+    const journal = useSelector((state: RootState) => state.journal);
+    const dispatch = useDispatch();
 
     const [postReady, setPostReady] = useState(false);
     const [foodName, setFoodName] = useState("");
@@ -56,10 +49,10 @@ function App() {
 
     const foodGet = useQuery({
         enabled: loggedIn ? true : false,
-        queryKey: ["day", formattedDate],
+        queryKey: ["day", journal.apiDate],
         queryFn: async () => {
             const token = await firebaseAuth.currentUser?.getIdToken();
-            const url = `${apiURL}/days/${formattedDate}`;
+            const url = `${apiURL}/days/${journal.apiDate}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
@@ -76,7 +69,7 @@ function App() {
 
     const foodPost = useQuery({
         enabled: postReady ? true : false,
-        queryKey: ["foodPost", formattedDate, calories, foodName],
+        queryKey: ["foodPost", journal.apiDate, calories, foodName],
         queryFn: async () => {
             const queryBody = JSON.stringify({
                 name: foodName,
@@ -94,7 +87,7 @@ function App() {
             setFoodName("");
 
             const token = await firebaseAuth.currentUser?.getIdToken();
-            const url = `${apiURL}/days/${formattedDate}/food`;
+            const url = `${apiURL}/days/${journal.apiDate}/food`;
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
@@ -115,7 +108,7 @@ function App() {
         queryKey: ["foodDelete", deleteID],
         queryFn: async () => {
             const token = await firebaseAuth.currentUser?.getIdToken();
-            const url = `${apiURL}/days/${formattedDate}/food/${deleteID}`;
+            const url = `${apiURL}/days/${journal.apiDate}/food/${deleteID}`;
             const response = await fetch(url, {
                 method: "DELETE",
                 headers: {
@@ -128,16 +121,6 @@ function App() {
         },
     });
 
-    // Effect used to disable the next-day button if it's the current day.
-    useEffect(() => {
-        const today = new Date();
-        if (formatDate(today) == formattedDate) {
-            setIsCurrentDay(true);
-        } else {
-            setIsCurrentDay(false);
-        }
-    }, [formattedDate]);
-
     if (!loggedIn) {
         return <Landing />;
     } else {
@@ -148,29 +131,21 @@ function App() {
                         className="date left"
                         onClick={(e) => {
                             e.preventDefault();
-                            const newDate = new Date(dayDate);
-                            newDate.setDate(dayDate.getDate() - 1);
-                            setDayDate(newDate);
-                            setFormattedDate(formatDate(newDate));
+                            dispatch({ type: "journal/prevDay" });
+                            console.log("PREV DAY");
                         }}
                     >
                         <ArrowBackiOSIcon color={"#ffffff"} />
                     </button>
 
-                    <h1 tabIndex={0}>
-                        {dayDate.toLocaleString("default", { month: "long" })} {dayDate.getDate()},{" "}
-                        {dayDate.getFullYear()}
-                    </h1>
+                    <h1 tabIndex={0}>{journal.dayName}</h1>
 
                     <button
                         className="date right"
-                        disabled={isCurrentDay}
+                        disabled={journal.isToday}
                         onClick={(e) => {
                             e.preventDefault();
-                            const newDate = new Date(dayDate);
-                            newDate.setDate(dayDate.getDate() + 1);
-                            setDayDate(newDate);
-                            setFormattedDate(formatDate(newDate));
+                            dispatch({ type: "journal/nextDay" });
                         }}
                     >
                         <ArrowForwardiOSIcon color={"#ffffff"} />
