@@ -20,95 +20,6 @@ function formatDate(date: Date) {
     return `${year}-${month}-${day}`;
 }
 
-const DateSection = styled.div`
-    position: relative;
-    height: auto;
-    width: 100%;
-    height: 50px;
-    margin-bottom: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-radius: 10px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    h2 {
-        font-size: 18px;
-        margin: 0;
-        margin-bottom: 10px;
-    }
-
-    button.left {
-        position: absolute;
-        left: 10px;
-
-        svg {
-            margin-right: 5px;
-        }
-    }
-    button.right {
-        position: absolute;
-        right: 10px;
-
-        svg {
-            margin-left: 5px;
-        }
-    }
-    button {
-        // Remove all button styling
-        border: none;
-        outline: none;
-        margin: 0;
-        height: 50px;
-        width: 50px;
-
-        @media (max-width: ${mobileView}) {
-            height: 35px;
-            width: 35px;
-        }
-
-        background-color: ${appAccentColor};
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        :hover {
-            background-color: ${appAccentHover};
-            // Fade out
-        }
-
-        :disabled {
-            background-color: #d3d3d3;
-        }
-    }
-`;
-
-const FoodJournal = styled.div`
-    border-radius: 10px;
-    height: min-content;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    div.postSection {
-        width: 95%;
-        height: 10px;
-        background-color: green;
-    }
-
-    span {
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-`;
-
 function App() {
     const navigate = useNavigate();
 
@@ -322,5 +233,94 @@ function App() {
         );
     }
 }
+
+const DateSection = styled.div`
+    position: relative;
+    height: auto;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+        font-size: 18px;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+
+    button.left {
+        position: absolute;
+        left: 10px;
+
+        svg {
+            margin-right: 5px;
+        }
+    }
+    button.right {
+        position: absolute;
+        right: 10px;
+
+        svg {
+            margin-left: 5px;
+        }
+    }
+    button {
+        // Remove all button styling
+        border: none;
+        outline: none;
+        margin: 0;
+        height: 50px;
+        width: 50px;
+
+        @media (max-width: ${mobileView}) {
+            height: 35px;
+            width: 35px;
+        }
+
+        background-color: ${appAccentColor};
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        :hover {
+            background-color: ${appAccentHover};
+            // Fade out
+        }
+
+        :disabled {
+            background-color: #d3d3d3;
+        }
+    }
+`;
+
+const FoodJournal = styled.div`
+    border-radius: 10px;
+    height: min-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    div.postSection {
+        width: 95%;
+        height: 10px;
+        background-color: green;
+    }
+
+    span {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+`;
 
 export default App;
