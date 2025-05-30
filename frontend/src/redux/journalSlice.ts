@@ -22,6 +22,8 @@ export interface JournalState {
     totalProtein: number;
     totalFat: number;
     food: Food[];
+    isFetching: boolean;
+    fetchError: string | null;
 }
 
 const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
@@ -46,6 +48,8 @@ const initialState: JournalState = {
     totalFat: 0,
     food: [],
     isToday: true, // Default to true since the initial day is today
+    isFetching: false,
+    fetchError: null,
 };
 
 export const journalSlice = createSlice({
@@ -59,7 +63,6 @@ export const journalSlice = createSlice({
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
             state.apiDate = getAPIDate(thisDay);
-            console.log("Daydunit");
         },
         prevDay(state) {
             const thisDay = new Date(state.day);
@@ -69,10 +72,13 @@ export const journalSlice = createSlice({
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
             state.apiDate = getAPIDate(thisDay);
-            console.log("Daypunit");
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(fetchDayByDate.pending, (state) => {
+            state.isFetching = true;
+            state.fetchError = null;
+        });
         builder.addCase(fetchDayByDate.fulfilled, (state, action) => {
             const data = action.payload;
             state.food = data.food;
@@ -80,11 +86,17 @@ export const journalSlice = createSlice({
             state.totalCarbs = data.totalCarbs;
             state.totalProtein = data.totalProtein;
             state.totalFat = data.totalFat;
+            state.isFetching = false;
+            state.fetchError = null;
 
             // Update the day name and apiDate based on the fetched date
             const fetchedDate = new Date(state.day);
             state.dayName = getJournalDayName(fetchedDate);
             state.apiDate = getAPIDate(fetchedDate);
+        });
+        builder.addCase(fetchDayByDate.rejected, (state, action) => {
+            state.isFetching = false;
+            state.fetchError = action.error.message || "Failed to fetch journal day";
         });
     },
 });
