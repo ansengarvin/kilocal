@@ -33,7 +33,7 @@ To achieve my goal of learning more about cloud technology, I wanted to deploy t
 
 <img src="./docs/images/diagram-azure.svg"/>
 
-Both the front and back end are containerized and deployed as Azure container apps. They are each publically accessible: The front-end container serves static files, and the back end provides a RESTful API that interfaces with my database.
+The front-end is hosted as a Static Web Application that serves the files to the user. The backend is containerized in Docker and deployed as a Container App. Both the front and back end are respectively accessible at kcal.ansengarvin.com and api.kcal.ansengarvin.com, where the frontend interfaces with the backend's API server over HTTPS (using Firebase for authentication). The database is not publically accessible for security reasons; The API server communicates with it over a virtual network shared between its app environment and the SQL database.
 
 ## Development and CI/CD Pipeline
 
@@ -61,10 +61,10 @@ Each Azure container app has access to a GitHub container registry. After a merg
 
 ## What could still be improved?
 
-- **Container Apps are a poor choice for the frontend.** My entire front end is a static, single-page react application which interfaces with the rest of the application through a public RESTful API. The only purpose the front-end container serves is to run npm-serve to serve the content. It's functional, but it's far slower and an inefficient use of resources. Azure has better solutions for static hosting.
-
 - **Addition of a staging environment.** Right now, my entire testing process (both in local development and in CI) uses a local database and emulator. Because of this, some bugs that are solely present in cloud-deployed builds are undetected until they reach production. To resolve this, a separate staging environment which closely mimics production should be set up.
 
 - **Containers take forever to spool up.** As I mention in [#30](https://github.com/ansengarvin/kilocal/issues/30), my container apps scale from 0 to 10. This is an important cost-saving measure, since container apps don't consume any free-tier resources when they're scaled down to 0. When a container app scales from 0 to 1, it does a "cold-start," where it has to download the images and start up the containers. It's time-consuming, and leaves the application hanging / loading for an unacceptable amount of time.
 
-- **General front-end improvements.** The website is pretty ugly right now. It doesn't display well on all mobile devices. The profile page is practically non-existant.
+- **General front-end improvements.** The website is pretty ugly right now. It doesn't display well on all mobile devices. The profile page is practically non-existant. There needs to be much better communication for loading.
+
+- ~~Container Apps are a poor choice for the frontend.~~ **(This has been resolved. See [#50](https://github.com/ansengarvin/kilocal/issues/50).)**
