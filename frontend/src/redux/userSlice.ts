@@ -22,13 +22,27 @@ const initialState: UserState = {
 const firebaseSignIn = createAsyncThunk(
     "user/firebaseSignIn",
     async (login: { email: string; password: string }, thunkAPI) => {
-        await signInWithEmailAndPassword(firebaseAuth, login.email, login.password);
-        if (!firebaseAuth.currentUser) {
-            return thunkAPI.rejectWithValue("Firebase: User not authenticated");
+        try {
+            await signInWithEmailAndPassword(firebaseAuth, login.email, login.password);
+            if (!firebaseAuth.currentUser) {
+                return thunkAPI.rejectWithValue("Firebase: User not authenticated");
+            }
+            console.log("Firebase authentication successful.");
+            thunkAPI.dispatch(databaseSync());
+            return true;
+        } catch (error: any) {
+            if (error.name == "FirebaseError") {
+                if (error.code == "auth/invalid-credential") {
+                    return thunkAPI.rejectWithValue("Invalid username or password.");
+                } else if (error.code == "auth/too-many-requests") {
+                    return thunkAPI.rejectWithValue("Too many requests. Try again later.");
+                } else {
+                    return thunkAPI.rejectWithValue(error.message);
+                }
+            } else {
+                return thunkAPI.rejectWithValue(error.message);
+            }
         }
-        console.log("Firebase authentication successful.");
-        thunkAPI.dispatch(databaseSync());
-        return true;
     },
 );
 
