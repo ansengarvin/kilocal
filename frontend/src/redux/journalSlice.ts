@@ -41,7 +41,7 @@ const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thun
     return response.json();
 });
 
-const postFoodEntry = createAsyncThunk("", async (food: Food, thunkAPI) => {
+const postFoodEntry = createAsyncThunk("journal/postFoodEntry", async (food: Food, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
     const queryBody = JSON.stringify(food);
@@ -53,8 +53,27 @@ const postFoodEntry = createAsyncThunk("", async (food: Food, thunkAPI) => {
         },
         body: queryBody,
     });
+    if (!response.ok) {
+        const error = await response.json();
+        return thunkAPI.rejectWithValue(error);
+    }
     thunkAPI.dispatch(fetchDayByDate()); // Refresh the journal data after posting
     return response.json();
+});
+
+const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: Number, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const token = await firebaseAuth.currentUser?.getIdToken();
+    const response = await fetch(`${apiURL}/days/${state.journal.apiDate}/food/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        return thunkAPI.rejectWithValue(error);
+    }
 });
 
 const initialState: JournalState = {
@@ -143,6 +162,7 @@ export const journalDispatch = {
     prevDay,
     fetchDayByDate,
     postFoodEntry,
+    deleteFoodEntry,
 };
 export default journalSlice.reducer;
 
