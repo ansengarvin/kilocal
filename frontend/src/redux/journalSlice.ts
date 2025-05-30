@@ -122,55 +122,56 @@ export const journalSlice = createSlice({
     },
     extraReducers: (builder) => {
         /* Fetch day cases */
-        builder.addCase(fetchDayByDate.pending, (state) => {
-            state.isFetching = true;
-            state.fetchError = null;
-        });
-        builder.addCase(fetchDayByDate.fulfilled, (state, action) => {
-            const data = action.payload;
-            state.food = data.food;
-            state.totalCalories = data.totalCalories;
-            state.totalCarbs = data.totalCarbs;
-            state.totalProtein = data.totalProtein;
-            state.totalFat = data.totalFat;
-            state.isFetching = false;
-            state.fetchError = null;
+        builder
+            .addCase(fetchDayByDate.pending, (state) => {
+                state.isFetching = true;
+                state.fetchError = null;
+            })
+            .addCase(fetchDayByDate.fulfilled, (state, action) => {
+                const data = action.payload;
+                state.food = data.food;
+                state.totalCalories = data.totalCalories;
+                state.totalCarbs = data.totalCarbs;
+                state.totalProtein = data.totalProtein;
+                state.totalFat = data.totalFat;
+                state.isFetching = false;
+                state.fetchError = null;
 
-            // Update the day name and apiDate based on the fetched date
-            const fetchedDate = new Date(state.day);
-            state.dayName = getJournalDayName(fetchedDate);
-            state.apiDate = getAPIDate(fetchedDate);
-        });
-        builder.addCase(fetchDayByDate.rejected, (state, action) => {
-            state.isFetching = false;
-            state.fetchError = action.error.message || "Failed to fetch journal day";
-        });
-        /* Post food cases */
-        builder.addCase(postFoodEntry.pending, (state) => {
-            state.isPosting = true;
-            state.postError = null;
-        });
-        builder.addCase(postFoodEntry.fulfilled, (state) => {
-            state.isPosting = false;
-            state.postError = null;
-        });
-        builder.addCase(postFoodEntry.rejected, (state, action) => {
-            state.isPosting = false;
-            state.postError = action.error.message || "Failed to post food entry";
-        });
-        /* Delete food cases */
-        builder.addCase(deleteFoodEntry.pending, (state) => {
-            state.isDeleting = true;
-            state.deleteError = null;
-        });
-        builder.addCase(deleteFoodEntry.fulfilled, (state) => {
-            state.isDeleting = false;
-            state.deleteError = null;
-        });
-        builder.addCase(deleteFoodEntry.rejected, (state, action) => {
-            state.isDeleting = false;
-            state.deleteError = action.error.message || "Failed to delete food entry";
-        });
+                // Update the day name and apiDate based on the fetched date
+                const fetchedDate = new Date(state.day);
+                state.dayName = getJournalDayName(fetchedDate);
+                state.apiDate = getAPIDate(fetchedDate);
+            })
+            .addCase(fetchDayByDate.rejected, (state, action) => {
+                state.isFetching = false;
+                state.fetchError = action.error.message || "Failed to fetch journal day";
+            })
+            /* Post food cases */
+            .addCase(postFoodEntry.pending, (state) => {
+                state.isPosting = true;
+                state.postError = null;
+            })
+            .addCase(postFoodEntry.fulfilled, (state) => {
+                state.isPosting = false;
+                state.postError = null;
+            })
+            .addCase(postFoodEntry.rejected, (state, action) => {
+                state.isPosting = false;
+                state.postError = action.error.message || "Failed to post food entry";
+            })
+            /* Delete food cases */
+            .addCase(deleteFoodEntry.pending, (state) => {
+                state.isDeleting = true;
+                state.deleteError = null;
+            })
+            .addCase(deleteFoodEntry.fulfilled, (state) => {
+                state.isDeleting = false;
+                state.deleteError = null;
+            })
+            .addCase(deleteFoodEntry.rejected, (state, action) => {
+                state.isDeleting = false;
+                state.deleteError = action.error.message || "Failed to delete food entry";
+            });
     },
 });
 
