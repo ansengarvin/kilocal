@@ -14,7 +14,7 @@ import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
 import { RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 
-function App() {
+export function Journal() {
     const navigate = useNavigate();
 
     const { loggedIn, verified, isLoadingInitial } = useOutletContext<{
@@ -297,5 +297,3 @@ const FoodJournal = styled.div`
         margin-bottom: 10px;
     }
 `;
-
-export default App;
