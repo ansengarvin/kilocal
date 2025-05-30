@@ -16,6 +16,12 @@ jobs:
               with:
                   node-version: latest
 
+            - name: Cache dependencies
+              uses: actions/cache@v4
+              with:
+                  key: ci-lint-node-modules-${{ hashFiles('**/package-lock.json') }}
+                  path: node_modules
+
             - name: Install dependencies
               run: npm install
 
@@ -33,6 +39,13 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: latest
+
+            - name: Cache dependencies
+              uses: actions/cache@v4
+              with:
+                  key: ci-frontend-node-modules-${{ hashFiles('**/package-lock.json') }}
+                  path: node_modules
+              working-directory: frontend
 
             - name: Install dependencies
               run: npm install
@@ -60,6 +73,12 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+
+            - name: Cache dependencies
+              uses: actions/cache@v4
+              with:
+                  key: ci-test-node-modules-${{ hashFiles('**/package-lock.json') }}
+                  path: node_modules
 
             - name: Install test prerequisites
               run: npm install
