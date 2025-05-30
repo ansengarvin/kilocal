@@ -38,50 +38,14 @@ export function Journal() {
     const journal = useSelector((state: RootState) => state.journal);
     const dispatch = useAppDispatch();
 
-    const [postReady, setPostReady] = useState(false);
-    const [foodName, setFoodName] = useState("");
-    const [calories, setCalories] = useState(0);
-    const [carbs, setCarbs] = useState(0);
-    const [protein, setProtein] = useState(0);
-    const [fat, setFat] = useState(0);
+    useEffect(() => {
+        if (loggedIn && verified) {
+            dispatch(journalDispatch.fetchDayByDate());
+        }
+    }, []);
 
     const [deleteID, setDeleteID] = useState(0);
     const [deleteReady, setDeleteReady] = useState(false);
-
-    const foodPost = useQuery({
-        enabled: postReady ? true : false,
-        queryKey: ["foodPost", journal.apiDate, calories, foodName],
-        queryFn: async () => {
-            const queryBody = JSON.stringify({
-                name: foodName,
-                calories: calories,
-                carbs: carbs,
-                protein: protein,
-                fat: fat,
-            });
-
-            setPostReady(false);
-            setCalories(0);
-            setCarbs(0);
-            setProtein(0);
-            setFat(0);
-            setFoodName("");
-
-            const token = await firebaseAuth.currentUser?.getIdToken();
-            const url = `${apiURL}/days/${journal.apiDate}/food`;
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token,
-                },
-                body: queryBody,
-            });
-
-            dispatch(journalDispatch.fetchDayByDate());
-            return response.json();
-        },
-    });
 
     // Food Delete Query
     useQuery({
@@ -146,33 +110,24 @@ export function Journal() {
                 />
                 <FoodJournal className="appWindow">
                     <h2>Add a Food</h2>
-                    <PostSection
-                        foodPost={foodPost}
-                        foodName={foodName}
-                        calories={calories}
-                        carbs={carbs}
-                        protein={protein}
-                        fat={fat}
-                        setPostReady={setPostReady}
-                        setFoodName={setFoodName}
-                        setCalories={setCalories}
-                        setCarbs={setCarbs}
-                        setProtein={setProtein}
-                        setFat={setFat}
-                    />
+                    <PostSection />
                     <br />
                     <h2>Food Journal</h2>
-                    {journal.food && journal.food.length > 0 ? (
-                        <FoodEntries
-                            foodList={journal.food}
-                            setDeleteID={setDeleteID}
-                            setDeleteReady={setDeleteReady}
-                            hasRecipes={false}
-                            hasTitles={true}
-                        />
-                    ) : (
-                        <span>No food for this day yet!</span>
-                    )}
+                    {journal.isFetching && <span>Loading...</span>}
+                    {!journal.isFetching && journal.fetchError && <span>{journal.fetchError}</span>}
+                    {!journal.isFetching &&
+                        !journal.fetchError &&
+                        (journal.food && journal.food.length > 0 ? (
+                            <FoodEntries
+                                foodList={journal.food}
+                                setDeleteID={setDeleteID}
+                                setDeleteReady={setDeleteReady}
+                                hasRecipes={false}
+                                hasTitles={true}
+                            />
+                        ) : (
+                            <span>No food for this day yet!</span>
+                        ))}
                 </FoodJournal>
             </ContentWindow>
         );

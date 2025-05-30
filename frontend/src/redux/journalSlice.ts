@@ -4,6 +4,7 @@ import { apiURL } from "../lib/defines";
 import { firebaseAuth } from "../lib/firebase";
 
 export interface Food {
+    id?: number;
     name: string;
     calories: number;
     protein: number;
@@ -24,6 +25,8 @@ export interface JournalState {
     food: Food[];
     isFetching: boolean;
     fetchError: string | null;
+    isPosting: boolean;
+    postError: string | null;
 }
 
 const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
@@ -35,6 +38,22 @@ const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thun
             Authorization: "Bearer " + token,
         },
     });
+    return response.json();
+});
+
+const postFoodEntry = createAsyncThunk("", async (food: Food, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const token = await firebaseAuth.currentUser?.getIdToken();
+    const queryBody = JSON.stringify(food);
+    const response = await fetch(`${apiURL}/days/${state.journal.apiDate}/food`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+        },
+        body: queryBody,
+    });
+    thunkAPI.dispatch(fetchDayByDate()); // Refresh the journal data after posting
     return response.json();
 });
 
@@ -50,6 +69,8 @@ const initialState: JournalState = {
     isToday: true, // Default to true since the initial day is today
     isFetching: false,
     fetchError: null,
+    isPosting: false,
+    postError: null,
 };
 
 export const journalSlice = createSlice({
@@ -75,6 +96,7 @@ export const journalSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        /* Fetch day cases */
         builder.addCase(fetchDayByDate.pending, (state) => {
             state.isFetching = true;
             state.fetchError = null;
@@ -98,6 +120,19 @@ export const journalSlice = createSlice({
             state.isFetching = false;
             state.fetchError = action.error.message || "Failed to fetch journal day";
         });
+        /* Post food cases */
+        builder.addCase(postFoodEntry.pending, (state) => {
+            state.isPosting = true;
+            state.postError = null;
+        });
+        builder.addCase(postFoodEntry.fulfilled, (state) => {
+            state.isPosting = false;
+            state.postError = null;
+        });
+        builder.addCase(postFoodEntry.rejected, (state, action) => {
+            state.isPosting = false;
+            state.postError = action.error.message || "Failed to post food entry";
+        });
     },
 });
 
@@ -107,6 +142,7 @@ export const journalDispatch = {
     nextDay,
     prevDay,
     fetchDayByDate,
+    postFoodEntry,
 };
 export default journalSlice.reducer;
 
