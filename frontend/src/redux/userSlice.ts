@@ -5,6 +5,7 @@ import { apiURL } from "../lib/defines";
 
 export interface UserState {
     loggedIn: boolean;
+    verified: boolean;
     isSigningIn: boolean;
     signInError: string | null;
     isSyncing: boolean;
@@ -13,6 +14,7 @@ export interface UserState {
 
 const initialState: UserState = {
     loggedIn: false,
+    verified: false,
     isSigningIn: false,
     signInError: null,
     isSyncing: false,
@@ -85,8 +87,8 @@ export const userSlice = createSlice({
                 state.signInError = null;
             })
             .addCase(firebaseSignIn.fulfilled, (state) => {
-                state.loggedIn = true;
                 state.isSigningIn = false;
+                state.verified = firebaseAuth.currentUser?.emailVerified || false;
             })
             .addCase(firebaseSignIn.rejected, (state, action) => {
                 state.isSigningIn = false;
@@ -98,6 +100,7 @@ export const userSlice = createSlice({
             })
             .addCase(databaseSync.fulfilled, (state) => {
                 state.isSyncing = false;
+                state.loggedIn = true;
                 console.log("Database sync successful");
             })
             .addCase(databaseSync.rejected, (state, action) => {
