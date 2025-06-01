@@ -4,11 +4,10 @@ import { firebaseAuth } from "../lib/firebase";
 import { apiURL } from "../lib/defines";
 
 export interface UserState {
-    isLoadedInitial: boolean;
+    firebaseIsLoadedInitial: boolean;
     isLoggedIn: boolean;
     isVerified: boolean;
     isSynced: boolean;
-    isFetchedKcal: boolean;
     isSigningIn: boolean;
     signInError: string | null;
     isSigningOut: boolean;
@@ -17,14 +16,14 @@ export interface UserState {
     syncError: string | null;
     email: string;
     name: string;
+    weight: number;
 }
 
 const initialState: UserState = {
-    isLoadedInitial: false,
+    firebaseIsLoadedInitial: false,
     isLoggedIn: false,
     isVerified: false,
     isSynced: false,
-    isFetchedKcal: false,
     isSigningIn: false,
     signInError: null,
     isSigningOut: false,
@@ -33,6 +32,7 @@ const initialState: UserState = {
     syncError: null,
     email: "",
     name: "",
+    weight: 0,
 };
 
 const firebaseSignIn = createAsyncThunk(
@@ -105,8 +105,8 @@ export const userSlice = createSlice({
     name: "user",
     initialState: initialState,
     reducers: {
-        setLoadedInitial: (state, action) => {
-            state.isLoadedInitial = action.payload;
+        setFirebaseLoadedInitial: (state, action) => {
+            state.firebaseIsLoadedInitial = action.payload;
         },
         fetchUserFirebase: (state) => {
             const user = firebaseAuth.currentUser;
@@ -153,10 +153,12 @@ export const userSlice = createSlice({
                 state.isSyncing = true;
                 state.syncError = null;
             })
-            .addCase(databaseSync.fulfilled, (state) => {
+            .addCase(databaseSync.fulfilled, (state, action) => {
                 state.isSyncing = false;
                 state.isLoggedIn = true;
                 state.isSynced = true;
+                state.email = action.payload.email || "";
+                state.name = action.payload.name || "";
                 console.log("Database sync successful");
             })
             .addCase(databaseSync.rejected, (state, action) => {
@@ -169,7 +171,7 @@ export const userSlice = createSlice({
 
 export const userDispatch = {
     fetchUserFirebase: userSlice.actions.fetchUserFirebase,
-    setLoadedInitial: userSlice.actions.setLoadedInitial,
+    setFirebaseLoadedInitial: userSlice.actions.setFirebaseLoadedInitial,
     firebaseSignIn,
     firebaseSignOut,
     databaseSync,

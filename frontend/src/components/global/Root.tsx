@@ -7,7 +7,7 @@ import { firebaseAuth } from "../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { tabletView } from "../../lib/defines";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../redux/store";
+import { RootState, useAppDispatch } from "../../redux/store";
 import { userDispatch } from "../../redux/userSlice";
 //import { useQuery } from '@tanstack/react-query'
 
@@ -43,7 +43,7 @@ const Grid = styled.div`
 export function Root(props: RootProps) {
     const { children } = props;
 
-    const user = useSelector((state: any) => state.user);
+    const user = useSelector((state: RootState) => state.user);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -52,36 +52,42 @@ export function Root(props: RootProps) {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, () => {
             dispatch(userDispatch.fetchUserFirebase());
-            dispatch(userDispatch.setLoadedInitial(true));
+            dispatch(userDispatch.setFirebaseLoadedInitial(true));
         });
         return () => unsubscribe();
     }, []);
 
+    // Perform database sync immediately on load
+    useEffect(() => {
+        if (user.isLoggedIn && user.isVerified && !user.isSyncing) {
+            // Sync to database
+            dispatch(userDispatch.databaseSync());
+        }
+    }, [user.firebaseIsLoadedInitial]);
+
     // Handle redirects
     useEffect(() => {
-        if (user.isLoadedInitial && !user.isSyncing) {
+        if (user.firebaseIsLoadedInitial && !user.isSyncing) {
             if (!user.isLoggedIn) {
                 if (location.pathname !== "/" && location.pathname !== "/login" && location.pathname !== "/signup") {
                     navigate("/");
                 }
                 return;
             }
-
             if (!user.isVerified) {
                 if (location.pathname !== "/verify") {
                     navigate("/verify");
                 }
                 return;
             }
-
             if (location.pathname === "/verify" || location.pathname === "/login" || location.pathname === "/signup") {
                 navigate("/");
                 return;
             }
         }
-    }, [user.isLoadedInitial, user.isVerified, user.isLoggedIn, user.isSyncing, location.pathname]);
+    }, [user.firebaseIsLoadedInitial, user.isVerified, user.isLoggedIn, user.isSyncing, location.pathname]);
 
-    if (!user.isLoadedInitial) {
+    if (!user.firebaseIsLoadedInitial) {
         return (
             <>
                 <Grid>
