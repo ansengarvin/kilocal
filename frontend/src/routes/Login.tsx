@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { ProgressBarText } from "../components/data/ProgressBar";
@@ -8,25 +7,11 @@ import { userDispatch } from "../redux/userSlice";
 import { useSelector } from "react-redux";
 
 export function Login() {
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.user);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    // Redirects
-    useEffect(() => {
-        if (user.isLoadedInitial && !user.isSyncing) {
-            if (user.isLoggedIn) {
-                if (!user.isVerified) {
-                    navigate("/verify");
-                } else {
-                    navigate("/");
-                }
-            }
-        }
-    }, [user.isVerified, user.isLoggedIn, user.isSyncing]);
 
     return (
         <LoginStyle>

@@ -1,12 +1,55 @@
 import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
-import { ReactNode } from "react";
 import { appAccentColor, tabletView } from "../../lib/defines";
 import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { RootState, useAppDispatch } from "../../redux/store";
+import { userDispatch } from "../../redux/userSlice";
 
-interface HeaderProps {
-    children?: ReactNode;
+export function Header() {
+    const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+    const isVerified = useSelector((state: RootState) => state.user.isVerified);
+    const dispatch = useAppDispatch();
+
+    return (
+        <Headerbar>
+            {!isLoggedIn && (
+                <>
+                    <NavLink className="title" to="/" aria-label="Home">
+                        KiloCal
+                    </NavLink>
+                    <NavLink className="navitem" to="/login" aria-label="Login">
+                        Login
+                    </NavLink>
+                </>
+            )}
+            {isLoggedIn && !isVerified && (
+                <>
+                    <NavLink className="title" to="/verify" aria-label="Home">
+                        KiloCal
+                    </NavLink>
+                    <a
+                        className="navitem"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            dispatch(userDispatch.firebaseSignOut());
+                        }}
+                    >
+                        Logout
+                    </a>
+                </>
+            )}
+            {isLoggedIn && isVerified && (
+                <>
+                    <NavLink className="title" to="/" aria-label="Home">
+                        KiloCal
+                    </NavLink>
+                    <NavLink className="navitem" to="/profile" aria-label="Profile">
+                        Profile
+                    </NavLink>
+                </>
+            )}
+        </Headerbar>
+    );
 }
 
 const Headerbar = styled.nav`
@@ -30,41 +73,15 @@ const Headerbar = styled.nav`
         color: white;
         text-decoration: none;
         height: 20px;
-    }
-    a.title {
-        margin-right: auto;
+        cursor: pointer;
     }
     a.active {
         text-decoration: underline;
     }
-
+    a.title {
+        margin-right: auto;
+        text-decoration: none;
+    }
     a.navItem {
     }
 `;
-
-export function Header(props: HeaderProps) {
-    const user = useSelector((state: RootState) => state.user);
-    return (
-        <Headerbar>
-            {user.isLoggedIn ? (
-                <>
-                    <NavLink className="title" to="/" aria-label="Home">
-                        KiloCal
-                    </NavLink>
-                    <NavLink className="navitem" to="/profile" aria-label="Profile">
-                        Profile
-                    </NavLink>
-                </>
-            ) : (
-                <>
-                    <NavLink className="title" to="/" aria-label="Home">
-                        KiloCal
-                    </NavLink>
-                    <NavLink className="navitem" to="/login" aria-label="Login">
-                        Login
-                    </NavLink>
-                </>
-            )}
-        </Headerbar>
-    );
-}

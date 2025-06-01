@@ -57,6 +57,7 @@ export function Root(props: RootProps) {
         return () => unsubscribe();
     }, []);
 
+    // Handle redirects
     useEffect(() => {
         if (user.isLoadedInitial && !user.isSyncing) {
             if (!user.isLoggedIn) {
