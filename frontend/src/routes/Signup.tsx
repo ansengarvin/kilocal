@@ -1,4 +1,3 @@
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";

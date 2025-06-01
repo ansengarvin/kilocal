@@ -1,16 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
 import { firebaseAuth } from "../lib/firebase";
-import { sendEmailVerification } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { RootState, useAppDispatch } from "../redux/store";
 import { useSelector } from "react-redux";
 import { userDispatch } from "../redux/userSlice";
 
 function Verify() {
-    const [resent, setResent] = useState(false);
-    const [isError, setIsError] = useState(false);
-
     const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.user);
 
@@ -29,20 +24,6 @@ function Verify() {
         }
     }, [user.isLoggedIn, user.isVerified, dispatch]);
 
-    // Resends email verification
-    const resendMutation = useMutation({
-        mutationFn: async () => {
-            const user = firebaseAuth.currentUser;
-            user && (await sendEmailVerification(user));
-        },
-        onSuccess() {
-            setResent(true);
-        },
-        onError() {
-            setIsError(true);
-        },
-    });
-
     return (
         <LoginStyle>
             <h1>Welcome to KiloCal!</h1>
@@ -53,10 +34,7 @@ function Verify() {
                         className="grey half"
                         onClick={(e) => {
                             e.preventDefault;
-                            resendMutation.reset();
-                            resendMutation.mutate();
-                            setResent(false);
-                            setIsError(true);
+                            dispatch(userDispatch.resendVerificationEmail());
                         }}
                     >
                         Resend Link
@@ -72,8 +50,7 @@ function Verify() {
                         Sign Out
                     </button>
                 </div>
-                {isError ? <p>Error sending verification email</p> : <></>}
-                {resent ? <p>Verification email resent</p> : <></>}
+                {user.resendVerificationStatus && <>{user.resendVerificationStatus}</>}
                 {user.signOutError ? <p>Error signing out: {user.signOutError}</p> : <></>}
             </div>
             <br />

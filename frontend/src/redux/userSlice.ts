@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../lib/firebase";
 import { apiURL } from "../lib/defines";
 
@@ -14,6 +14,8 @@ export interface UserState {
     signOutError: string | null;
     isSyncing: boolean;
     syncError: string | null;
+    isResendingVerification: boolean;
+    resendVerificationStatus: string | null;
     email: string;
     name: string;
     weight: number;
@@ -30,6 +32,8 @@ const initialState: UserState = {
     signOutError: null,
     isSyncing: false,
     syncError: null,
+    isResendingVerification: false,
+    resendVerificationStatus: null,
     email: "",
     name: "",
     weight: 0,
@@ -105,6 +109,19 @@ const firebaseSignOut = createAsyncThunk("user/signOut", async (_, thunkAPI) => 
     }
 });
 
+const resendVerificationEmail = createAsyncThunk("user/resendVerificationEmail", async (_, thunkAPI) => {
+    const user = firebaseAuth.currentUser;
+    if (!user) {
+        return thunkAPI.rejectWithValue("No user is currently signed in.");
+    }
+    try {
+        await sendEmailVerification(user);
+        return true;
+    } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+    }
+});
+
 export const userSlice = createSlice({
     name: "user",
     initialState: initialState,
@@ -169,6 +186,21 @@ export const userSlice = createSlice({
                 state.isSyncing = false;
                 state.syncError = (action.payload as string) || action.error.message || "Database sync failed";
                 console.error("Database sync error:", action.error.message);
+            })
+            .addCase(resendVerificationEmail.pending, (state) => {
+                state.isResendingVerification = true;
+                state.resendVerificationStatus = null;
+            })
+            .addCase(resendVerificationEmail.fulfilled, (state) => {
+                state.isResendingVerification = false;
+                state.resendVerificationStatus = "Verification email sent successfully";
+                console.log("Verification email resent successfully");
+            })
+            .addCase(resendVerificationEmail.rejected, (state, action) => {
+                state.isResendingVerification = false;
+                state.resendVerificationStatus =
+                    (action.payload as string) || action.error.message || "Resend verification failed";
+                console.error("Resend verification error:", action.error.message);
             });
     },
 });
@@ -179,5 +211,6 @@ export const userDispatch = {
     firebaseSignIn,
     firebaseSignOut,
     databaseSync,
+    resendVerificationEmail,
 };
 export default userSlice.reducer;
