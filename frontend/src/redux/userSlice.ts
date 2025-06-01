@@ -12,6 +12,8 @@ export interface UserState {
     signInError: string | null;
     isSigningOut: boolean;
     signOutError: string | null;
+    isSigningUp: boolean;
+    signUpError: string | null;
     isSyncing: boolean;
     syncError: string | null;
     isResendingVerification: boolean;
@@ -30,6 +32,8 @@ const initialState: UserState = {
     signInError: null,
     isSigningOut: false,
     signOutError: null,
+    isSigningUp: false,
+    signUpError: null,
     isSyncing: false,
     syncError: null,
     isResendingVerification: false,
@@ -119,7 +123,7 @@ const firebaseSignUp = createAsyncThunk(
             }
             const user = userCredentials.user;
             await sendEmailVerification(user);
-            return { email: user.email, name: signup.name };
+            return { email: signup.email, name: signup.name };
         } catch (error: any) {
             if (error.name === "FirebaseError") {
                 if (error.code === "auth/email-already-in-use") {
@@ -127,6 +131,8 @@ const firebaseSignUp = createAsyncThunk(
                 } else if (error.code === "auth/invalid-email") {
                     return thunkAPI.rejectWithValue("Please enter your email in the format:name@example.com");
                 }
+            } else {
+                return thunkAPI.rejectWithValue(error.message);
             }
         }
     },
@@ -192,6 +198,22 @@ export const userSlice = createSlice({
                 state.isSigningOut = false;
                 state.signOutError = (action.payload as string) || action.error.message || "Firebase: Sign-out failed";
                 console.error("Sign-out error:", action.error.message);
+            })
+            .addCase(firebaseSignUp.pending, (state) => {
+                state.isSigningUp = true;
+                state.signUpError = null;
+            })
+            .addCase(firebaseSignUp.fulfilled, (state, action) => {
+                state.isSigningUp = false;
+                state.isLoggedIn = true;
+                state.email = action.payload?.email || "";
+                state.name = action.payload?.name || "";
+                console.log("User signed up successfully");
+            })
+            .addCase(firebaseSignUp.rejected, (state, action) => {
+                state.isSigningUp = false;
+                state.signUpError = (action.payload as string) || action.error.message || "Firebase: Sign-up failed";
+                console.error("Sign-up error:", action.error.message);
             })
             .addCase(databaseSync.pending, (state) => {
                 state.isSyncing = true;
