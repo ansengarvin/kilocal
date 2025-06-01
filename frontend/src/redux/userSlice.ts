@@ -15,8 +15,6 @@ export interface UserState {
     signOutError: string | null;
     isSyncing: boolean;
     syncError: string | null;
-    isFetchingKcal: boolean;
-    fetchKcalError: string | null;
     email: string;
     name: string;
 }
@@ -33,8 +31,6 @@ const initialState: UserState = {
     signOutError: null,
     isSyncing: false,
     syncError: null,
-    isFetchingKcal: false,
-    fetchKcalError: null,
     email: "",
     name: "",
 };
@@ -105,29 +101,6 @@ const firebaseSignOut = createAsyncThunk("user/signOut", async (_, thunkAPI) => 
     }
 });
 
-const fetchUserKcal = createAsyncThunk("user/fetchUserKcal", async (_, thunkAPI) => {
-    const token = await firebaseAuth.currentUser?.getIdToken();
-    if (!token) {
-        return thunkAPI.rejectWithValue("User not authenticated");
-    }
-    const url = `${apiURL}/users/`;
-    try {
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + token,
-            },
-        });
-        if (!response.ok) {
-            const errorResponse = await response.json();
-            throw new Error(errorResponse.err);
-        }
-        return response.json();
-    } catch (error) {
-        return thunkAPI.rejectWithValue(error);
-    }
-});
-
 export const userSlice = createSlice({
     name: "user",
     initialState: initialState,
@@ -190,22 +163,6 @@ export const userSlice = createSlice({
                 state.isSyncing = false;
                 state.syncError = (action.payload as string) || action.error.message || "Database sync failed";
                 console.error("Database sync error:", action.error.message);
-            })
-            .addCase(fetchUserKcal.pending, (state) => {
-                state.isFetchingKcal = true;
-                state.fetchKcalError = null;
-            })
-            .addCase(fetchUserKcal.fulfilled, (state, action) => {
-                state.isFetchingKcal = false;
-                state.isFetchedKcal = true;
-                state.email = action.payload.email || "";
-                state.name = action.payload.name || "";
-                console.log("User Kcal fetched successfully", action.payload);
-            })
-            .addCase(fetchUserKcal.rejected, (state, action) => {
-                state.isFetchingKcal = false;
-                state.fetchKcalError = (action.payload as string) || action.error.message || "Fetch user Kcal failed";
-                console.error("Fetch user Kcal error:", action.error.message);
             });
     },
 });

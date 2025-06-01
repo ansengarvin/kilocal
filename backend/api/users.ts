@@ -17,7 +17,10 @@ router.post("/login", requireAuthentication, async function (req, res) {
     try {
         const pool = await getPool();
         const uid = req.user;
-        const result = await pool.request().input("id", uid).query("SELECT id FROM users WHERE id = @id");
+        const result = await pool
+            .request()
+            .input("id", uid)
+            .query("SELECT id, name, email, weight FROM users WHERE id = @id");
         if (result.recordset.length) {
             // User ID exists, free to proceed.
             res.status(200).send(result.recordset[0]);

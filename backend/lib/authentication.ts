@@ -179,7 +179,10 @@ export async function syncFirebaseUserWithDB(req: Request, res: Response) {
     const email = req.email;
 
     // Check if the user's email exists in the database
-    const result = await pool.request().input("email", email).query("SELECT id FROM users WHERE email = @email");
+    const result = await pool
+        .request()
+        .input("email", email)
+        .query("SELECT id, name, email, weight FROM users WHERE email = @email");
 
     if (result.recordset.length) {
         const dbUserId = result.recordset[0].id;

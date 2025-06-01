@@ -9,4 +9,7 @@ test("database sync", async ({ user, kcalApiContext }) => {
     const json = await response.json();
     expect(json.id).toBeDefined();
     expect(json.id).toBe(user.uid);
+    expect(json.email).toBe(user.email);
+    expect(json.name).toBeDefined();
+    expect(json.weight).toBeDefined();
 });
