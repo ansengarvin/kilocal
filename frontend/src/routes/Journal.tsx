@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import { ContentWindow } from "../components/styles/AppStyle";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
@@ -14,24 +13,8 @@ import { useSelector } from "react-redux";
 import { journalDispatch } from "../redux/journalSlice";
 
 export function Journal() {
-    const navigate = useNavigate();
-
-    const { loggedIn, verified, isLoadingInitial } = useOutletContext<{
-        loggedIn: boolean;
-        verified: boolean;
-        isLoadingInitial: boolean;
-    }>();
-
-    // Redirects
-    useEffect(() => {
-        if (!isLoadingInitial) {
-            if (loggedIn) {
-                if (!verified) {
-                    navigate("/verify");
-                }
-            }
-        }
-    }, [verified, loggedIn]);
+    const loggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+    const verified = useSelector((state: RootState) => state.user.isVerified);
 
     const journal = useSelector((state: RootState) => state.journal);
     const dispatch = useAppDispatch();

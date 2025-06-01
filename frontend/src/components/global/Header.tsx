@@ -2,10 +2,11 @@ import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
 import { ReactNode } from "react";
 import { appAccentColor, tabletView } from "../../lib/defines";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface HeaderProps {
     children?: ReactNode;
-    loggedIn: boolean;
 }
 
 const Headerbar = styled.nav`
@@ -42,11 +43,10 @@ const Headerbar = styled.nav`
 `;
 
 export function Header(props: HeaderProps) {
-    const { loggedIn } = props;
-
+    const user = useSelector((state: RootState) => state.user);
     return (
         <Headerbar>
-            {loggedIn ? (
+            {user.isLoggedIn ? (
                 <>
                     <NavLink className="title" to="/" aria-label="Home">
                         KiloCal

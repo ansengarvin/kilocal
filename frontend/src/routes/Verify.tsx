@@ -6,33 +6,28 @@ import { useEffect, useState } from "react";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { RootState, useAppDispatch } from "../redux/store";
 import { useSelector } from "react-redux";
+import { userDispatch } from "../redux/userSlice";
 
 function Verify() {
-    const navigate = useNavigate();
-
-    const { isLoadingInitial } = useOutletContext<{
-        isLoadingInitial: boolean;
-    }>();
     const [resent, setResent] = useState(false);
     const [isError, setIsError] = useState(false);
 
     const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.user);
 
-    // Redirects
-    useEffect(() => {
-        if (!isLoadingInitial) {
-            if (user.isLoggedIn) {
-                if (!user.isVerified) {
-                    navigate("/verify");
-                } else {
-                    navigate("/");
-                }
-            } else {
-                navigate("/");
-            }
-        }
-    }, [user.isVerified, user.isLoggedIn]);
+    // useEffect(() => {
+    //     if (!isLoadingInitial && user.isLoggedIn && !user.isVerified) {
+    //         const interval = setInterval(async () => {
+    //             if (firebaseAuth.currentUser) {
+    //                 await firebaseAuth.currentUser.reload();
+    //                 dispatch(userDispatch.fetchUser());
+    //             }
+    //             console.log("Interval");
+    //         }, 5000);
+
+    //         return () => clearInterval(interval);
+    //     }
+    // }, [isLoadingInitial, user.isLoggedIn, user.isVerified, dispatch]);
 
     // Resends email verification
     const resendMutation = useMutation({
@@ -45,22 +40,6 @@ function Verify() {
         },
         onError() {
             setIsError(true);
-        },
-    });
-
-    // Signs user out
-    const [signoutError, setSignoutError] = useState(false);
-    const [signoutErrorMessage, setSignoutErrorMessage] = useState("");
-    const signOut = useMutation({
-        mutationFn: async () => {
-            await firebaseAuth.signOut();
-        },
-        onSuccess() {
-            console.log("User signed out");
-        },
-        onError(error) {
-            setSignoutError(true);
-            setSignoutErrorMessage(error.message);
         },
     });
 
@@ -87,7 +66,7 @@ function Verify() {
                         className="grey half"
                         onClick={(e) => {
                             e.preventDefault;
-                            signOut.mutate();
+                            dispatch(userDispatch.firebaseSignOut());
                         }}
                     >
                         Sign Out
@@ -95,7 +74,7 @@ function Verify() {
                 </div>
                 {isError ? <p>Error sending verification email</p> : <></>}
                 {resent ? <p>Verification email resent</p> : <></>}
-                {signoutError ? <p>Error signing out: {signoutErrorMessage}</p> : <></>}
+                {user.signOutError ? <p>Error signing out: {user.signOutError}</p> : <></>}
             </div>
             <br />
             <span>

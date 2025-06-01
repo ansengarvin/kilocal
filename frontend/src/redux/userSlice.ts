@@ -4,19 +4,25 @@ import { firebaseAuth } from "../lib/firebase";
 import { apiURL } from "../lib/defines";
 
 export interface UserState {
+    isLoadedInitial: boolean;
     isLoggedIn: boolean;
     isVerified: boolean;
     isSigningIn: boolean;
     signInError: string | null;
+    isSigningOut: boolean;
+    signOutError: string | null;
     isSyncing: boolean;
     syncError: string | null;
 }
 
 const initialState: UserState = {
+    isLoadedInitial: false,
     isLoggedIn: false,
     isVerified: false,
     isSigningIn: false,
     signInError: null,
+    isSigningOut: false,
+    signOutError: null,
     isSyncing: false,
     syncError: null,
 };
@@ -79,10 +85,32 @@ const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) =
     }
 });
 
+const firebaseSignOut = createAsyncThunk("user/signOut", async (_, thunkAPI) => {
+    try {
+        await firebaseAuth.signOut();
+    } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+    }
+});
+
 export const userSlice = createSlice({
     name: "user",
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        setLoadedInitial: (state, action) => {
+            state.isLoadedInitial = action.payload;
+        },
+        fetchUser: (state) => {
+            const user = firebaseAuth.currentUser;
+            if (user) {
+                state.isLoggedIn = true;
+                state.isVerified = user.emailVerified;
+            } else {
+                state.isLoggedIn = false;
+                state.isVerified = false;
+            }
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(firebaseSignIn.pending, (state) => {
@@ -97,6 +125,21 @@ export const userSlice = createSlice({
             .addCase(firebaseSignIn.rejected, (state, action) => {
                 state.isSigningIn = false;
                 state.signInError = (action.payload as string) || action.error.message || "Firebase: Sign-in failed";
+            })
+            .addCase(firebaseSignOut.pending, (state) => {
+                state.isSigningOut = true;
+                state.signOutError = null;
+            })
+            .addCase(firebaseSignOut.fulfilled, (state) => {
+                state.isSigningOut = false;
+                state.isLoggedIn = false;
+                state.isVerified = false;
+                console.log("User signed out successfully");
+            })
+            .addCase(firebaseSignOut.rejected, (state, action) => {
+                state.isSigningOut = false;
+                state.signOutError = (action.payload as string) || action.error.message || "Firebase: Sign-out failed";
+                console.error("Sign-out error:", action.error.message);
             })
             .addCase(databaseSync.pending, (state) => {
                 state.isSyncing = true;
@@ -116,7 +159,10 @@ export const userSlice = createSlice({
 });
 
 export const userDispatch = {
+    fetchUser: userSlice.actions.fetchUser,
+    setLoadedInitial: userSlice.actions.setLoadedInitial,
     firebaseSignIn,
+    firebaseSignOut,
     databaseSync,
 };
 export default userSlice.reducer;

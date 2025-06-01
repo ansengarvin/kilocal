@@ -11,16 +11,13 @@ export function Login() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.user);
-    const { isLoadingInitial } = useOutletContext<{
-        isLoadingInitial: boolean;
-    }>();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     // Redirects
     useEffect(() => {
-        if (!isLoadingInitial && !user.isSyncing) {
+        if (user.isLoadedInitial && !user.isSyncing) {
             if (user.isLoggedIn) {
                 if (!user.isVerified) {
                     navigate("/verify");
