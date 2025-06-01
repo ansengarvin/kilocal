@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { ProgressBarText } from "../components/data/ProgressBar";

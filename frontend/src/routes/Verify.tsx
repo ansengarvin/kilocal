@@ -1,8 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import { firebaseAuth } from "../lib/firebase";
 import { sendEmailVerification } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { RootState, useAppDispatch } from "../redux/store";
 import { useSelector } from "react-redux";
