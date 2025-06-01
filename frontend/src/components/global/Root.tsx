@@ -51,7 +51,7 @@ export function Root(props: RootProps) {
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, () => {
-            dispatch(userDispatch.fetchUser());
+            dispatch(userDispatch.fetchUserFirebase());
             dispatch(userDispatch.setLoadedInitial(true));
         });
         return () => unsubscribe();
