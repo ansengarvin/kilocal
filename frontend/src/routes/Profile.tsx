@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import { ContentWindow } from "../components/styles/AppStyle";
 import styled from "@emotion/styled";
 import { firebaseAuth } from "../lib/firebase";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiURL } from "../lib/defines";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const SignOutButton = styled.button`
     margin-top: auto;
@@ -13,29 +14,10 @@ const SignOutButton = styled.button`
 `;
 
 function Profile() {
-    const navigate = useNavigate();
-    const { loggedIn, verified, isLoadingInitial } = useOutletContext<{
-        loggedIn: boolean;
-        verified: boolean;
-        isLoadingInitial: boolean;
-    }>();
-
-    // Redirects
-    useEffect(() => {
-        if (!isLoadingInitial) {
-            if (loggedIn) {
-                if (!verified) {
-                    navigate("/verify");
-                }
-            } else {
-                navigate("/login");
-            }
-        }
-    }, [verified, loggedIn]);
-
+    const user = useSelector((state: RootState) => state.user);
     const { isLoading, error, data } = useQuery({
         queryKey: ["user"],
-        enabled: loggedIn ? true : false,
+        enabled: user.isLoggedIn ? true : false,
         queryFn: async () => {
             const token = await firebaseAuth.currentUser?.getIdToken();
             const url = `${apiURL}/users/`;
