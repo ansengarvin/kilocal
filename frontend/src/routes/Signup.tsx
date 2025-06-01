@@ -79,12 +79,8 @@ export function Signup() {
                     {isSigningUp ? (
                         <ProgressBarText value={0} goal={1} height="35px" width="100%" text={"Signing Up..."} />
                     ) : (
-                        <button
-                            className={isSigningUp ? "signup loading" : "signup"}
-                            type="submit"
-                            disabled={isSigningUp}
-                        >
-                            {isSigningUp ? "Loading" : "Sign Up"}
+                        <button className="signup" type="submit">
+                            Sign Up
                         </button>
                     )}
                 </div>
