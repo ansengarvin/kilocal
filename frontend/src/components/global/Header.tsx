@@ -20,6 +20,9 @@ export function Header() {
                     <NavLink className="navitem" to="/login" aria-label="Login">
                         Login
                     </NavLink>
+                    <NavLink className="navitem" to="/signup" area-label="Signup">
+                        Signup
+                    </NavLink>
                 </>
             )}
             {isLoggedIn && !isVerified && (
