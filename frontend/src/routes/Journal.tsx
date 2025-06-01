@@ -94,11 +94,7 @@ export function Journal() {
                     <PostSection />
                     <br />
                     <h2>Food Journal</h2>
-                    {journal.isFetching && <span>Loading...</span>}
-                    {journal.isPosting && <span>Posting...</span>}
-                    {journal.isDeleting && <span>Deleting...</span>}
-                    {journal.fetchError && <span>{journal.fetchError}</span>}
-                    {!journal.isFetching && !journal.fetchError && <span></span>}
+                    <span>{statusMessage}</span>
                     {journal.food && journal.food.length > 0 ? <FoodEntries /> : <span>No food for this day yet!</span>}
                 </FoodJournal>
             </ContentWindow>
