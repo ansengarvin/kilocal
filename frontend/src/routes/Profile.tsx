@@ -19,7 +19,7 @@ function Profile() {
             <div className="content">
                 {!user.isSyncing && (
                     <>
-                        <h1>Your Profile</h1>
+                        <h1>{user.name}'s Profile</h1>
                         <p>
                             Email: {user.email}
                             <br />
