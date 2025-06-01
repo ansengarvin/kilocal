@@ -74,7 +74,7 @@ export function Root(props: RootProps) {
                 return;
             }
 
-            if (location.pathname === "/verify") {
+            if (location.pathname === "/verify" || location.pathname === "/login" || location.pathname === "/signup") {
                 navigate("/");
                 return;
             }

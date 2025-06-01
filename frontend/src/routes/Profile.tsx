@@ -1,11 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ContentWindow } from "../components/styles/AppStyle";
 import styled from "@emotion/styled";
 import { firebaseAuth } from "../lib/firebase";
-import { useState } from "react";
 import { apiURL } from "../lib/defines";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState, useAppDispatch } from "../redux/store";
+import { userDispatch } from "../redux/userSlice";
 
 const SignOutButton = styled.button`
     margin-top: auto;
@@ -15,6 +15,7 @@ const SignOutButton = styled.button`
 
 function Profile() {
     const user = useSelector((state: RootState) => state.user);
+    const dispatch = useAppDispatch();
     const { isLoading, error, data } = useQuery({
         queryKey: ["user"],
         enabled: user.isLoggedIn ? true : false,
@@ -28,21 +29,6 @@ function Profile() {
                 },
             });
             return response.json();
-        },
-    });
-
-    const [signoutError, setSignoutError] = useState(false);
-    const [signoutErrorMessage, setSignoutErrorMessage] = useState("");
-    const signOut = useMutation({
-        mutationFn: async () => {
-            await firebaseAuth.signOut();
-        },
-        onSuccess() {
-            console.log("User signed out");
-        },
-        onError(error) {
-            setSignoutError(true);
-            setSignoutErrorMessage(error.message);
         },
     });
 
@@ -64,12 +50,12 @@ function Profile() {
                 <SignOutButton
                     onClick={(e) => {
                         e.preventDefault;
-                        signOut.mutate();
+                        dispatch(userDispatch.firebaseSignOut());
                     }}
                 >
                     Sign Out
                 </SignOutButton>
-                {signoutError ? <>{signoutErrorMessage}</> : <></>}
+                {user.signOutError && <>user.signOutError</>}
             </div>
         </ContentWindow>
     );

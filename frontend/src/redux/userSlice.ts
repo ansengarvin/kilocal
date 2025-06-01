@@ -7,6 +7,7 @@ export interface UserState {
     isLoadedInitial: boolean;
     isLoggedIn: boolean;
     isVerified: boolean;
+    isSynced: boolean;
     isSigningIn: boolean;
     signInError: string | null;
     isSigningOut: boolean;
@@ -19,6 +20,7 @@ const initialState: UserState = {
     isLoadedInitial: false,
     isLoggedIn: false,
     isVerified: false,
+    isSynced: false,
     isSigningIn: false,
     signInError: null,
     isSigningOut: false,
@@ -147,7 +149,7 @@ export const userSlice = createSlice({
             })
             .addCase(databaseSync.fulfilled, (state) => {
                 state.isSyncing = false;
-                state.isLoggedIn = false;
+                state.isLoggedIn = true;
                 console.log("Database sync successful");
             })
             .addCase(databaseSync.rejected, (state, action) => {
