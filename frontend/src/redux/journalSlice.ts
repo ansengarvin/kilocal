@@ -119,6 +119,11 @@ export const journalSlice = createSlice({
             state.dayName = getJournalDayName(thisDay);
             state.apiDate = getAPIDate(thisDay);
         },
+        clearAllErrors(state) {
+            state.fetchError = null;
+            state.postError = null;
+            state.deleteError = null;
+        },
     },
     extraReducers: (builder) => {
         /* Fetch day cases */
@@ -175,11 +180,12 @@ export const journalSlice = createSlice({
     },
 });
 
-const { nextDay, prevDay } = journalSlice.actions;
+const { nextDay, prevDay, clearAllErrors } = journalSlice.actions;
 
 export const journalDispatch = {
     nextDay,
     prevDay,
+    clearAllErrors,
     fetchDayByDate,
     postFoodEntry,
     deleteFoodEntry,
