@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../lib/firebase";
 import { apiURL } from "../lib/defines";
 
@@ -101,13 +101,36 @@ const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) =
     }
 });
 
-const firebaseSignOut = createAsyncThunk("user/signOut", async (_, thunkAPI) => {
+const firebaseSignOut = createAsyncThunk("user/firebaseSignOut", async (_, thunkAPI) => {
     try {
         await firebaseAuth.signOut();
     } catch (error: any) {
         return thunkAPI.rejectWithValue(error.message);
     }
 });
+
+const firebaseSignUp = createAsyncThunk(
+    "user/firebaseSignUp",
+    async (signup: { email: string; password: string; name: string }, thunkAPI) => {
+        try {
+            const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, signup.email, signup.password);
+            if (!userCredentials.user) {
+                return thunkAPI.rejectWithValue("Firebase: User not authenticated");
+            }
+            const user = userCredentials.user;
+            await sendEmailVerification(user);
+            return { email: user.email, name: signup.name };
+        } catch (error: any) {
+            if (error.name === "FirebaseError") {
+                if (error.code === "auth/email-already-in-use") {
+                    return thunkAPI.rejectWithValue("Email already in use. Please try a different email.");
+                } else if (error.code === "auth/invalid-email") {
+                    return thunkAPI.rejectWithValue("Please enter your email in the format:name@example.com");
+                }
+            }
+        }
+    },
+);
 
 const resendVerificationEmail = createAsyncThunk("user/resendVerificationEmail", async (_, thunkAPI) => {
     const user = firebaseAuth.currentUser;
@@ -210,6 +233,7 @@ export const userDispatch = {
     setFirebaseLoadedInitial: userSlice.actions.setFirebaseLoadedInitial,
     firebaseSignIn,
     firebaseSignOut,
+    firebaseSignUp,
     databaseSync,
     resendVerificationEmail,
 };
