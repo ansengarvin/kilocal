@@ -57,13 +57,13 @@ export function Root(props: RootProps) {
         return () => unsubscribe();
     }, []);
 
-    // Perform database sync immediately on load
+    // Perform database sync immediately on firebase load if user is verified, or upon user verification.
     useEffect(() => {
         if (user.isLoggedIn && user.isVerified && !user.isSyncing) {
             // Sync to database
             dispatch(userDispatch.databaseSync());
         }
-    }, [user.firebaseIsLoadedInitial]);
+    }, [user.firebaseIsLoadedInitial, user.isVerified]);
 
     // Handle redirects
     useEffect(() => {

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { firebaseAuth } from "../lib/firebase";
 import { sendEmailVerification } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { RootState, useAppDispatch } from "../redux/store";
 import { useSelector } from "react-redux";
@@ -14,19 +14,20 @@ function Verify() {
     const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.user);
 
-    // useEffect(() => {
-    //     if (!isLoadingInitial && user.isLoggedIn && !user.isVerified) {
-    //         const interval = setInterval(async () => {
-    //             if (firebaseAuth.currentUser) {
-    //                 await firebaseAuth.currentUser.reload();
-    //                 dispatch(userDispatch.fetchUser());
-    //             }
-    //             console.log("Interval");
-    //         }, 5000);
+    // Check if user is verified on an interval; If they are,
+    useEffect(() => {
+        if (user.firebaseIsLoadedInitial && user.isLoggedIn && !user.isVerified) {
+            const interval = setInterval(async () => {
+                if (firebaseAuth.currentUser) {
+                    await firebaseAuth.currentUser.reload();
+                    dispatch(userDispatch.fetchUserFirebase());
+                }
+                console.log("Interval");
+            }, 2000);
 
-    //         return () => clearInterval(interval);
-    //     }
-    // }, [isLoadingInitial, user.isLoggedIn, user.isVerified, dispatch]);
+            return () => clearInterval(interval);
+        }
+    }, [user.isLoggedIn, user.isVerified, dispatch]);
 
     // Resends email verification
     const resendMutation = useMutation({
