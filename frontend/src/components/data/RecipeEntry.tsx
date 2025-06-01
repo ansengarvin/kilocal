@@ -82,7 +82,7 @@ export function RecipeEntry() {
             <tr>
                 <td colSpan={6}>
                     <RecipeEntryFoods>
-                        <FoodEntries foodList={testFoods} hasRecipes={false} hasTitles={false} />
+                        <FoodEntries />
                     </RecipeEntryFoods>
                 </td>
             </tr>
