@@ -17,6 +17,7 @@ export function PostSection() {
                 className="entryContainer"
                 onSubmit={(e) => {
                     e.preventDefault();
+                    dispatch(journalDispatch.clearAllErrors());
                     dispatch(
                         journalDispatch.postFoodEntry({
                             name: foodName,

@@ -57,6 +57,7 @@ export function FoodEntries() {
                                             tabIndex={-1}
                                             aria-label={`Button: Delete ${food.name} from day`}
                                             onClick={() => {
+                                                dispatch(journalDispatch.clearAllErrors());
                                                 dispatch(journalDispatch.deleteFoodEntry(food.id));
                                             }}
                                         >

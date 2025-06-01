@@ -57,6 +57,7 @@ export function Journal() {
                         className="date left"
                         onClick={(e) => {
                             e.preventDefault();
+                            dispatch(journalDispatch.clearAllErrors());
                             dispatch(journalDispatch.prevDay());
                             dispatch(journalDispatch.fetchDayByDate());
                             console.log("PREV DAY");
@@ -72,6 +73,7 @@ export function Journal() {
                         disabled={journal.isToday}
                         onClick={(e) => {
                             e.preventDefault();
+                            dispatch(journalDispatch.clearAllErrors());
                             dispatch(journalDispatch.nextDay());
                             dispatch(journalDispatch.fetchDayByDate());
                         }}
