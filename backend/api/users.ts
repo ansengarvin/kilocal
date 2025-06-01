@@ -13,7 +13,7 @@ router.post("/", requireAuthentication, async function (req, res) {
  * It checks if a user exists, and if they don't, create a user with the firebase UID.
  * # TODO: Consolidate this process of function calls into a single SQL query
  */
-router.post("/login", requireAuthentication, async function (req, res) {
+router.post("/sync", requireAuthentication, async function (req, res) {
     try {
         const pool = await getPool();
         const uid = req.user;

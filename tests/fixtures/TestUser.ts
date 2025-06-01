@@ -25,7 +25,7 @@ export class TestUser {
     }
 
     async syncDatabase(kcalApiContext: APIRequestContext) {
-        const response = await kcalApiContext.post("/users/login");
+        const response = await kcalApiContext.post("/users/sync");
         const status = response.status();
         const message = await response.text();
         const err = `Failed to create user: Status ${status}, message: ${message}`;

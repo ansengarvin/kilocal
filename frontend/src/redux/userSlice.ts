@@ -74,7 +74,7 @@ const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) =
     var retries = 0;
     while (retries < 3) {
         try {
-            const url = `${apiURL}/users/login`;
+            const url = `${apiURL}/users/sync`;
             const response = await fetch(url, {
                 method: "POST",
                 headers: {

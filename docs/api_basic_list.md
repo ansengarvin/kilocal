@@ -8,8 +8,8 @@ This is the most basic list of possible paths for the RESTful API here.
 * /users
     * POST (create new user)
 
-* /users/login
-    * POST (login)
+* /users/sync
+    * POST (sync)
 
 * /users/{id}
     * GET (information from a single user acct)
