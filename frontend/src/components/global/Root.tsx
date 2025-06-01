@@ -61,7 +61,7 @@ export function Root(props: RootProps) {
     useEffect(() => {
         if (user.isLoadedInitial && !user.isSyncing) {
             if (!user.isLoggedIn) {
-                if (location.pathname !== "/" && location.pathname !== "/login") {
+                if (location.pathname !== "/" && location.pathname !== "/login" && location.pathname !== "/signup") {
                     navigate("/");
                 }
                 return;
