@@ -21,15 +21,15 @@ export function Login() {
     // Redirects
     useEffect(() => {
         if (!isLoadingInitial && !user.isSyncing) {
-            if (user.loggedIn) {
-                if (!user.verified) {
+            if (user.isLoggedIn) {
+                if (!user.isVerified) {
                     navigate("/verify");
                 } else {
                     navigate("/");
                 }
             }
         }
-    }, [user.verified, user.loggedIn, user.isSyncing]);
+    }, [user.isVerified, user.isLoggedIn, user.isSyncing]);
 
     return (
         <LoginStyle>

@@ -4,8 +4,8 @@ import { firebaseAuth } from "../lib/firebase";
 import { apiURL } from "../lib/defines";
 
 export interface UserState {
-    loggedIn: boolean;
-    verified: boolean;
+    isLoggedIn: boolean;
+    isVerified: boolean;
     isSigningIn: boolean;
     signInError: string | null;
     isSyncing: boolean;
@@ -13,8 +13,8 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-    loggedIn: false,
-    verified: false,
+    isLoggedIn: false,
+    isVerified: false,
     isSigningIn: false,
     signInError: null,
     isSyncing: false,
@@ -29,15 +29,18 @@ const firebaseSignIn = createAsyncThunk(
             if (!firebaseAuth.currentUser) {
                 return thunkAPI.rejectWithValue("Firebase: User not authenticated");
             }
-            console.log("Firebase authentication successful.");
-            thunkAPI.dispatch(databaseSync());
+            if (firebaseAuth.currentUser.emailVerified) {
+                thunkAPI.dispatch(databaseSync());
+            }
             return true;
         } catch (error: any) {
             if (error.name == "FirebaseError") {
-                if (error.code == "auth/invalid-credential") {
+                if (error.code == "auth/invalid-credential" || error.code == "auth/user-not-found") {
                     return thunkAPI.rejectWithValue("Invalid username or password.");
                 } else if (error.code == "auth/too-many-requests") {
                     return thunkAPI.rejectWithValue("Too many requests. Try again later.");
+                } else if (error.code == "auth/invalid-email") {
+                    return thunkAPI.rejectWithValue("Please enter your email in the format: name@example.com");
                 } else {
                     return thunkAPI.rejectWithValue(error.message);
                 }
@@ -88,11 +91,12 @@ export const userSlice = createSlice({
             })
             .addCase(firebaseSignIn.fulfilled, (state) => {
                 state.isSigningIn = false;
-                state.verified = firebaseAuth.currentUser?.emailVerified || false;
+                state.isLoggedIn = true;
+                state.isVerified = firebaseAuth.currentUser?.emailVerified || false;
             })
             .addCase(firebaseSignIn.rejected, (state, action) => {
                 state.isSigningIn = false;
-                state.signInError = action.error.message || "Firebase: Sign-in failed";
+                state.signInError = (action.payload as string) || action.error.message || "Firebase: Sign-in failed";
             })
             .addCase(databaseSync.pending, (state) => {
                 state.isSyncing = true;
@@ -100,12 +104,12 @@ export const userSlice = createSlice({
             })
             .addCase(databaseSync.fulfilled, (state) => {
                 state.isSyncing = false;
-                state.loggedIn = true;
+                state.isLoggedIn = false;
                 console.log("Database sync successful");
             })
             .addCase(databaseSync.rejected, (state, action) => {
                 state.isSyncing = false;
-                state.syncError = action.error.message || "Database sync failed";
+                state.syncError = (action.payload as string) || action.error.message || "Database sync failed";
                 console.error("Database sync error:", action.error.message);
             });
     },

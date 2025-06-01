@@ -4,23 +4,26 @@ import { firebaseAuth } from "../lib/firebase";
 import { sendEmailVerification } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { LoginStyle } from "../components/styles/LoginStyle";
+import { RootState, useAppDispatch } from "../redux/store";
+import { useSelector } from "react-redux";
 
 function Verify() {
     const navigate = useNavigate();
 
-    const { loggedIn, verified, isLoadingInitial } = useOutletContext<{
-        loggedIn: boolean;
-        verified: boolean;
+    const { isLoadingInitial } = useOutletContext<{
         isLoadingInitial: boolean;
     }>();
     const [resent, setResent] = useState(false);
     const [isError, setIsError] = useState(false);
 
+    const dispatch = useAppDispatch();
+    const user = useSelector((state: RootState) => state.user);
+
     // Redirects
     useEffect(() => {
         if (!isLoadingInitial) {
-            if (loggedIn) {
-                if (!verified) {
+            if (user.isLoggedIn) {
+                if (!user.isVerified) {
                     navigate("/verify");
                 } else {
                     navigate("/");
@@ -29,7 +32,7 @@ function Verify() {
                 navigate("/");
             }
         }
-    }, [verified, loggedIn]);
+    }, [user.isVerified, user.isLoggedIn]);
 
     // Resends email verification
     const resendMutation = useMutation({
