@@ -49,7 +49,11 @@ const firebaseSignIn = createAsyncThunk(
             return true;
         } catch (error: any) {
             if (error.name == "FirebaseError") {
-                if (error.code == "auth/invalid-credential" || error.code == "auth/user-not-found") {
+                if (
+                    error.code == "auth/invalid-credential" ||
+                    error.code == "auth/user-not-found" ||
+                    error.code == "auth/wrong-password"
+                ) {
                     return thunkAPI.rejectWithValue("Invalid username or password.");
                 } else if (error.code == "auth/too-many-requests") {
                     return thunkAPI.rejectWithValue("Too many requests. Try again later.");
