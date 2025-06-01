@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { firebaseAuth } from "../lib/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { LoginStyle } from "../components/styles/LoginStyle";
 import { apiURL } from "../lib/defines";
@@ -16,12 +16,6 @@ interface UserInfo {
 }
 
 export function Signup() {
-    const { verified, loggedIn, isLoadingInitial } = useOutletContext<{
-        loggedIn: boolean;
-        verified: boolean;
-        isLoadingInitial: boolean;
-    }>();
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -99,19 +93,6 @@ export function Signup() {
             setWeight(0);
         },
     });
-
-    // Redirects
-    useEffect(() => {
-        if (!signUpMutation.isPending && !isLoadingInitial) {
-            if (loggedIn) {
-                if (verified) {
-                    navigate("/profile");
-                } else {
-                    navigate("/verify");
-                }
-            }
-        }
-    }, [verified, loggedIn, signUpMutation.isPending]);
 
     return (
         <LoginStyle>
