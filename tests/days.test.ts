@@ -19,6 +19,24 @@ test.describe("POST /days/", () => {
         expect(json.date).toBe(today);
     });
 
+    test("Create same day twice (400)", async ({ kcalApiContext }) => {
+        // First create
+        const responseFirst = await kcalApiContext.post("/days/", {
+            data: {
+                date: today,
+            },
+        });
+        expect(responseFirst.status()).toBe(201);
+
+        // Second create should fail with 400
+        const responseSecond = await kcalApiContext.post("/days/", {
+            data: {
+                date: today,
+            },
+        });
+        expect(responseSecond.status()).toBe(400);
+    });
+
     test("malformed date (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post("/days/", {
             data: {
