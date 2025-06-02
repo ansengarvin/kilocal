@@ -71,6 +71,7 @@ router.post("/", requireAuthentication, async function (req, res) {
             return;
         }
     } catch (err) {
+        console.error("Error:", err);
         res.status(500).send({
             error: err,
         });
@@ -117,6 +118,7 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             });
             return;
         } else {
+            console.log(err);
             res.status(500).send({ err: "Internal server error" });
             return;
         }

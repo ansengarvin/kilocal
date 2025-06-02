@@ -61,12 +61,20 @@ function test() {
     
     # Start emulator, run playwright tests, and stop emulator
     npx firebase emulators:exec --project ag-kilocal "npx playwright test"
+	TEST_EXIT_CODE=$?
 
 	# Transfer all docker logs to local folder and stop running images
-	docker logs frontend > ./tests/logs/docker/frontend.log
-	docker logs backend > ./tests/logs/docker/backend.log
-	docker logs mssql > ./tests/logs/docker/mssql.log
+	docker logs frontend > ./tests/logs/docker/frontend.log 2>&1
+	docker logs backend > ./tests/logs/docker/backend.log 2>&1
+	docker logs mssql > ./tests/logs/docker/mssql.log 2>&1
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml down
+
+	if ( [ $TEST_EXIT_CODE -ne 0 ] ); then
+		echo "Tests failed with exit code $TEST_EXIT_CODE. Opening test results in the browser."
+		npx playwright show-report tests/logs/playwright/html
+	else
+		echo "All tests passed successfully!"
+	fi
 }
 
 #####
