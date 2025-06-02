@@ -112,13 +112,13 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
         return;
     } catch (err) {
         if (err instanceof RequestError) {
-            console.log("RequestError:", err);
+            console.error("RequestError:", err);
             res.status(400).send({
                 err: err.message,
             });
             return;
         } else {
-            console.log(err);
+            console.error("Error:", err);
             res.status(500).send({ err: "Internal server error" });
             return;
         }
@@ -157,6 +157,7 @@ router.get("/:date", requireAuthentication, async function (req, res) {
         });
         return;
     } catch (err) {
+        console.error("Error:", err);
         res.status(500).send({
             err: err,
         });
@@ -185,6 +186,7 @@ router.delete("/:date/food/:food_id", requireAuthentication, async function (req
             return;
         }
     } catch (err) {
+        console.error("Error:", err);
         res.status(500).send({
             err: err,
         });

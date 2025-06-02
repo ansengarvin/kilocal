@@ -52,7 +52,8 @@ router.delete("/:user_id", requireAuthentication, async function (req, res) {
             return;
         }
     } catch (err) {
-        res.status(400).send({
+        console.error("Error:", err);
+        res.status(500).send({
             err: err.message,
         });
         return;
@@ -77,7 +78,8 @@ router.get("/", requireAuthentication, async function (req, res) {
             return;
         }
     } catch (err) {
-        res.status(400).send({
+        console.error("Error:", err);
+        res.status(500).send({
             err: err.message,
         });
         return;

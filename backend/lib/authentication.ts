@@ -123,7 +123,8 @@ export async function createUserIfNoneExists(req: Request, res: Response) {
             weight: insertResult.recordset[0].weight,
         });
     } catch (err: any) {
-        res.status(400).send({
+        console.error("Error:", err);
+        res.status(500).send({
             err: err.message,
         });
         return;
@@ -162,7 +163,8 @@ export async function replaceUser(deleteUID: string, req: Request, res: Response
         res.status(201).send(result.recordset[0]);
         return;
     } catch (err: any) {
-        res.status(400).send({
+        console.error("Error:", err);
+        res.status(500).send({
             err: err.message,
         });
         return;
@@ -199,6 +201,7 @@ export async function syncFirebaseUserWithDB(req: Request, res: Response) {
             // User doesn't exist in firebase, but exists in DB.
             // Treat Firebase as the authority; Delete the bad entry and replace it with the new one.
             if (err.code !== "auth/user-not-found") {
+                console.error("Error:", err);
                 res.status(500).send({
                     err: err.message,
                 });
