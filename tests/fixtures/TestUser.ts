@@ -41,10 +41,23 @@ export class TestUser {
 }
 
 // Loosely follows https://playwright.dev/docs/test-fixtures
-export function createTestWithUser(
-    testName: string,
-): TestType<{ user: TestUser; kcalApiContext: APIRequestContext }, {}> {
-    return base.extend<{ user: TestUser; kcalApiContext: APIRequestContext }>({
+export function createTestWithUser(testName: string): TestType<
+    {
+        user: TestUser;
+        wrongUser: TestUser;
+        kcalApiContext: APIRequestContext;
+        wrongUserAPIContext: APIRequestContext;
+        noAuthApiContext: APIRequestContext;
+    },
+    {}
+> {
+    return base.extend<{
+        user: TestUser;
+        wrongUser: TestUser;
+        kcalApiContext: APIRequestContext;
+        wrongUserAPIContext: APIRequestContext;
+        noAuthApiContext: APIRequestContext;
+    }>({
         user: async ({}, use) => {
             const email = testName + "@ansengarvin.com";
             const user = new TestUser(email, "BigTest1111!!!!");
@@ -52,6 +65,14 @@ export function createTestWithUser(
             await user.getFirebaseToken();
             await use(user);
             await user.cleanup();
+        },
+        wrongUser: async ({}, use) => {
+            const email = testName + "wrongUser@ansengarvin.com";
+            const wrongUser = new TestUser(email, "BigTest1111!!!!");
+            await wrongUser.createFirebaseUser();
+            await wrongUser.getFirebaseToken();
+            await use(wrongUser);
+            await wrongUser.cleanup();
         },
         kcalApiContext: async ({ user }, use) => {
             const kcalApiContext = await playwright.request.newContext({
@@ -64,6 +85,27 @@ export function createTestWithUser(
             await user.syncDatabase(kcalApiContext);
             await use(kcalApiContext);
             await kcalApiContext.dispose();
+        },
+        wrongUserAPIContext: async ({ wrongUser }, use) => {
+            const wrongUserAPIContext = await playwright.request.newContext({
+                baseURL: "http://localhost:8000/",
+                extraHTTPHeaders: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${wrongUser.token}`,
+                },
+            });
+            await use(wrongUserAPIContext);
+            await wrongUserAPIContext.dispose();
+        },
+        noAuthApiContext: async ({}, use) => {
+            const noAuthApiContext = await playwright.request.newContext({
+                baseURL: "http://localhost:8000/",
+                extraHTTPHeaders: {
+                    "Content-Type": "application/json",
+                },
+            });
+            await use(noAuthApiContext);
+            await noAuthApiContext.dispose();
         },
     });
 }
