@@ -144,17 +144,9 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
         });
         return;
     } catch (err) {
-        if (err instanceof RequestError) {
-            console.error("RequestError:", err);
-            res.status(400).send({
-                err: err.message,
-            });
-            return;
-        } else {
-            console.error("Error:", err);
-            res.status(500).send({ err: "Internal server error" });
-            return;
-        }
+        console.error("Error:", err);
+        res.status(500).send({ err: "Internal server error" });
+        return;
     }
 });
 
