@@ -70,7 +70,7 @@ function test() {
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml down
 
 	if ( [ $TEST_EXIT_CODE -ne 0 ] ); then
-		echo "Tests failed with exit code $TEST_EXIT_CODE. Opening test results in the browser."
+		echo "One or more tests failed. Opening test results in the browser."
 		npx playwright show-report tests/logs/playwright/html
 	else
 		echo "All tests passed successfully!"
