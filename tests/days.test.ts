@@ -166,6 +166,20 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(400);
     });
 
+    test("zero amount (400)", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Zero Amount",
+                calories: 100,
+                amount: 0,
+                carbs: 0,
+                fat: 0,
+                protein: 0,
+            },
+        });
+        expect(response.status()).toBe(400);
+    });
+
     test("negative amount (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
