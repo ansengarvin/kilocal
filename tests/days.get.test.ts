@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { createTestWithUser } from "./fixtures/TestUser";
 
-const test = createTestWithUser("days_get");
+const test = createTestWithUser("days");
 let date = new Date();
 const today = date.toISOString().split("T")[0];
 
@@ -44,7 +44,41 @@ test.describe("GET /days/", () => {
         expect(response.status()).toBe(400);
     });
 
-    test("get day with food items (200)", async ({ kcalApiContext }) => {
+    test("get day with food with single item", async ({ kcalApiContext }) => {
+        // Create a food item
+        const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Generic",
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            },
+        });
+        expect(responsePost.status()).toBe(201);
+        const jsonPost = await responsePost.json();
+        expect(jsonPost.id).toBeDefined();
+
+        // Get the day and check if it contains the food item
+        const responseGet = await kcalApiContext.get(`/days/${today}`);
+        expect(responseGet.status()).toBe(200);
+        const jsonGet = await responseGet.json();
+        expect(jsonGet.totalCalories).toBe(80);
+        expect(jsonGet.totalCarbs).toBe(20);
+        expect(jsonGet.totalFat).toBe(20);
+        expect(jsonGet.totalProtein).toBe(20);
+        expect(jsonGet.food.length).toBe(1);
+        expect(jsonGet.food[0].id).toBe(jsonPost.id);
+        expect(jsonGet.food[0].name).toBe("Generic");
+        expect(jsonGet.food[0].calories).toBe(80);
+        expect(jsonGet.food[0].amount).toBe(1);
+        expect(jsonGet.food[0].carbs).toBe(20);
+        expect(jsonGet.food[0].fat).toBe(20);
+        expect(jsonGet.food[0].protein).toBe(20);
+    });
+
+    test("validate correct summation", async ({ kcalApiContext }) => {
         const foodItems = [
             {
                 name: "Generic",
@@ -61,6 +95,30 @@ test.describe("GET /days/", () => {
                 carbs: 25,
                 fat: 0,
                 protein: 1,
+            },
+            {
+                name: "Apple",
+                calories: 95,
+                amount: 1,
+                carbs: 25,
+                fat: 0,
+                protein: 1,
+            },
+            {
+                name: "Chicken Breast",
+                calories: 165,
+                amount: 1,
+                carbs: 0,
+                fat: 3.6,
+                protein: 31,
+            },
+            {
+                name: "Rice",
+                calories: 130,
+                amount: 1,
+                carbs: 28,
+                fat: 0.3,
+                protein: 2.7,
             },
         ];
 
@@ -79,17 +137,14 @@ test.describe("GET /days/", () => {
             });
             expect(response.status()).toBe(201);
         }
-
-        // Get the food items
-        const response = await kcalApiContext.get(`/days/${today}`);
-        expect(response.status()).toBe(200);
-        const json = await response.json();
-        expect(json.totalCalories).toBe(totalCalories);
-        expect(json.totalCarbs).toBe(totalCarbs);
-        expect(json.totalFat).toBe(totalFat);
-        expect(json.totalProtein).toBe(totalProtein);
-        expect(json.food).toBeDefined();
-        expect(json.food.length).toBe(foodItems.length);
+        // Get the day and check if totals are correct
+        const responseGet = await kcalApiContext.get(`/days/${today}`);
+        expect(responseGet.status()).toBe(200);
+        const jsonGet = await responseGet.json();
+        expect(jsonGet.totalCalories).toBe(totalCalories);
+        expect(jsonGet.totalCarbs).toBe(totalCarbs);
+        expect(jsonGet.totalFat).toBe(totalFat);
+        expect(jsonGet.totalProtein).toBe(totalProtein);
     });
 
     test("unauthenticated (401)", async ({ noAuthApiContext }) => {
