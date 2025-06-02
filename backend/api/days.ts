@@ -2,6 +2,7 @@ import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
 import { getPool } from "../lib/database";
 import { RequestError } from "mssql";
+import { isDate, isNumber, isNumericID } from "../lib/utils";
 
 const router = Router();
 
@@ -39,6 +40,12 @@ router.post("/", requireAuthentication, async function (req, res) {
             return;
         }
 
+        // Check if the date is properly formatted
+        if (!isDate(req.body.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            return;
+        }
+
         const pool = await getPool();
 
         // Check if the date already exists for this user
@@ -71,6 +78,7 @@ router.post("/", requireAuthentication, async function (req, res) {
             return;
         }
     } catch (err) {
+        console.error("Error:", err);
         res.status(500).send({
             error: err,
         });
@@ -86,6 +94,32 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             return;
         }
 
+        if (!isDate(req.params.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            return;
+        }
+
+        if (!isNumber(req.body.calories) || req.body.calories < 0) {
+            res.status(400).send({ err: "Calories must be a positive number" });
+            return;
+        }
+        if (req.body.carbs && (!isNumber(req.body.carbs) || req.body.carbs < 0)) {
+            res.status(400).send({ err: "Carbs must be a positive number" });
+            return;
+        }
+        if (req.body.fat && (!isNumber(req.body.fat) || req.body.fat < 0)) {
+            res.status(400).send({ err: "Fat must be a positive number" });
+            return;
+        }
+        if (req.body.protein && (!isNumber(req.body.protein) || req.body.protein < 0)) {
+            res.status(400).send({ err: "Protein must be a positive number" });
+            return;
+        }
+        if (req.body.amount !== undefined && (!isNumber(req.body.amount) || req.body.amount < 1)) {
+            res.status(400).send({ err: "Amount must be a positive number" });
+            return;
+        }
+
         const pool = await getPool();
         let day_id = await get_day_id(req.user, req.params.date);
 
@@ -94,38 +128,43 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             .input("day_id", day_id)
             .input("name", req.body.name)
             .input("calories", req.body.calories)
-            .input("amount", req.body.amount || 1)
+            .input("amount", req.body.amount !== undefined ? req.body.amount : 1)
             .input("carbs", req.body.carbs || 0)
             .input("fat", req.body.fat || 0)
             .input("protein", req.body.protein || 0)
             .input("position", 0) // TODO: Calculate position instead of 0
             .query(`
                 INSERT INTO Foods(day_id, name, calories, amount, carbs, fat, protein, position)
-                OUTPUT INSERTED.id
+                OUTPUT INSERTED.id, INSERTED.name, INSERTED.calories, INSERTED.amount, INSERTED.carbs, INSERTED.fat, INSERTED.protein
                 VALUES(@day_id, @name, @calories, @amount, @carbs, @fat, @protein, @position)
             `);
 
+        const row = insertResult.recordset[0];
         res.status(201).send({
-            id: insertResult.recordset[0].id,
+            id: row.id,
+            name: row.name,
+            calories: row.calories,
+            amount: row.amount,
+            carbs: row.carbs,
+            fat: row.fat,
+            protein: row.protein,
         });
         return;
     } catch (err) {
-        if (err instanceof RequestError) {
-            console.log("RequestError:", err);
-            res.status(400).send({
-                err: err.message,
-            });
-            return;
-        } else {
-            res.status(500).send({ err: "Internal server error" });
-            return;
-        }
+        console.error("Error:", err);
+        res.status(500).send({ err: "Internal server error" });
+        return;
     }
 });
 
 // Gets the contents of a day
 router.get("/:date", requireAuthentication, async function (req, res) {
     try {
+        if (!isDate(req.params.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            return;
+        }
+
         let day_id = await get_day_id(req.user, req.params.date);
 
         const pool = await getPool();
@@ -155,6 +194,7 @@ router.get("/:date", requireAuthentication, async function (req, res) {
         });
         return;
     } catch (err) {
+        console.error("Error:", err);
         res.status(500).send({
             err: err,
         });
@@ -164,6 +204,16 @@ router.get("/:date", requireAuthentication, async function (req, res) {
 
 router.delete("/:date/food/:food_id", requireAuthentication, async function (req, res) {
     try {
+        if (!isDate(req.params.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            return;
+        }
+
+        if (!isNumericID(req.params.food_id)) {
+            res.status(400).send({ err: "Food ID must be a numeric value" });
+            return;
+        }
+
         let day_id = await get_day_id(req.user, req.params.date);
         const pool = await getPool();
 
@@ -183,6 +233,7 @@ router.delete("/:date/food/:food_id", requireAuthentication, async function (req
             return;
         }
     } catch (err) {
+        console.error("Error:", err);
         res.status(500).send({
             err: err,
         });
