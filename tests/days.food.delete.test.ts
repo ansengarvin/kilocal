@@ -121,4 +121,22 @@ test.describe("DELETE /days/:date/food/:food_id", () => {
         const responseDeleteAgain = await kcalApiContext.delete(`/days/${today}/food/${jsonPost.id}`);
         expect(responseDeleteAgain.status()).toBe(404);
     });
+
+    test("sql injection in date", async ({ kcalApiContext }) => {
+        const sqlInjectionString = "2023-10-01; DROP TABLE food; --";
+        const response = await kcalApiContext.delete(`/days/${sqlInjectionString}/food/1`);
+        expect(response.status()).toBe(400);
+        // Check if food table still exists
+        const responseCheck = await kcalApiContext.get(`/days/${today}`);
+        expect(responseCheck.status()).toBe(200);
+    });
+
+    test("sql injection in food id", async ({ kcalApiContext }) => {
+        const sqlInjectionString = "Generic'; DROP TABLE food; --";
+        const response = await kcalApiContext.delete(`/days/${today}/food/${sqlInjectionString}`);
+        expect(response.status()).toBe(400);
+        // Check if food table still exists
+        const responseCheck = await kcalApiContext.get(`/days/${today}`);
+        expect(responseCheck.status()).toBe(200);
+    });
 });
