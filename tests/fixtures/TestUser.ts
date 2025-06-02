@@ -29,7 +29,7 @@ export class TestUser {
         const status = response.status();
         const message = await response.text();
         const err = `Failed to create user: Status ${status}, message: ${message}`;
-        if (response.status() !== 201) {
+        if (response.status() !== 200) {
             console.error(err);
             throw new Error(err);
         }
