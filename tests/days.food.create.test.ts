@@ -23,18 +23,6 @@ test.describe("POST days/:date/food", () => {
         expect(json.id).toBeDefined();
     });
 
-    test("nullable values excluded (201)", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Banana",
-                calories: 80,
-            },
-        });
-        expect(response.status()).toBe(201);
-        const json = await response.json();
-        expect(json.id).toBeDefined();
-    });
-
     test("calories excluded (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
@@ -51,6 +39,18 @@ test.describe("POST days/:date/food", () => {
             },
         });
         expect(response.status()).toBe(400);
+    });
+
+    test("nullable values excluded (201)", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Banana",
+                calories: 80,
+            },
+        });
+        expect(response.status()).toBe(201);
+        const json = await response.json();
+        expect(json.id).toBeDefined();
     });
 
     test("no request body (400)", async ({ kcalApiContext }) => {
@@ -135,74 +135,22 @@ test.describe("POST days/:date/food", () => {
         //#TODO: Decide if we want to allow floating points for amounts and how we should  handle that.
     });
 
-    test("non-numeric calories", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Non-numeric Calories",
-                calories: "eighty",
-                amount: 1,
-                carbs: 20,
-                fat: 20,
-                protein: 20,
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
-
-    test("non-numeric carbs", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Non-numeric Carbs",
-                calories: 80,
-                amount: 1,
-                carbs: "twenty",
-                fat: 20,
-                protein: 20,
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
-
-    test("non-numeric fat", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Non-numeric Fat",
-                calories: 80,
-                amount: 1,
-                carbs: 20,
-                fat: "twenty",
-                protein: 20,
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
-
-    test("non-numeric protein", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Non-numeric Protein",
+    test("non-numeric inputs for numeric fields", async ({ kcalApiContext }) => {
+        const numericFields = ["calories", "amount", "carbs", "fat", "protein"];
+        for (const field of numericFields) {
+            const data = {
+                name: "Generic",
                 calories: 80,
                 amount: 1,
                 carbs: 20,
                 fat: 20,
-                protein: "twenty",
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
-
-    test("non-numeric amount", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Non-numeric Amount",
-                calories: 80,
-                amount: "one",
-                carbs: 20,
-                fat: 20,
                 protein: 20,
-            },
-        });
-        expect(response.status()).toBe(400);
+            };
+            data[field] = "twenty";
+
+            const response = await kcalApiContext.post(`/days/${today}/food`, { data });
+            expect(response.status()).toBe(400);
+        }
     });
 
     test("malformed date", async ({ kcalApiContext }) => {
