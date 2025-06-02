@@ -5,7 +5,7 @@ const test = createTestWithUser("days");
 let date = new Date();
 const today = date.toISOString().split("T")[0];
 
-test.describe.serial("Days API", () => {
+test.describe("Days API", () => {
     test("POST /days/", async ({ user, kcalApiContext }) => {
         const response = await kcalApiContext.post("/days/", {
             data: {
@@ -17,6 +17,15 @@ test.describe.serial("Days API", () => {
         expect(json.id).toBeDefined();
         expect(json.user_id).toBe(user.uid);
         expect(json.date).toBe(today);
+    });
+
+    test("POST /days/ - malformed date", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.post("/days/", {
+            data: {
+                date: "not-a-date",
+            },
+        });
+        expect(response.status()).toBe(400);
     });
 
     test("POST days/:date/food - all valid inputs", async ({ kcalApiContext }) => {
