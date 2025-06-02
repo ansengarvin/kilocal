@@ -406,6 +406,11 @@ test.describe("DELETE /days/:date/food/:food_id", () => {
         expect(response.status()).toBe(400);
     });
 
+    test("malformed date", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.delete(`/days/not-a-date/food/1`);
+        expect(response.status()).toBe(400);
+    });
+
     test("unauthenticated api call delete item that exists (401)", async ({ kcalApiContext, noAuthApiContext }) => {
         // Create a food item with the correct user
         const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
