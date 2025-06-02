@@ -110,7 +110,7 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(401);
     });
 
-    test("negative calories", async ({ kcalApiContext }) => {
+    test("negative calories (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Negative Calories",
@@ -124,7 +124,7 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(400);
     });
 
-    test("negative carbs", async ({ kcalApiContext }) => {
+    test("negative carbs (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Negative Carbs",
@@ -138,7 +138,7 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(400);
     });
 
-    test("negative fat", async ({ kcalApiContext }) => {
+    test("negative fat (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Negative Fat",
@@ -152,7 +152,7 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(400);
     });
 
-    test("negative protein", async ({ kcalApiContext }) => {
+    test("negative protein (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Negative Protein",
@@ -164,6 +164,47 @@ test.describe("POST days/:date/food", () => {
             },
         });
         expect(response.status()).toBe(400);
+    });
+
+    test("negative amount (400)", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Negative Amount",
+                calories: 100,
+                amount: -1,
+                carbs: 0,
+                fat: 0,
+                protein: 0,
+            },
+        });
+        expect(response.status()).toBe(400);
+    });
+
+    test("floating point values for calories and macronutrients (201)", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Floating Point Food",
+                calories: 80.5,
+                amount: 1,
+                carbs: 20.2,
+                fat: 20.3,
+                protein: 20.4,
+            },
+        });
+        expect(response.status()).toBe(201);
+        const json = await response.json();
+        expect(json.id).toBeDefined();
+
+        // Get day and check that all values are the same
+        const responseGet = await kcalApiContext.get(`/days/${today}`);
+        expect(responseGet.status()).toBe(200);
+        const jsonGet = await responseGet.json();
+        expect(jsonGet.food).toBeDefined();
+        expect(jsonGet.food.length).toBe(1);
+        expect(jsonGet.totalCalories).toBe(80.5);
+        expect(jsonGet.totalCarbs).toBe(20.2);
+        expect(jsonGet.totalFat).toBe(20.3);
+        expect(jsonGet.totalProtein).toBe(20.4);
     });
 });
 
