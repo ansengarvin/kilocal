@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 const router = Router();
-import { requireAuthentication, syncFirebaseUserWithDB } from "../lib/authentication";
+import { requireAuthentication } from "../lib/authentication";
 import { getPool } from "../lib/database";
 
 /**
