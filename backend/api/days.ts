@@ -39,6 +39,13 @@ router.post("/", requireAuthentication, async function (req, res) {
             return;
         }
 
+        // Check if the date is properly formatted
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
+        if (!dateRegex.test(req.body.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            return;
+        }
+
         const pool = await getPool();
 
         // Check if the date already exists for this user
