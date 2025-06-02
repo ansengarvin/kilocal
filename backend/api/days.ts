@@ -195,6 +195,12 @@ router.get("/:date", requireAuthentication, async function (req, res) {
 
 router.delete("/:date/food/:food_id", requireAuthentication, async function (req, res) {
     try {
+        const foodRegex = /^\d+$/; // Ensure food_id is a number
+        if (!foodRegex.test(req.params.food_id)) {
+            res.status(400).send({ err: "Food ID must be a number" });
+            return;
+        }
+
         console.log("Attempting to get day id");
         let day_id = await get_day_id(req.user, req.params.date);
         const pool = await getPool();
