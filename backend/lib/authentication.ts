@@ -59,27 +59,3 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
         }
     }
 }
-
-export function requireVerification(req: Request, res: Response, next: NextFunction) {
-    const uid = req.user;
-
-    admin
-        .auth()
-        .getUser(uid.valueOf())
-        .then((user) => {
-            if (user.emailVerified) {
-                next();
-            } else {
-                res.status(403).send({
-                    err: "email not verified",
-                });
-                return;
-            }
-        })
-        .catch((err) => {
-            res.status(400).send({
-                err: err.message,
-            });
-            return;
-        });
-}
