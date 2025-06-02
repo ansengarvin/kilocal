@@ -298,6 +298,11 @@ test.describe("GET /days/", () => {
         expect(json.food.length).toBe(0);
     });
 
+    test("malformed date", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.get(`/days/not-a-date`);
+        expect(response.status()).toBe(400);
+    });
+
     test("get day with food items (200)", async ({ kcalApiContext }) => {
         const foodItems = [
             {
