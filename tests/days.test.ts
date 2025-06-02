@@ -253,6 +253,21 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(400);
     });
 
+    test("sql injection in date url param", async ({ kcalApiContext }) => {
+        const sqlInjectedDate = "2023-10-01' OR 1=1; --";
+        const response = await kcalApiContext.post(`/days/${sqlInjectedDate}/food`, {
+            data: {
+                name: "Generic",
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            },
+        });
+        expect(response.status()).toBe(400);
+    });
+
     test("sql injection in request body", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
