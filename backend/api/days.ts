@@ -110,7 +110,7 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             res.status(400).send({ err: "Protein must be a positive number" });
             return;
         }
-        if (req.body.amount && req.body.amount < 1) {
+        if (req.body.amount !== undefined && req.body.amount < 1) {
             res.status(400).send({ err: "Amount must be a positive number" });
             return;
         }
@@ -123,7 +123,7 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             .input("day_id", day_id)
             .input("name", req.body.name)
             .input("calories", req.body.calories)
-            .input("amount", req.body.amount || 1)
+            .input("amount", req.body.amount !== undefined ? req.body.amount : 1)
             .input("carbs", req.body.carbs || 0)
             .input("fat", req.body.fat || 0)
             .input("protein", req.body.protein || 0)
