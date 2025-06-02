@@ -239,7 +239,21 @@ test.describe("POST days/:date/food", () => {
         expect(jsonGet.totalProtein).toBe(20.4);
     });
 
-    test("sql injection", async ({ kcalApiContext }) => {
+    test("malformed date", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.post(`/days/not-a-date/food`, {
+            data: {
+                name: "Generic",
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            },
+        });
+        expect(response.status()).toBe(400);
+    });
+
+    test("sql injection in request body", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Generic'; DROP TABLE Days; --",
