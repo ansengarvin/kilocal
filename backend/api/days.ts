@@ -7,28 +7,28 @@ import { isDate, isNumber, isNumericID } from "../lib/utils";
 const router = Router();
 
 // Gets a day ID if the day entry exists.
-// If the day entry does not exist, creates then returns ID.
-//TODO: Using multiple SQL queries is probably not the way to do this - You can probably do it with a single SQL query.
-async function get_day_id(user_id: string, date: String) {
+
+async function get_day_id(user_id: string, date: String): Promise<number> {
     // SELECT
     const pool = await getPool();
     let result = await pool
         .request()
         .input("user_id", user_id)
         .input("date", date)
-        .query("SELECT id FROM days WHERE user_id = @user_id AND date = @date");
-
-    if (result.recordset.length !== 0) {
-        return result.recordset[0].id;
-    } else {
-        // INSERT
-        let insertResult = await pool
-            .request()
-            .input("user_id", user_id)
-            .input("date", date)
-            .query("INSERT INTO days(user_id, date) OUTPUT INSERTED.id VALUES(@user_id, @date)");
-        return insertResult.recordset[0].id;
-    }
+        .query(
+            `
+            MERGE INTO days AS target
+            USING (SELECT @user_id AS user_Id, @date AS date) AS source
+            ON source.user_id = target.user_id AND target.date = source.date
+            WHEN MATCHED THEN
+                UPDATE SET user_id = target.user_id
+            WHEN NOT MATCHED THEN
+                INSERT (user_id, date)
+                VALUES (source.user_id, source.date)
+            OUTPUT INSERTED.id;
+        `,
+        );
+    return result.recordset[0].id;
 }
 
 // Make a new day
@@ -121,8 +121,7 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
         }
 
         const pool = await getPool();
-        let day_id = await get_day_id(req.user, req.params.date);
-
+        const day_id = await get_day_id(req.user, req.params.date);
         const insertResult = await pool
             .request()
             .input("day_id", day_id)
@@ -134,10 +133,10 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             .input("protein", req.body.protein || 0)
             .input("position", 0) // TODO: Calculate position instead of 0
             .query(`
-                INSERT INTO Foods(day_id, name, calories, amount, carbs, fat, protein, position)
-                OUTPUT INSERTED.id, INSERTED.name, INSERTED.calories, INSERTED.amount, INSERTED.carbs, INSERTED.fat, INSERTED.protein
-                VALUES(@day_id, @name, @calories, @amount, @carbs, @fat, @protein, @position)
-            `);
+                    INSERT INTO Foods(day_id, name, calories, amount, carbs, fat, protein, position)
+                    OUTPUT INSERTED.id, INSERTED.name, INSERTED.calories, INSERTED.amount, INSERTED.carbs, INSERTED.fat, INSERTED.protein
+                    VALUES(@day_id, @name, @calories, @amount, @carbs, @fat, @protein, @position)
+                `);
 
         const row = insertResult.recordset[0];
         res.status(201).send({
