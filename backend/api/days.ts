@@ -110,6 +110,10 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             res.status(400).send({ err: "Protein must be a positive number" });
             return;
         }
+        if (req.body.amount && req.body.amount < 1) {
+            res.status(400).send({ err: "Amount must be a positive number" });
+            return;
+        }
 
         const pool = await getPool();
         let day_id = await get_day_id(req.user, req.params.date);
