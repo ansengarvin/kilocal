@@ -71,6 +71,7 @@ export function createTestWithUser(testName: string): TestType<
             const wrongUser = new TestUser(email, "BigTest1111!!!!");
             await wrongUser.createFirebaseUser();
             await wrongUser.getFirebaseToken();
+            // Sync the wrong user to ensure it has a database entry
             await use(wrongUser);
             await wrongUser.cleanup();
         },
@@ -94,6 +95,7 @@ export function createTestWithUser(testName: string): TestType<
                     Authorization: `Bearer ${wrongUser.token}`,
                 },
             });
+            await wrongUser.syncDatabase(wrongUserAPIContext);
             await use(wrongUserAPIContext);
             await wrongUserAPIContext.dispose();
         },

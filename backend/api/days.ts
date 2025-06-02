@@ -174,13 +174,23 @@ router.get("/:date", requireAuthentication, async function (req, res) {
 
 router.delete("/:date/food/:food_id", requireAuthentication, async function (req, res) {
     try {
+        console.log("Attempting to get day id");
         let day_id = await get_day_id(req.user, req.params.date);
         const pool = await getPool();
 
+        console.log(
+            "Attempting to delete now by user",
+            req.user,
+            "with food_id",
+            req.params.food_id,
+            "and day_id",
+            day_id,
+        );
         const result = await pool.request().input("food_id", req.params.food_id).input("day_id", day_id).query(`
                 DELETE FROM foods
                 WHERE id = @food_id AND day_id = @day_id
             `);
+        console.log("Result of delete:", result);
 
         // result.rowsAffected[0] contains the number of rows deleted
         if (result.rowsAffected[0] === 0) {
