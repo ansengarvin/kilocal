@@ -72,60 +72,22 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(401);
     });
 
-    test("negative calories (400)", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Negative Calories",
-                calories: -100,
+    test("negative numeric values", async ({ kcalApiContext }) => {
+        const numericFields = ["calories", "carbs", "fat", "protein", "amount"];
+        for (const field of numericFields) {
+            const data = {
+                name: "Generic",
+                calories: 80,
                 amount: 1,
-                carbs: 0,
-                fat: 0,
-                protein: 0,
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            };
+            data[field] = -10;
 
-    test("negative carbs (400)", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Negative Carbs",
-                calories: 100,
-                amount: 1,
-                carbs: -10,
-                fat: 0,
-                protein: 0,
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
-
-    test("negative fat (400)", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Negative Fat",
-                calories: 100,
-                amount: 1,
-                carbs: 0,
-                fat: -10,
-                protein: 0,
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
-
-    test("negative protein (400)", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Negative Protein",
-                calories: 100,
-                amount: 1,
-                carbs: 0,
-                fat: 0,
-                protein: -10,
-            },
-        });
-        expect(response.status()).toBe(400);
+            const response = await kcalApiContext.post(`/days/${today}/food`, { data });
+            expect(response.status()).toBe(400);
+        }
     });
 
     test("zero amount (400)", async ({ kcalApiContext }) => {
@@ -134,20 +96,6 @@ test.describe("POST days/:date/food", () => {
                 name: "Zero Amount",
                 calories: 100,
                 amount: 0,
-                carbs: 0,
-                fat: 0,
-                protein: 0,
-            },
-        });
-        expect(response.status()).toBe(400);
-    });
-
-    test("negative amount (400)", async ({ kcalApiContext }) => {
-        const response = await kcalApiContext.post(`/days/${today}/food`, {
-            data: {
-                name: "Negative Amount",
-                calories: 100,
-                amount: -1,
                 carbs: 0,
                 fat: 0,
                 protein: 0,
