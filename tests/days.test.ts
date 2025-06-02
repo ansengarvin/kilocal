@@ -238,6 +238,30 @@ test.describe("POST days/:date/food", () => {
         expect(jsonGet.totalFat).toBe(20.3);
         expect(jsonGet.totalProtein).toBe(20.4);
     });
+
+    test("sql injection", async ({ kcalApiContext }) => {
+        const response = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Generic'; DROP TABLE Days; --",
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            },
+        });
+        expect(response.status()).toBe(201);
+        const json = await response.json();
+        expect(json.id).toBeDefined();
+
+        // Verify both that the food item exists (e.g. the days table still exists)
+        const responseGet = await kcalApiContext.get(`/days/${today}`);
+        expect(responseGet.status()).toBe(200);
+        const jsonGet = await responseGet.json();
+        expect(jsonGet.food).toBeDefined();
+        expect(jsonGet.food.length).toBe(1);
+        expect(jsonGet.food[0].name).toBe("Generic'; DROP TABLE Days; --");
+    });
 });
 
 test.describe("GET /days/", () => {
@@ -325,6 +349,12 @@ test.describe("GET /days/", () => {
     test("unauthenticated (401)", async ({ noAuthApiContext }) => {
         const response = await noAuthApiContext.get(`/days/${today}`);
         expect(response.status()).toBe(401);
+    });
+
+    test("SQL Injection (400)", async ({ kcalApiContext }) => {
+        const sqlInjectedDate = "2023-10-01' OR 1=1; --";
+        const response = await kcalApiContext.get(`/days/${sqlInjectedDate}`);
+        expect(response.status()).toBe(400);
     });
 });
 
