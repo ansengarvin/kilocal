@@ -171,10 +171,8 @@ test.describe("DELETE /days/:date/food/:food_id", () => {
         const response = await kcalApiContext.delete(`/days/${today}/food/999999`);
         expect(response.status()).toBe(404);
     });
-});
 
-test.describe("Days API", () => {
-    test("/days/ POST->GET->DELETE flow", async ({ kcalApiContext }) => {
+    test("delete multiple items after getting / deleting", async ({ kcalApiContext }) => {
         // POST
         const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
