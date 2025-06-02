@@ -286,7 +286,7 @@ test.describe("POST days/:date/food", () => {
         expect(response.status()).toBe(400);
     });
 
-    test("sql injection in request body", async ({ kcalApiContext }) => {
+    test("sql injection in name", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
                 name: "Generic'; DROP TABLE Days; --",
@@ -308,5 +308,29 @@ test.describe("POST days/:date/food", () => {
         expect(jsonGet.food).toBeDefined();
         expect(jsonGet.food.length).toBe(1);
         expect(jsonGet.food[0].name).toBe("Generic'; DROP TABLE Days; --");
+    });
+
+    test("sql injection in numeric fields", async ({ kcalApiContext }) => {
+        const numericFields = ["calories", "amount", "carbs", "fat", "protein"];
+
+        for (const field of numericFields) {
+            // Use 'of' not 'in'
+            const data = {
+                name: "Generic",
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            };
+            data[field] = "80; DROP TABLE Days; --";
+
+            const response = await kcalApiContext.post(`/days/${today}/food`, { data });
+            expect(response.status()).toBe(400);
+
+            // Verify database integrity
+            const responseGet = await kcalApiContext.get(`/days/${today}`);
+            expect(responseGet.status()).toBe(200);
+        }
     });
 });

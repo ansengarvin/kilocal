@@ -13,13 +13,15 @@ admin.initializeApp({
 });
 
 export async function createFirebaseTestUser(email: string, password: string) {
-    // Delete if exists
+    // Edge case: delete user if one exists with the same email, in case cleanup failed for some reason
     try {
         await admin
             .auth()
             .getUserByEmail(email)
             .then((u) => admin.auth().deleteUser(u.uid));
-    } catch {}
+    } catch {
+        // There was no user to delete, but that's fine - We just proceed.
+    }
     // Create user
     const user = await admin.auth().createUser({ email, password, emailVerified: true });
     if (!user) {
