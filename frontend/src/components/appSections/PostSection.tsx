@@ -1,45 +1,33 @@
-import { UseQueryResult } from "@tanstack/react-query";
 import { FoodEntryStyle } from "../styles/FoodEntryStyle";
 import { AddIcon } from "../../lib/icons/AddIcon";
+import { useState } from "react";
+import { useAppDispatch } from "../../redux/store";
+import { journalDispatch } from "../../redux/journalSlice";
 
-interface postSectionProps {
-    foodPost: UseQueryResult<any, Error>;
-    foodName: string;
-    calories: number;
-    carbs: number;
-    protein: number;
-    fat: number;
-    setPostReady: Function;
-    setFoodName: Function;
-    setCalories: Function;
-    setCarbs: Function;
-    setProtein: Function;
-    setFat: Function;
-}
-
-export function PostSection(props: postSectionProps) {
-    const {
-        foodPost,
-        setPostReady,
-        foodName,
-        calories,
-        carbs,
-        protein,
-        fat,
-        setFoodName,
-        setCalories,
-        setCarbs,
-        setProtein,
-        setFat,
-    } = props;
-
+export function PostSection() {
+    const [foodName, setFoodName] = useState("");
+    const [calories, setCalories] = useState(0);
+    const [carbs, setCarbs] = useState(0);
+    const [protein, setProtein] = useState(0);
+    const [fat, setFat] = useState(0);
+    const dispatch = useAppDispatch();
     return (
         <FoodEntryStyle>
             <form
                 className="entryContainer"
                 onSubmit={(e) => {
                     e.preventDefault();
-                    setPostReady(true);
+                    dispatch(journalDispatch.clearAllErrors());
+                    dispatch(
+                        journalDispatch.postFoodEntry({
+                            name: foodName,
+                            calories: calories,
+                            carbs: carbs,
+                            protein: protein,
+                            fat: fat,
+                            amount: 1, // Default amount is 1
+                        }),
+                    );
                 }}
             >
                 <div className="row">
@@ -113,7 +101,6 @@ export function PostSection(props: postSectionProps) {
                     </div>
                 </div>
             </form>
-            {foodPost.data && foodPost.data["err"] && <>{foodPost.data["err"]}</>}
         </FoodEntryStyle>
     );
 }

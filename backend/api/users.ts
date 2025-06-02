@@ -9,15 +9,20 @@ router.post("/", requireAuthentication, async function (req, res) {
 });
 
 /**
- * This API call is a misnomer; what it really is is a firebase-database sync.
- * It checks if a user exists, and if they don't, create a user with the firebase UID.
- * # TODO: Consolidate this process of function calls into a single SQL query
+ * This call checks if the provided firebase UID exists as a user in the Kcal database,
+ * and creates a new table in the database if they do. If the provided email already exists in the database,
+ * that account is deleted and replaced with the new UID.
+ *
+ * This is done because Firebase Auth is treated as the sole authority on a users' vailidity.
  */
-router.post("/login", requireAuthentication, async function (req, res) {
+router.post("/sync", requireAuthentication, async function (req, res) {
     try {
         const pool = await getPool();
         const uid = req.user;
-        const result = await pool.request().input("id", uid).query("SELECT id FROM users WHERE id = @id");
+        const result = await pool
+            .request()
+            .input("id", uid)
+            .query("SELECT id, name, email, weight FROM users WHERE id = @id");
         if (result.recordset.length) {
             // User ID exists, free to proceed.
             res.status(200).send(result.recordset[0]);
@@ -30,6 +35,7 @@ router.post("/login", requireAuthentication, async function (req, res) {
         res.status(400).send({
             err: err.message,
         });
+        return;
     }
 });
 
@@ -40,13 +46,16 @@ router.delete("/:user_id", requireAuthentication, async function (req, res) {
         const result = await pool.request().input("id", userId).query("DELETE FROM users WHERE id = @id");
         if (result.rowsAffected[0] > 0) {
             res.status(204).send();
+            return;
         } else {
             res.status(404).send({ err: "User not found" });
+            return;
         }
     } catch (err) {
         res.status(400).send({
             err: err.message,
         });
+        return;
     }
 });
 
@@ -60,15 +69,18 @@ router.get("/", requireAuthentication, async function (req, res) {
             .query("SELECT id, name, email, weight FROM users WHERE id = @id");
         if (result.recordset.length) {
             res.status(200).send(result.recordset[0]);
+            return;
         } else {
             res.status(404).send({
                 err: "User not found",
             });
+            return;
         }
     } catch (err) {
         res.status(400).send({
             err: err.message,
         });
+        return;
     }
 });
 

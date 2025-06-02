@@ -1,65 +1,28 @@
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import { firebaseAuth } from "../lib/firebase";
-import { sendEmailVerification } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { LoginStyle } from "../components/styles/LoginStyle";
+import { RootState, useAppDispatch } from "../redux/store";
+import { useSelector } from "react-redux";
+import { userDispatch } from "../redux/userSlice";
 
 function Verify() {
-    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const user = useSelector((state: RootState) => state.user);
 
-    const { loggedIn, verified, isLoadingInitial } = useOutletContext<{
-        loggedIn: boolean;
-        verified: boolean;
-        isLoadingInitial: boolean;
-    }>();
-    const [resent, setResent] = useState(false);
-    const [isError, setIsError] = useState(false);
-
-    // Redirects
+    // Check if user is verified on an interval; If they are,
     useEffect(() => {
-        if (!isLoadingInitial) {
-            if (loggedIn) {
-                if (!verified) {
-                    navigate("/verify");
-                } else {
-                    navigate("/");
+        if (user.firebaseIsLoadedInitial && user.isLoggedIn && !user.isVerified) {
+            const interval = setInterval(async () => {
+                if (firebaseAuth.currentUser) {
+                    await firebaseAuth.currentUser.reload();
+                    dispatch(userDispatch.fetchUserFirebase());
                 }
-            } else {
-                navigate("/");
-            }
+                console.log("Interval");
+            }, 2000);
+
+            return () => clearInterval(interval);
         }
-    }, [verified, loggedIn]);
-
-    // Resends email verification
-    const resendMutation = useMutation({
-        mutationFn: async () => {
-            const user = firebaseAuth.currentUser;
-            user && (await sendEmailVerification(user));
-        },
-        onSuccess() {
-            setResent(true);
-        },
-        onError() {
-            setIsError(true);
-        },
-    });
-
-    // Signs user out
-    const [signoutError, setSignoutError] = useState(false);
-    const [signoutErrorMessage, setSignoutErrorMessage] = useState("");
-    const signOut = useMutation({
-        mutationFn: async () => {
-            await firebaseAuth.signOut();
-        },
-        onSuccess() {
-            console.log("User signed out");
-        },
-        onError(error) {
-            setSignoutError(true);
-            setSignoutErrorMessage(error.message);
-        },
-    });
+    }, [user.isLoggedIn, user.isVerified, dispatch]);
 
     return (
         <LoginStyle>
@@ -71,10 +34,7 @@ function Verify() {
                         className="grey half"
                         onClick={(e) => {
                             e.preventDefault;
-                            resendMutation.reset();
-                            resendMutation.mutate();
-                            setResent(false);
-                            setIsError(true);
+                            dispatch(userDispatch.resendVerificationEmail());
                         }}
                     >
                         Resend Link
@@ -84,15 +44,14 @@ function Verify() {
                         className="grey half"
                         onClick={(e) => {
                             e.preventDefault;
-                            signOut.mutate();
+                            dispatch(userDispatch.firebaseSignOut());
                         }}
                     >
                         Sign Out
                     </button>
                 </div>
-                {isError ? <p>Error sending verification email</p> : <></>}
-                {resent ? <p>Verification email resent</p> : <></>}
-                {signoutError ? <p>Error signing out: {signoutErrorMessage}</p> : <></>}
+                {user.resendVerificationStatus && <>{user.resendVerificationStatus}</>}
+                {user.signOutError ? <p>Error signing out: {user.signOutError}</p> : <></>}
             </div>
             <br />
             <span>

@@ -21,6 +21,8 @@ function rebuild () {
 function up() {
 	npx firebase emulators:start &
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml -f docker-compose.db.yaml up --build -d
+	echo "Waiting 8 seconds for database setup..."
+    sleep 8
 	docker exec -i mssql //opt/mssql-tools18/bin/sqlcmd -S "tcp:mssql,1433" -U sa -P 'YourStrong!Passw0rd' -d master -i //docker-entrypoint-initdb.d/dev.sql -C
 	npm run dev --prefix frontend
 }

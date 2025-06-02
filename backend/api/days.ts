@@ -68,11 +68,13 @@ router.post("/", requireAuthentication, async function (req, res) {
                 user_id: row.user_id,
                 date: row.date.toISOString().split("T")[0], // split date or it will be in format yyyy-mm-ddT00:00:00
             });
+            return;
         }
     } catch (err) {
         res.status(500).send({
             error: err,
         });
+        return;
     }
 });
 
@@ -106,6 +108,7 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
         res.status(201).send({
             id: insertResult.recordset[0].id,
         });
+        return;
     } catch (err) {
         if (err instanceof RequestError) {
             console.log("RequestError:", err);
@@ -115,6 +118,7 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             return;
         } else {
             res.status(500).send({ err: "Internal server error" });
+            return;
         }
     }
 });
@@ -149,10 +153,12 @@ router.get("/:date", requireAuthentication, async function (req, res) {
             totalFat: totalFat,
             food: result.recordset,
         });
+        return;
     } catch (err) {
         res.status(500).send({
             err: err,
         });
+        return;
     }
 });
 
@@ -171,13 +177,16 @@ router.delete("/:date/food/:food_id", requireAuthentication, async function (req
             res.status(404).send({
                 err: "Food not found",
             });
+            return;
         } else {
             res.status(204).send();
+            return;
         }
     } catch (err) {
         res.status(500).send({
             err: err,
         });
+        return;
     }
 });
 

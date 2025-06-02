@@ -1,6 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 
+/*
+    This is the client API key, which is not supposed to be secret; It's how the client
+    determines which firebase project to send to. It's fine to have here.
+*/
 const firebaseConfig = {
     apiKey: "AIzaSyD0sR_vCnUWa1ZkuhvyTCwYD6P70e3qGFA",
     authDomain: "ag-kilocal.firebaseapp.com",

@@ -1,11 +1,14 @@
-import { useState, ReactNode, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import styled from "@emotion/styled";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { firebaseAuth } from "../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { tabletView } from "../../lib/defines";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "../../redux/store";
+import { userDispatch } from "../../redux/userSlice";
 //import { useQuery } from '@tanstack/react-query'
 
 interface RootProps {
@@ -40,33 +43,55 @@ const Grid = styled.div`
 export function Root(props: RootProps) {
     const { children } = props;
 
-    const [isLoadingInitial, setIsLoadingInitial] = useState(true);
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [verified, setVerified] = useState(false);
+    const user = useSelector((state: RootState) => state.user);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // Sets status to loggedIn if user is logged in
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-            if (user) {
-                if (user.emailVerified) {
-                    setVerified(true);
-                } else {
-                    setVerified(false);
-                }
-                setLoggedIn(true);
-            } else {
-                setLoggedIn(false);
-            }
-            setIsLoadingInitial(false);
+        const unsubscribe = onAuthStateChanged(firebaseAuth, () => {
+            dispatch(userDispatch.fetchUserFirebase());
+            dispatch(userDispatch.setFirebaseLoadedInitial(true));
         });
         return () => unsubscribe();
-    }, [firebaseAuth]);
+    }, []);
 
-    if (isLoadingInitial) {
+    // Perform database sync immediately on firebase load if user is verified, or upon user verification.
+    useEffect(() => {
+        if (user.isLoggedIn && user.isVerified && !user.isSyncing) {
+            // Sync to database
+            dispatch(userDispatch.databaseSync());
+        }
+    }, [user.firebaseIsLoadedInitial, user.isVerified]);
+
+    // Handle redirects
+    useEffect(() => {
+        if (user.firebaseIsLoadedInitial && !user.isSyncing) {
+            if (!user.isLoggedIn) {
+                if (location.pathname !== "/" && location.pathname !== "/login" && location.pathname !== "/signup") {
+                    navigate("/");
+                }
+                return;
+            }
+            if (!user.isVerified) {
+                if (location.pathname !== "/verify") {
+                    navigate("/verify");
+                }
+                return;
+            }
+            if (location.pathname === "/verify" || location.pathname === "/login" || location.pathname === "/signup") {
+                navigate("/");
+                return;
+            }
+        }
+    }, [user.firebaseIsLoadedInitial, user.isVerified, user.isLoggedIn, user.isSyncing, location.pathname]);
+
+    if (!user.firebaseIsLoadedInitial) {
         return (
             <>
                 <Grid>
-                    <Header loggedIn={loggedIn} />
+                    <Header />
                     <main>LOADING</main>
                     <Footer />
                 </Grid>
@@ -76,21 +101,8 @@ export function Root(props: RootProps) {
         return (
             <>
                 <Grid>
-                    <Header loggedIn={loggedIn} />
-                    <main>
-                        {children || (
-                            <Outlet
-                                context={{
-                                    loggedIn,
-                                    setLoggedIn,
-                                    verified,
-                                    setVerified,
-                                    isLoadingInitial,
-                                    setIsLoadingInitial,
-                                }}
-                            />
-                        )}
-                    </main>
+                    <Header />
+                    <main>{children || <Outlet />}</main>
                     <Footer />
                 </Grid>
             </>

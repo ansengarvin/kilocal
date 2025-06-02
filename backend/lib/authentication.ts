@@ -22,6 +22,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
         res.status(401).send({
             err: "no authorization header",
         });
+        return;
     } else {
         const token = authHeader.split("Bearer ")[1];
 
@@ -30,6 +31,7 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
             res.status(401).send({
                 err: "missing auth token",
             });
+            return;
         } else {
             admin
                 .auth()
@@ -45,11 +47,13 @@ export function requireAuthentication(req: Request, res: Response, next: NextFun
                             err: "Firebase Auth service not found (ENOTFOUND)",
                             details: err.message,
                         });
+                        return;
                     } else {
                         res.status(401).send({
                             err: "invalid auth token",
                             details: err.message,
                         });
+                        return;
                     }
                 });
         }
@@ -69,12 +73,14 @@ export function requireVerification(req: Request, res: Response, next: NextFunct
                 res.status(403).send({
                     err: "email not verified",
                 });
+                return;
             }
         })
         .catch((err) => {
             res.status(400).send({
                 err: err.message,
             });
+            return;
         });
 }
 
@@ -173,7 +179,10 @@ export async function syncFirebaseUserWithDB(req: Request, res: Response) {
     const email = req.email;
 
     // Check if the user's email exists in the database
-    const result = await pool.request().input("email", email).query("SELECT id FROM users WHERE email = @email");
+    const result = await pool
+        .request()
+        .input("email", email)
+        .query("SELECT id, name, email, weight FROM users WHERE email = @email");
 
     if (result.recordset.length) {
         const dbUserId = result.recordset[0].id;
