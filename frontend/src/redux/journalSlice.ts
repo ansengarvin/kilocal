@@ -74,10 +74,10 @@ const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: N
     });
     if (!response.ok) {
         const error = await response.json();
-        return thunkAPI.rejectWithValue(error);
+        return thunkAPI.rejectWithValue(error.message);
     }
     thunkAPI.dispatch(fetchDayByDate()); // Refresh the journal data after deleting
-    return response.json();
+    return true;
 });
 
 const initialState: JournalState = {
