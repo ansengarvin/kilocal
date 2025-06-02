@@ -7,3 +7,7 @@ export function isNumericID(value: string): boolean {
     const numericIDRegex = /^\d+$/; // Ensure food_id is a number
     return numericIDRegex.test(value);
 }
+
+export function isNumber(value: any): boolean {
+    return typeof value === "number" && !isNaN(value);
+}

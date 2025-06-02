@@ -2,7 +2,7 @@ import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
 import { getPool } from "../lib/database";
 import { RequestError } from "mssql";
-import { isDate, isNumericID } from "../lib/utils";
+import { isDate, isNumber, isNumericID } from "../lib/utils";
 
 const router = Router();
 
@@ -99,23 +99,23 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             return;
         }
 
-        if (req.body.calories < 0) {
+        if (!isNumber(req.body.calories) || req.body.calories < 0) {
             res.status(400).send({ err: "Calories must be a positive number" });
             return;
         }
-        if (req.body.carbs && req.body.carbs < 0) {
+        if (req.body.carbs && (!isNumber(req.body.carbs) || req.body.carbs < 0)) {
             res.status(400).send({ err: "Carbs must be a positive number" });
             return;
         }
-        if (req.body.fat && req.body.fat < 0) {
+        if (req.body.fat && (!isNumber(req.body.fat) || req.body.fat < 0)) {
             res.status(400).send({ err: "Fat must be a positive number" });
             return;
         }
-        if (req.body.protein && req.body.protein < 0) {
+        if (req.body.protein && (!isNumber(req.body.protein) || req.body.protein < 0)) {
             res.status(400).send({ err: "Protein must be a positive number" });
             return;
         }
-        if (req.body.amount !== undefined && req.body.amount < 1) {
+        if (req.body.amount !== undefined && (!isNumber(req.body.amount) || req.body.amount < 1)) {
             res.status(400).send({ err: "Amount must be a positive number" });
             return;
         }
