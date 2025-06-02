@@ -6,7 +6,7 @@ let date = new Date();
 const today = date.toISOString().split("T")[0];
 
 test.describe("POST /days/", () => {
-    test("create a day with a valid date", async ({ user, kcalApiContext }) => {
+    test("create a day with a valid date (201)", async ({ user, kcalApiContext }) => {
         const response = await kcalApiContext.post("/days/", {
             data: {
                 date: today,
@@ -19,7 +19,7 @@ test.describe("POST /days/", () => {
         expect(json.date).toBe(today);
     });
 
-    test("malformed date", async ({ kcalApiContext }) => {
+    test("malformed date (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post("/days/", {
             data: {
                 date: "not-a-date",
@@ -28,7 +28,7 @@ test.describe("POST /days/", () => {
         expect(response.status()).toBe(400);
     });
 
-    test("no request body", async ({ kcalApiContext }) => {
+    test("no request body (400)", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.post("/days/", {});
         expect(response.status()).toBe(400);
     });
@@ -200,12 +200,44 @@ test.describe("GET /days/", () => {
 });
 
 test.describe("DELETE /days/:date/food/:food_id", () => {
+    test("single item", async ({ kcalApiContext }) => {
+        // Create a food item
+        const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Generic",
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            },
+        });
+        expect(responsePost.status()).toBe(201);
+        const jsonPost = await responsePost.json();
+        expect(jsonPost.id).toBeDefined();
+
+        // Delete the food item
+        const responseDelete = await kcalApiContext.delete(`/days/${today}/food/${jsonPost.id}`);
+        expect(responseDelete.status()).toBe(204);
+        expect(await responseDelete.text()).toBe("");
+
+        // Verify the item is deleted
+        const responseGet = await kcalApiContext.get(`/days/${today}`);
+        expect(responseGet.status()).toBe(200);
+        const jsonGet = await responseGet.json();
+        expect(jsonGet.totalCalories).toBe(0);
+        expect(jsonGet.totalCarbs).toBe(0);
+        expect(jsonGet.totalFat).toBe(0);
+        expect(jsonGet.totalProtein).toBe(0);
+        expect(jsonGet.food).toEqual([]);
+    });
+
     test("nonexistant item", async ({ kcalApiContext }) => {
         const response = await kcalApiContext.delete(`/days/${today}/food/999999`);
         expect(response.status()).toBe(404);
     });
 
-    test("delete another user's item by an unauthenticated api call", async ({ kcalApiContext, noAuthApiContext }) => {
+    test("unauthenticated api call delete item that exists (401)", async ({ kcalApiContext, noAuthApiContext }) => {
         // Create a food item with the correct user
         const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
@@ -226,7 +258,7 @@ test.describe("DELETE /days/:date/food/:food_id", () => {
         expect(responseDelete.status()).toBe(401);
     });
 
-    test("wrong user deleting another user's item", async ({ kcalApiContext, wrongUserAPIContext }) => {
+    test("wrong user deleting another user's item (404)", async ({ kcalApiContext, wrongUserAPIContext }) => {
         // Create a food item with the correct user
         const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
             data: {
