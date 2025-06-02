@@ -229,4 +229,23 @@ test.describe("POST days/:date/food", () => {
             expect(responseGet.status()).toBe(200);
         }
     });
+
+    test("special characters in name", async ({ kcalApiContext }) => {
+        const specialNames = ["🍕PIZZA🍕", "北京烤鸭", "Пельмени", "dîáçrìtïçs"];
+        for (const specialName of specialNames) {
+            const data = {
+                name: specialName,
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            };
+            const response = await kcalApiContext.post(`/days/${today}/food`, { data });
+            expect(response.status()).toBe(201);
+            const json = await response.json();
+            expect(json.id).toBeDefined();
+            expect(json.name).toBe(specialName);
+        }
+    });
 });
