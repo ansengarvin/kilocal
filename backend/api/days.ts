@@ -5,6 +5,16 @@ import { RequestError } from "mssql";
 
 const router = Router();
 
+function isDate(date: string): boolean {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
+    return dateRegex.test(date);
+}
+
+function isNumericID(value: string): boolean {
+    const numericIDRegex = /^\d+$/; // Ensure food_id is a number
+    return numericIDRegex.test(value);
+}
+
 // Gets a day ID if the day entry exists.
 // If the day entry does not exist, creates then returns ID.
 //TODO: Using multiple SQL queries is probably not the way to do this - You can probably do it with a single SQL query.
@@ -40,8 +50,7 @@ router.post("/", requireAuthentication, async function (req, res) {
         }
 
         // Check if the date is properly formatted
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
-        if (!dateRegex.test(req.body.date)) {
+        if (!isDate(req.body.date)) {
             res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
             return;
         }
@@ -91,6 +100,11 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
     try {
         if (!req.body || req.body.calories == null || req.body.name == null) {
             res.status(400).send({ err: "entry must have request body with calories" });
+            return;
+        }
+
+        if (!isDate(req.params.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
             return;
         }
 
@@ -156,6 +170,11 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
 // Gets the contents of a day
 router.get("/:date", requireAuthentication, async function (req, res) {
     try {
+        if (!isDate(req.params.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            return;
+        }
+
         let day_id = await get_day_id(req.user, req.params.date);
 
         const pool = await getPool();
@@ -195,9 +214,13 @@ router.get("/:date", requireAuthentication, async function (req, res) {
 
 router.delete("/:date/food/:food_id", requireAuthentication, async function (req, res) {
     try {
-        const foodRegex = /^\d+$/; // Ensure food_id is a number
-        if (!foodRegex.test(req.params.food_id)) {
-            res.status(400).send({ err: "Food ID must be a number" });
+        if (!isDate(req.params.date)) {
+            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            return;
+        }
+
+        if (!isNumericID(req.params.food_id)) {
+            res.status(400).send({ err: "Food ID must be a numeric value" });
             return;
         }
 
