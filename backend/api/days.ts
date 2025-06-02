@@ -2,18 +2,9 @@ import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
 import { getPool } from "../lib/database";
 import { RequestError } from "mssql";
+import { isDate, isNumericID } from "../lib/utils";
 
 const router = Router();
-
-function isDate(date: string): boolean {
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
-    return dateRegex.test(date);
-}
-
-function isNumericID(value: string): boolean {
-    const numericIDRegex = /^\d+$/; // Ensure food_id is a number
-    return numericIDRegex.test(value);
-}
 
 // Gets a day ID if the day entry exists.
 // If the day entry does not exist, creates then returns ID.
