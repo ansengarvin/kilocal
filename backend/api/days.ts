@@ -94,6 +94,23 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             return;
         }
 
+        if (req.body.calories < 0) {
+            res.status(400).send({ err: "Calories must be a positive number" });
+            return;
+        }
+        if (req.body.carbs && req.body.carbs < 0) {
+            res.status(400).send({ err: "Carbs must be a positive number" });
+            return;
+        }
+        if (req.body.fat && req.body.fat < 0) {
+            res.status(400).send({ err: "Fat must be a positive number" });
+            return;
+        }
+        if (req.body.protein && req.body.protein < 0) {
+            res.status(400).send({ err: "Protein must be a positive number" });
+            return;
+        }
+
         const pool = await getPool();
         let day_id = await get_day_id(req.user, req.params.date);
 
