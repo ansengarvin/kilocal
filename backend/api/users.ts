@@ -1,38 +1,46 @@
 import { Router } from "express";
 
 const router = Router();
-import { requireAuthentication, syncFirebaseUserWithDB } from "../lib/authentication";
+import { requireAuthentication } from "../lib/authentication";
 import { getPool } from "../lib/database";
 
-router.post("/", requireAuthentication, async function (req, res) {
-    syncFirebaseUserWithDB(req, res);
-});
-
 /**
- * This call checks if the provided firebase UID exists as a user in the Kcal database,
- * and creates a new table in the database if they do. If the provided email already exists in the database,
- * that account is deleted and replaced with the new UID.
- *
- * This is done because Firebase Auth is treated as the sole authority on a users' vailidity.
+ * This call exists to treat Firebase as the sole authority on user identification.
+ * If an identical email exists to the Firebase email that does not belong to its ID, it is deleted.
+ * Afterwards, this call ensures that our database has a column that corresponds with Firebase's auth.
  */
 router.post("/sync", requireAuthentication, async function (req, res) {
     try {
         const pool = await getPool();
         const uid = req.user;
+        const email = req.email;
+        const name = req.body.name;
+        const weight = req.body.weight;
         const result = await pool
             .request()
             .input("id", uid)
-            .query("SELECT id, name, email, weight FROM users WHERE id = @id");
-        if (result.recordset.length) {
-            // User ID exists, free to proceed.
-            res.status(200).send(result.recordset[0]);
-            return;
-        } else {
-            // User ID doesn't exist, need to perform a sync.
-            await syncFirebaseUserWithDB(req, res);
-        }
+            .input("email", email)
+            .input("name", name)
+            .input("weight", weight)
+            .query(
+                `
+                    DELETE FROM users WHERE email = @email AND id <> @id;
+                    
+                    MERGE INTO users WITH (HOLDLOCK) AS target
+                    USING (SELECT @id AS id, @email AS email, @name AS name, @weight AS weight) AS source
+                    ON source.id = target.id
+                    WHEN MATCHED THEN
+                        UPDATE SET name = source.name, weight = source.weight
+                    WHEN NOT MATCHED THEN
+                        INSERT (id, email, name, weight)
+                        VALUES (source.id, source.email, source.name, source.weight)
+                    OUTPUT inserted.id, inserted.name, inserted.email, inserted.weight;
+                `,
+            );
+        res.status(200).send(result.recordset[0]);
+        return;
     } catch (err) {
-        res.status(400).send({
+        res.status(500).send({
             err: err.message,
         });
         return;
