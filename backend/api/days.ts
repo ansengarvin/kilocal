@@ -135,7 +135,7 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
             .input("position", 0) // TODO: Calculate position instead of 0
             .query(`
                 INSERT INTO Foods(day_id, name, calories, amount, carbs, fat, protein, position)
-                OUTPUT INSERTED.id
+                OUTPUT INSERTED.id, INSERTED.name, INSERTED.calories, INSERTED.amount, INSERTED.carbs, INSERTED.fat, INSERTED.protein
                 VALUES(@day_id, @name, @calories, @amount, @carbs, @fat, @protein, @position)
             `);
 
