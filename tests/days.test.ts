@@ -226,6 +226,28 @@ test.describe("DELETE /days/:date/food/:food_id", () => {
         expect(responseDelete.status()).toBe(401);
     });
 
+    test("wrong user deleting another user's item", async ({ kcalApiContext, wrongUserAPIContext }) => {
+        // Create a food item with the correct user
+        const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
+            data: {
+                name: "Generic",
+                calories: 80,
+                amount: 1,
+                carbs: 20,
+                fat: 20,
+                protein: 20,
+            },
+        });
+        expect(responsePost.status()).toBe(201);
+        const jsonPost = await responsePost.json();
+        expect(jsonPost.id).toBeDefined();
+
+        // Attempt to delete it with the wrong user
+        const responseDelete = await wrongUserAPIContext.delete(`/days/${today}/food/${jsonPost.id}`);
+        // return 404 so we don't reveal that the item id actually exists
+        expect(responseDelete.status()).toBe(404);
+    });
+
     test("delete multiple items and flow POST->GET->DELETE", async ({ kcalApiContext }) => {
         // POST
         const responsePost = await kcalApiContext.post(`/days/${today}/food`, {
