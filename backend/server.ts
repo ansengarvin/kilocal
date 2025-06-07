@@ -25,6 +25,7 @@ declare global {
             user?: string;
             admin?: boolean;
             email?: string;
+            dayID?: number;
         }
     }
 }
