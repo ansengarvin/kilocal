@@ -10,20 +10,16 @@ export function FoodEntries() {
     return (
         <FoodEntryStyle>
             <table className="entryContainer" tabIndex={0}>
-                {true ? (
-                    <thead>
-                        <tr>
-                            <th className="foodName">Food</th>
-                            <th className="calories">Calories</th>
-                            <th className="carbs">Carbs</th>
-                            <th className="protein">Protein</th>
-                            <th className="fat">Fat</th>
-                            <th className="buttons"> </th>
-                        </tr>
-                    </thead>
-                ) : (
-                    <></>
-                )}
+                <thead>
+                    <tr>
+                        <th className="foodName">Food</th>
+                        <th className="calories">Calories</th>
+                        <th className="carbs">Carbs</th>
+                        <th className="protein">Protein</th>
+                        <th className="fat">Fat</th>
+                        <th className="buttons"> </th>
+                    </tr>
+                </thead>
 
                 <tbody>
                     {food
