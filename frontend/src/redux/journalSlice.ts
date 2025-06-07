@@ -62,7 +62,7 @@ const postFoodEntry = createAsyncThunk("journal/postFoodEntry", async (food: Foo
     return response.json();
 });
 
-const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: Number, thunkAPI) => {
+const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: number, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
     const response = await fetch(`${apiURL}/days/${state.journal.day}/food/${id}`, {

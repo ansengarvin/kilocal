@@ -29,7 +29,7 @@ function Profile() {
                 )}
                 <SignOutButton
                     onClick={(e) => {
-                        e.preventDefault;
+                        e.preventDefault();
                         dispatch(userDispatch.firebaseSignOut());
                     }}
                 >
