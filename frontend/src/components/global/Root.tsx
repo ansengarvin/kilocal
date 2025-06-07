@@ -63,7 +63,7 @@ export function Root(props: RootProps) {
             // Sync to database
             dispatch(userDispatch.databaseSync());
         }
-    }, [user.isLoggedIn, user.firebaseIsLoadedInitial, user.isVerified, dispatch]);
+    }, [user.isLoggedIn, user.firebaseIsLoadedInitial, user.isVerified, user.isSyncing, dispatch]);
 
     // Handle redirects
     useEffect(() => {
