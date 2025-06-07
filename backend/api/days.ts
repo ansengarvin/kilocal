@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { requireAuthentication } from "../lib/authentication";
 import { getPool } from "../lib/database";
-import { RequestError } from "mssql";
 import { isDate, isNumber, isNumericID } from "../lib/utils";
 import { requireBody, requireDayID, requireValidDateParam } from "../lib/middleware";
 
