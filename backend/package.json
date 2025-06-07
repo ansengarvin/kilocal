@@ -5,22 +5,25 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "npx ts-node server.ts",
-        "dev": "nodemon server.ts"
+        "dev": "nodemon server.ts",
+        "lint": "eslint ."
     },
     "author": "",
     "license": "ISC",
     "description": "",
     "dependencies": {
-        "@types/express": "^5.0.0",
         "cors": "^2.8.5",
         "express": "^4.21.2",
         "firebase-admin": "^13.0.2",
         "mssql": "^11.0.1",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.7.2"
+        "ts-node": "^10.9.2"
     },
     "devDependencies": {
+        "@types/express": "^5.0.3",
         "@types/mssql": "^9.1.7",
-        "nodemon": "^3.1.7"
+        "eslint": "^9.28.0",
+        "nodemon": "^3.1.7",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.33.1"
     }
 }
