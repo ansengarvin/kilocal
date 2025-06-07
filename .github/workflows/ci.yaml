@@ -4,8 +4,8 @@ on:
     pull_request:
 
 jobs:
-    lint:
-        name: lint(prettier)
+    format:
+        name: format (prettier)
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
@@ -19,7 +19,7 @@ jobs:
             - name: Cache dependencies
               uses: actions/cache@v4
               with:
-                  key: ci-lint-node-modules-${{ hashFiles('**/package-lock.json') }}
+                  key: ci-format-node-modules-${{ hashFiles('**/package-lock.json') }}
                   path: node_modules
 
             - name: Install dependencies
@@ -27,6 +27,31 @@ jobs:
 
             - name: Check code formatting with prettier
               run: npx prettier . --check
+
+    lint_frontend:
+        name: lint frontend (eslint)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+
+            - name: Cache dependencies
+              uses: actions/cache@v4
+              with:
+                  key: ci-lint-frontend-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+            - name: Install dependencies
+              run: npm install
+              working-directory: frontend
+
+            - name: Run ESLint
+              run: npx eslint .
+              working-directory: frontend
 
     build_frontend:
         name: validate frontend
