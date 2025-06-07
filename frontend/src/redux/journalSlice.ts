@@ -33,7 +33,6 @@ export interface JournalState {
 const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
-    console.log(token);
     const response = await fetch(`${apiURL}/days/${state.journal.day}`, {
         method: "GET",
         headers: {
@@ -107,7 +106,6 @@ export const journalSlice = createSlice({
             state.day = thisDay.toISOString().split("T")[0]; // Store date in ISO format
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
-            console.log(`Next day: ${state.day}, isToday: ${state.isToday}, dayName: ${state.dayName}}`);
         },
         prevDay(state) {
             const thisDay = new Date(state.day);
@@ -116,7 +114,6 @@ export const journalSlice = createSlice({
             // Technically the UI shouldn't allow us to go into a future day, but check this anyway
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
-            console.log(`Previous day: ${state.day}, isToday: ${state.isToday}, dayName: ${state.dayName}`);
         },
         clearAllErrors(state) {
             state.fetchError = null;

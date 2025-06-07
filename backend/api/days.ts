@@ -135,8 +135,6 @@ router.post(
 // Gets the contents of a day
 router.get("/:date", requireAuthentication, requireValidDateParam, requireDayID, async function (req, res) {
     try {
-        console.log(req.params.date);
-
         const pool = await getPool();
         const result = await pool
             .request()
