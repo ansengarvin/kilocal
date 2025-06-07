@@ -21,7 +21,7 @@ function Verify() {
 
             return () => clearInterval(interval);
         }
-    }, [user.isLoggedIn, user.isVerified, dispatch]);
+    }, [user.firebaseIsLoadedInitial, user.isLoggedIn, user.isVerified, dispatch]);
 
     return (
         <LoginStyle>
