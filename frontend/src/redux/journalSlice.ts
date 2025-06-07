@@ -16,7 +16,6 @@ export interface Food {
 export interface JournalState {
     day: string;
     dayName: string;
-    apiDate: string;
     isToday?: boolean;
     totalCalories: number;
     totalCarbs: number;
@@ -34,7 +33,8 @@ export interface JournalState {
 const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
-    const response = await fetch(`${apiURL}/days/${state.journal.apiDate}`, {
+    console.log(token);
+    const response = await fetch(`${apiURL}/days/${state.journal.day}`, {
         method: "GET",
         headers: {
             Authorization: "Bearer " + token,
@@ -47,7 +47,7 @@ const postFoodEntry = createAsyncThunk("journal/postFoodEntry", async (food: Foo
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
     const queryBody = JSON.stringify(food);
-    const response = await fetch(`${apiURL}/days/${state.journal.apiDate}/food`, {
+    const response = await fetch(`${apiURL}/days/${state.journal.day}/food`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const postFoodEntry = createAsyncThunk("journal/postFoodEntry", async (food: Foo
 const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: Number, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
-    const response = await fetch(`${apiURL}/days/${state.journal.apiDate}/food/${id}`, {
+    const response = await fetch(`${apiURL}/days/${state.journal.day}/food/${id}`, {
         method: "DELETE",
         headers: {
             Authorization: "Bearer " + token,
@@ -81,9 +81,8 @@ const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: N
 });
 
 const initialState: JournalState = {
-    day: new Date().toISOString(),
+    day: new Date().toISOString().split("T")[0], // Start with today's date in ISO format
     dayName: getJournalDayName(new Date()),
-    apiDate: getAPIDate(new Date()),
     totalCalories: 0,
     totalCarbs: 0,
     totalProtein: 0,
@@ -105,19 +104,19 @@ export const journalSlice = createSlice({
         nextDay(state) {
             const thisDay = new Date(state.day);
             thisDay.setDate(thisDay.getDate() + 1);
-            state.day = thisDay.toISOString();
+            state.day = thisDay.toISOString().split("T")[0]; // Store date in ISO format
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
-            state.apiDate = getAPIDate(thisDay);
+            console.log(`Next day: ${state.day}, isToday: ${state.isToday}, dayName: ${state.dayName}}`);
         },
         prevDay(state) {
             const thisDay = new Date(state.day);
             thisDay.setDate(thisDay.getDate() - 1);
-            state.day = thisDay.toISOString();
+            state.day = thisDay.toISOString().split("T")[0]; // Store date in ISO format
             // Technically the UI shouldn't allow us to go into a future day, but check this anyway
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
-            state.apiDate = getAPIDate(thisDay);
+            console.log(`Previous day: ${state.day}, isToday: ${state.isToday}, dayName: ${state.dayName}`);
         },
         clearAllErrors(state) {
             state.fetchError = null;
@@ -145,7 +144,6 @@ export const journalSlice = createSlice({
                 // Update the day name and apiDate based on the fetched date
                 const fetchedDate = new Date(state.day);
                 state.dayName = getJournalDayName(fetchedDate);
-                state.apiDate = getAPIDate(fetchedDate);
             })
             .addCase(fetchDayByDate.rejected, (state, action) => {
                 state.isFetching = false;
@@ -200,12 +198,4 @@ function getJournalDayName(date: Date): string {
     const day = date.getDate();
     const year = date.getFullYear();
     return `${month} ${day}, ${year}`;
-}
-
-function getAPIDate(date: Date) {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
-    return `${year}-${month}-${day}`;
 }

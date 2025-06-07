@@ -3,6 +3,7 @@ import { requireAuthentication } from "../lib/authentication";
 import { getPool } from "../lib/database";
 import { RequestError } from "mssql";
 import { isDate, isNumber, isNumericID } from "../lib/utils";
+import { requireBody, requireValidDateParam } from "../lib/middleware";
 
 const router = Router();
 
@@ -32,7 +33,7 @@ async function get_day_id(user_id: string, date: String): Promise<number> {
 }
 
 // Make a new day
-router.post("/", requireAuthentication, async function (req, res) {
+router.post("/", requireAuthentication, requireBody, async function (req, res) {
     try {
         // Ensure user_id and date provided
         if (!req.body || !req.body.date) {
@@ -42,7 +43,7 @@ router.post("/", requireAuthentication, async function (req, res) {
 
         // Check if the date is properly formatted
         if (!isDate(req.body.date)) {
-            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
+            res.status(400).send({ err: `Date must be in YYYY-MM-DD format. Your date is ${req.body.date}` });
             return;
         }
 
@@ -87,15 +88,10 @@ router.post("/", requireAuthentication, async function (req, res) {
 });
 
 // Add a food to a day
-router.post("/:date/food", requireAuthentication, async function (req, res) {
+router.post("/:date/food", requireAuthentication, requireBody, requireValidDateParam, async function (req, res) {
     try {
-        if (!req.body || req.body.calories == null || req.body.name == null) {
+        if (req.body.calories == null || req.body.name == null) {
             res.status(400).send({ err: "entry must have request body with calories" });
-            return;
-        }
-
-        if (!isDate(req.params.date)) {
-            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
             return;
         }
 
@@ -157,12 +153,9 @@ router.post("/:date/food", requireAuthentication, async function (req, res) {
 });
 
 // Gets the contents of a day
-router.get("/:date", requireAuthentication, async function (req, res) {
+router.get("/:date", requireAuthentication, requireValidDateParam, async function (req, res) {
     try {
-        if (!isDate(req.params.date)) {
-            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
-            return;
-        }
+        console.log(req.params.date);
 
         let day_id = await get_day_id(req.user, req.params.date);
 
@@ -201,13 +194,8 @@ router.get("/:date", requireAuthentication, async function (req, res) {
     }
 });
 
-router.delete("/:date/food/:food_id", requireAuthentication, async function (req, res) {
+router.delete("/:date/food/:food_id", requireAuthentication, requireValidDateParam, async function (req, res) {
     try {
-        if (!isDate(req.params.date)) {
-            res.status(400).send({ err: "Date must be in YYYY-MM-DD format" });
-            return;
-        }
-
         if (!isNumericID(req.params.food_id)) {
             res.status(400).send({ err: "Food ID must be a numeric value" });
             return;

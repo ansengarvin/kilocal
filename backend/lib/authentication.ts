@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import admin from "firebase-admin";
-import { getPool } from "./database";
 
 if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
     console.log("Firebase emulator activated at", process.env.FIREBASE_AUTH_EMULATOR_HOST);
@@ -16,7 +15,6 @@ if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
 
 export function requireAuthentication(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get("Authorization") || "";
-
     if (!authHeader) {
         req.user = "";
         res.status(401).send({

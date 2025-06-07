@@ -4,7 +4,7 @@ export function isDate(date: string): boolean {
 }
 
 export function isNumericID(value: string): boolean {
-    const numericIDRegex = /^\d+$/; // Ensure food_id is a number
+    const numericIDRegex = /^\d+$/; // Ensure it is a number
     return numericIDRegex.test(value);
 }
 
