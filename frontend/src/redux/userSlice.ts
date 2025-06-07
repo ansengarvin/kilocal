@@ -81,7 +81,7 @@ const firebaseSignIn = createAsyncThunk(
 
 const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) => {
     const token = await firebaseAuth.currentUser?.getIdToken();
-    var retries = 0;
+    let retries = 0;
     while (retries < 3) {
         try {
             const url = `${apiURL}/users/sync`;
