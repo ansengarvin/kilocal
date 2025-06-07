@@ -30,7 +30,7 @@ export function requireValidDateParam(req: Request, res: Response, next: NextFun
 export async function requireDayID(req: Request, res: Response, next: NextFunction) {
     try {
         const pool = await getPool();
-        let result = await pool
+        const result = await pool
             .request()
             .input("user_id", req.user)
             .input("date", req.params.date)
