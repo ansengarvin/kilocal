@@ -17,7 +17,6 @@ function Verify() {
                     await firebaseAuth.currentUser.reload();
                     dispatch(userDispatch.fetchUserFirebase());
                 }
-                console.log("Interval");
             }, 2000);
 
             return () => clearInterval(interval);

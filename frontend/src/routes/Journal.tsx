@@ -60,7 +60,6 @@ export function Journal() {
                             dispatch(journalDispatch.clearAllErrors());
                             dispatch(journalDispatch.prevDay());
                             dispatch(journalDispatch.fetchDayByDate());
-                            console.log("PREV DAY");
                         }}
                     >
                         <ArrowBackiOSIcon color={"#ffffff"} />
