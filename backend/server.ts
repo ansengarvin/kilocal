@@ -1,8 +1,8 @@
 import express from "express";
 import { poolPromise } from "./lib/database";
 
-var api = require("./api");
-var cors = require("cors");
+let api = require("./api");
+let cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 8000;
