@@ -15,3 +15,5 @@ export const theme = {
         tablet: "900px",
     },
 };
+
+export type AppTheme = typeof theme;

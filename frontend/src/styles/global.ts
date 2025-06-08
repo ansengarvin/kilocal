@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
-import { appAccentColor, appWindowColor, mobileView } from "../lib/defines.tsx";
+import { AppTheme } from "./theme.tsx";
 
-export const globalStyle = css`
+export const globalStyle = (theme: AppTheme) => css`
     html,
     body {
         margin: 0;
@@ -20,13 +20,13 @@ export const globalStyle = css`
     h3 {
         margin: 0;
 
-        color: ${appAccentColor};
+        color: ${theme.colors.onSurface};
     }
 
     h1 {
         font-size: 2em;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${theme.breakpoints.mobile}) {
             font-size: 1.5em;
         }
     }
@@ -34,7 +34,7 @@ export const globalStyle = css`
     h2 {
         font-size: 1.5em;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${theme.breakpoints.mobile}) {
             font-size: 1.25em;
         }
     }
@@ -42,7 +42,7 @@ export const globalStyle = css`
     h3 {
         font-size: 1.25em;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${theme.breakpoints.mobile}) {
             font-size: 1em;
         }
     }
@@ -52,7 +52,7 @@ export const globalStyle = css`
         font-weight: normal;
         font-size: 1em;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${theme.breakpoints.mobile}) {
             font-size: 0.75em;
         }
     }
@@ -64,14 +64,14 @@ export const globalStyle = css`
     span {
         font-size: 1em;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${theme.breakpoints.mobile}) {
             font-size: 0.75em;
         }
         height: 1em;
     }
 
     .appWindow {
-        background-color: ${appWindowColor};
+        background-color: ${theme.colors.surface};
     }
 
     a {
