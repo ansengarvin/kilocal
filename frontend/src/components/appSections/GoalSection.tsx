@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { ProgressCircle } from "../data/ProgressCircle";
 import { PieChartWithKey } from "../data/PieChartWithKey";
-import { mobileViewPx } from "../../lib/defines";
 
 interface GoalSectionProps {
     calorieTotal: number;
@@ -12,65 +11,19 @@ interface GoalSectionProps {
     proteinGoal: number;
     fatTotal: number;
     fatGoal: number;
+    bigVersion: boolean;
 }
 
-// const carbColor = "#124E78"
-// const proteinColor = "#8C271E"
-// const fatColor = "#FFBA49"
-
-const calorieColor = "#417B5A";
-const carbColor = "#235789";
-const proteinColor = "#C1292E";
-const fatColor = "#ED9B40";
-
-const metricBackColor = "#dbd8cc";
-const metricTextColor = "#383838";
-
-const largeMetricRadius = screen.width > mobileViewPx ? 60 : 40;
-const largeMetricFontSize = screen.width > mobileViewPx ? "14pt" : "11pt";
-const pieChartKeyFontSize = screen.width > mobileViewPx ? "12pt" : "10pt";
-
-const smallMetricRadius = screen.width > mobileViewPx ? 50 : 30;
-const smallMetricFontSize = screen.width > mobileViewPx ? "12pt" : "10pt";
-
-const GoalSectionDiv = styled.div`
-    width: 100%;
-    height: min-content;
-    margin-bottom: 10px;
-    border-radius: 10px;
-
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    div.metric {
-        margin-top: 5px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        h3 {
-            margin: 0;
-            margin-top: 5px;
-            font-weight: normal;
-        }
-    }
-
-    div.subsection {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        gap: 20px;
-    }
-`;
-
 export function GoalSection(props: GoalSectionProps) {
-    const { calorieTotal, calorieGoal, carbTotal, carbGoal, proteinTotal, proteinGoal, fatTotal, fatGoal } = props;
+    const { calorieTotal, calorieGoal, carbTotal, carbGoal, proteinTotal, proteinGoal, fatTotal, fatGoal, bigVersion } =
+        props;
+
+    const largeMetricRadius = bigVersion ? 60 : 40;
+    const largeMetricFontSize = bigVersion ? "14pt" : "11pt";
+    const pieChartKeyFontSize = bigVersion ? "12pt" : "10pt";
+
+    const smallMetricRadius = bigVersion ? 50 : 30;
+    const smallMetricFontSize = bigVersion ? "12pt" : "10pt";
 
     const macroTotals = carbTotal + proteinTotal + fatTotal;
     let carbPercentage = carbTotal / macroTotals;
@@ -85,7 +38,7 @@ export function GoalSection(props: GoalSectionProps) {
     return (
         <GoalSectionDiv className="appWindow">
             <h2>Daily Goals</h2>
-            {screen.width < mobileViewPx ? (
+            {bigVersion ? (
                 <>
                     <div className="subsection">
                         <div className="metric">
@@ -195,3 +148,47 @@ export function GoalSection(props: GoalSectionProps) {
         </GoalSectionDiv>
     );
 }
+
+const calorieColor = "#417B5A";
+const carbColor = "#235789";
+const proteinColor = "#C1292E";
+const fatColor = "#ED9B40";
+
+const metricBackColor = "#dbd8cc";
+const metricTextColor = "#383838";
+
+const GoalSectionDiv = styled.div`
+    width: 100%;
+    height: min-content;
+    margin-bottom: 10px;
+    border-radius: 10px;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    div.metric {
+        margin-top: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        h3 {
+            margin: 0;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+    }
+
+    div.subsection {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+    }
+`;

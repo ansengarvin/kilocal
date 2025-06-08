@@ -1,4 +1,4 @@
-import { FoodEntryStyle } from "../styles/FoodEntryStyle";
+import { FoodEntryStyle } from "../../styles/FoodEntryStyle";
 import { AddIcon } from "../../lib/icons/AddIcon";
 import { useState } from "react";
 import { useAppDispatch } from "../../redux/store";

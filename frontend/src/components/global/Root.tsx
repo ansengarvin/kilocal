@@ -5,7 +5,6 @@ import { Footer } from "./Footer";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { firebaseAuth } from "../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { tabletView } from "../../lib/defines";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { userDispatch } from "../../redux/userSlice";
@@ -26,7 +25,7 @@ const Grid = styled.div`
     grid-template-columns: 100px 1fr 100px;
     grid-template-rows: auto 1fr auto;
 
-    @media (max-width: ${tabletView}) {
+    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
         grid-template-columns: 10px 1fr 10px;
         grid-template-rows: auto 1fr auto;
     }
@@ -63,7 +62,8 @@ export function Root(props: RootProps) {
             // Sync to database
             dispatch(userDispatch.databaseSync());
         }
-    }, [user.isLoggedIn, user.firebaseIsLoadedInitial, user.isVerified, user.isSyncing, dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user.isLoggedIn, user.firebaseIsLoadedInitial, user.isVerified, dispatch]);
 
     // Handle redirects
     useEffect(() => {

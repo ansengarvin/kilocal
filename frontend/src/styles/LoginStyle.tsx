@@ -1,15 +1,17 @@
 import styled from "@emotion/styled";
-import { appWindowColor, mobileView } from "../../lib/defines";
 
+/**
+ * Used by both Signup and Login page
+ */
 export const LoginStyle = styled.div`
     height: min-content;
     width: 700px;
 
-    @media (max-width: ${mobileView}) {
+    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
         width: 100%;
     }
 
-    background-color: ${appWindowColor};
+    background-color: ${(props) => props.theme.colors.surface};
     padding-top: 10px;
     padding-bottom: 50px;
     margin-top: 50px;

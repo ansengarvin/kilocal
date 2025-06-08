@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
-import { appAccentColor, tabletView } from "../../lib/defines";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { userDispatch } from "../../redux/userSlice";
@@ -56,7 +55,7 @@ export function Header() {
 }
 
 const Headerbar = styled.nav`
-    background-color: ${appAccentColor};
+    background-color: ${(props) => props.theme.colors.primary};
     grid-area: header;
     display: flex;
     align-items: center;
@@ -67,7 +66,7 @@ const Headerbar = styled.nav`
     padding-left: 100px;
     padding-right: 100px;
 
-    @media (max-width: ${tabletView}) {
+    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
         padding-left: 10px;
         padding-right: 10px;
     }

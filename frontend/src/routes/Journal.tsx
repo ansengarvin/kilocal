@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { ContentWindow } from "../components/styles/AppStyle";
+import { ContentWindow } from "../styles/ContentWindow";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
 import { PostSection } from "../components/appSections/PostSection";
 import { Landing } from "../components/global/Landing";
-import { appAccentColor, appAccentHover, mobileView } from "../lib/defines";
 import { ArrowBackiOSIcon } from "../lib/icons/ArrowBackiOSIcon";
 import { ArrowForwardiOSIcon } from "../lib/icons/ArrowForwardiOSIcon";
 import { RootState, useAppDispatch } from "../redux/store";
@@ -89,6 +88,7 @@ export function Journal() {
                     proteinGoal={100}
                     fatTotal={journal.totalFat}
                     fatGoal={50}
+                    bigVersion={false}
                 />
                 <FoodJournal className="appWindow">
                     <h2>Add a Food</h2>
@@ -148,19 +148,19 @@ const DateSection = styled.div`
         height: 50px;
         width: 50px;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
             height: 35px;
             width: 35px;
         }
 
-        background-color: ${appAccentColor};
+        background-color: ${(props) => props.theme.colors.primary};
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
 
         :hover {
-            background-color: ${appAccentHover};
+            background-color: ${(props) => props.theme.colors.primaryHover};
             // Fade out
         }
 

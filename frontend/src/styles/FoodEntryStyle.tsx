@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
-import { mobileView } from "../../lib/defines";
 
+/**
+ * Provides a consistent style to both food post and food get fields
+ */
 export const FoodEntryStyle = styled.div`
     width: 100%;
     height: min-content;
@@ -56,7 +58,7 @@ export const FoodEntryStyle = styled.div`
         height: 50px;
         border-radius: 10px;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
             height: 40px;
         }
 
@@ -102,7 +104,7 @@ export const FoodEntryStyle = styled.div`
         min-width: 75px;
         max-width: 75px;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
             min-width: 40px;
             max-width: 40px;
         }
@@ -112,7 +114,7 @@ export const FoodEntryStyle = styled.div`
         min-width: 75px;
         max-width: 75px;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
             min-width: 40px;
             max-width: 40px;
         }
@@ -120,7 +122,7 @@ export const FoodEntryStyle = styled.div`
 
     .buttonContainer {
         width: 35px;
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
             width: 25px;
         }
     }
@@ -129,7 +131,7 @@ export const FoodEntryStyle = styled.div`
         height: 35px;
         width: 35px;
 
-        @media (max-width: ${mobileView}) {
+        @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
             height: 25px;
             width: 25px;
         }
