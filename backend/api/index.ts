@@ -1,7 +1,10 @@
 import { Router } from "express";
+import days from "./days";
+import users from "./users";
+
 const router = Router();
 
-router.use("/users", require("./users"));
-router.use("/days", require("./days"));
+router.use("/days", days);
+router.use("/users", users);
 
-module.exports = router;
+export default router;

@@ -1,7 +1,7 @@
 import express from "express";
 import { poolPromise } from "./lib/database";
 
-let api = require("./api");
+import api from "./api/index";
 import cors from "cors";
 
 const app = express();
