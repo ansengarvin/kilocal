@@ -18,17 +18,6 @@ app.use(
 );
 app.use("/", api);
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: string;
-            admin?: boolean;
-            email?: string;
-            dayID?: number;
-        }
-    }
-}
-
 app.get("/test", async function (req, res) {
     try {
         // Returns the current time in pacific time
