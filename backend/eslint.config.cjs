@@ -13,10 +13,6 @@ const lint = tseslint.config(
             globals: globals.browser,
         },
         plugins: {},
-        rules: {
-            // Disable fobidding of require()
-            "@typescript-eslint/no-require-imports": "off",
-        },
     },
 );
 
