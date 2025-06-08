@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { tabletView } from "../../lib/defines";
+import { tabletView } from "../lib/defines";
 
 export const ContentWindow = styled.div`
     width: 750px;

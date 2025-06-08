@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { appWindowColor, mobileView } from "../../lib/defines";
+import { appWindowColor, mobileView } from "../lib/defines";
 
 export const LoginStyle = styled.div`
     height: min-content;

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { mobileView } from "../../lib/defines";
+import { mobileView } from "../lib/defines";
 
 export const FoodEntryStyle = styled.div`
     width: 100%;

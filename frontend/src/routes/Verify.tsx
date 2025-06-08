@@ -1,6 +1,6 @@
 import { firebaseAuth } from "../lib/firebase";
 import { useEffect } from "react";
-import { LoginStyle } from "../components/styles/LoginStyle";
+import { LoginStyle } from "../styles/LoginStyle";
 import { RootState, useAppDispatch } from "../redux/store";
 import { useSelector } from "react-redux";
 import { userDispatch } from "../redux/userSlice";

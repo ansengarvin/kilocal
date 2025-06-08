@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LoginStyle } from "../components/styles/LoginStyle";
+import { LoginStyle } from "../styles/LoginStyle";
 import { ProgressBarText } from "../components/data/ProgressBar";
 import { RootState, useAppDispatch } from "../redux/store";
 import { userDispatch } from "../redux/userSlice";
