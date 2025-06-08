@@ -21,7 +21,7 @@ function Verify() {
 
             return () => clearInterval(interval);
         }
-    }, [user.isLoggedIn, user.isVerified, dispatch]);
+    }, [user.firebaseIsLoadedInitial, user.isLoggedIn, user.isVerified, dispatch]);
 
     return (
         <LoginStyle>
@@ -32,7 +32,7 @@ function Verify() {
                     <button
                         className="grey half"
                         onClick={(e) => {
-                            e.preventDefault;
+                            e.preventDefault();
                             dispatch(userDispatch.resendVerificationEmail());
                         }}
                     >
@@ -42,7 +42,7 @@ function Verify() {
                     <button
                         className="grey half"
                         onClick={(e) => {
-                            e.preventDefault;
+                            e.preventDefault();
                             dispatch(userDispatch.firebaseSignOut());
                         }}
                     >

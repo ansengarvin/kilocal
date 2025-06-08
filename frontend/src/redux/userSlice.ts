@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../lib/firebase";
 import { apiURL } from "../lib/defines";
+import { FirebaseError } from "firebase/app";
 
 export interface UserState {
     firebaseIsLoadedInitial: boolean;
@@ -55,8 +56,8 @@ const firebaseSignIn = createAsyncThunk(
                 thunkAPI.dispatch(databaseSync());
             }
             return true;
-        } catch (error: any) {
-            if (error.name == "FirebaseError") {
+        } catch (error: unknown) {
+            if (error instanceof FirebaseError) {
                 if (
                     error.code == "auth/invalid-credential" ||
                     error.code == "auth/user-not-found" ||
@@ -71,7 +72,8 @@ const firebaseSignIn = createAsyncThunk(
                     return thunkAPI.rejectWithValue(error.message);
                 }
             } else {
-                return thunkAPI.rejectWithValue(error.message);
+                const errorMessage = error instanceof Error ? error.message : "An unexpected error has occurred";
+                return thunkAPI.rejectWithValue(errorMessage);
             }
         }
     },
@@ -79,7 +81,7 @@ const firebaseSignIn = createAsyncThunk(
 
 const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) => {
     const token = await firebaseAuth.currentUser?.getIdToken();
-    var retries = 0;
+    let retries = 0;
     while (retries < 3) {
         try {
             const url = `${apiURL}/users/sync`;
@@ -108,8 +110,20 @@ const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) =
 const firebaseSignOut = createAsyncThunk("user/firebaseSignOut", async (_, thunkAPI) => {
     try {
         await firebaseAuth.signOut();
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
+    } catch (error: unknown) {
+        if (error instanceof FirebaseError) {
+            if (error.code === "auth/no-current-user") {
+                return thunkAPI.rejectWithValue("No user is currently signed in.");
+            } else {
+                return thunkAPI.rejectWithValue(error.message);
+            }
+        }
+        // Handle other types of errors
+        if (error instanceof Error) {
+            return thunkAPI.rejectWithValue(error.message);
+        } else {
+            return thunkAPI.rejectWithValue("An unexpected error has occurred during sign-out.");
+        }
     }
 });
 
@@ -124,15 +138,16 @@ const firebaseSignUp = createAsyncThunk(
             const user = userCredentials.user;
             await sendEmailVerification(user);
             return { email: signup.email, name: signup.name };
-        } catch (error: any) {
-            if (error.name === "FirebaseError") {
+        } catch (error: unknown) {
+            if (error instanceof FirebaseError) {
                 if (error.code === "auth/email-already-in-use") {
                     return thunkAPI.rejectWithValue("Email already in use. Please try a different email.");
                 } else if (error.code === "auth/invalid-email") {
                     return thunkAPI.rejectWithValue("Please enter your email in the format:name@example.com");
                 }
             } else {
-                return thunkAPI.rejectWithValue(error.message);
+                const errorMessage = error instanceof Error ? error.message : "An unexpected error has occurred";
+                return thunkAPI.rejectWithValue(errorMessage);
             }
         }
     },
@@ -146,8 +161,12 @@ const resendVerificationEmail = createAsyncThunk("user/resendVerificationEmail",
     try {
         await sendEmailVerification(user);
         return true;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof FirebaseError || error instanceof Error
+                ? error.message
+                : "An unexpected error has occurred";
+        return thunkAPI.rejectWithValue(errorMessage);
     }
 });
 

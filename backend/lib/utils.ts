@@ -8,6 +8,6 @@ export function isNumericID(value: string): boolean {
     return numericIDRegex.test(value);
 }
 
-export function isNumber(value: any): boolean {
+export function isNumber(value: unknown): boolean {
     return typeof value === "number" && !isNaN(value);
 }

@@ -55,7 +55,7 @@ export function Root(props: RootProps) {
             dispatch(userDispatch.setFirebaseLoadedInitial(true));
         });
         return () => unsubscribe();
-    }, []);
+    }, [dispatch]);
 
     // Perform database sync immediately on firebase load if user is verified, or upon user verification.
     useEffect(() => {
@@ -63,7 +63,7 @@ export function Root(props: RootProps) {
             // Sync to database
             dispatch(userDispatch.databaseSync());
         }
-    }, [user.firebaseIsLoadedInitial, user.isVerified]);
+    }, [user.isLoggedIn, user.firebaseIsLoadedInitial, user.isVerified, user.isSyncing, dispatch]);
 
     // Handle redirects
     useEffect(() => {
@@ -85,7 +85,7 @@ export function Root(props: RootProps) {
                 return;
             }
         }
-    }, [user.firebaseIsLoadedInitial, user.isVerified, user.isLoggedIn, user.isSyncing, location.pathname]);
+    }, [user.firebaseIsLoadedInitial, user.isVerified, user.isLoggedIn, user.isSyncing, location.pathname, navigate]);
 
     if (!user.firebaseIsLoadedInitial) {
         return (

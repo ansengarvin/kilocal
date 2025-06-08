@@ -23,7 +23,7 @@ export function Journal() {
         if (loggedIn && verified) {
             dispatch(journalDispatch.fetchDayByDate());
         }
-    }, []);
+    }, [loggedIn, verified, dispatch]);
 
     /*  
         At the end of post/delete dispatches, fetch is called to refresh data.

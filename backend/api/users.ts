@@ -94,4 +94,4 @@ router.get("/", requireAuthentication, async function (req, res) {
     }
 });
 
-module.exports = router;
+export default router;

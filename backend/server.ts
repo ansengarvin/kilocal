@@ -1,9 +1,8 @@
 import express from "express";
 import { poolPromise } from "./lib/database";
-const isDev = 0;
 
-var api = require("./api");
-var cors = require("cors");
+import api from "./api/index";
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -18,17 +17,6 @@ app.use(
     }),
 );
 app.use("/", api);
-
-declare global {
-    namespace Express {
-        interface Request {
-            user?: string;
-            admin?: boolean;
-            email?: string;
-            dayID?: number;
-        }
-    }
-}
 
 app.get("/test", async function (req, res) {
     try {

@@ -1,5 +1,4 @@
 import sql from "mssql";
-import assert from "assert";
 
 // If a local database isn't being used, these environment variables must be set.
 const sqlConfig = {
