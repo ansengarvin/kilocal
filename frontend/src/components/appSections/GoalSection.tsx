@@ -11,28 +11,19 @@ interface GoalSectionProps {
     proteinGoal: number;
     fatTotal: number;
     fatGoal: number;
-    smallVersion?: boolean;
+    bigVersion: boolean;
 }
 
 export function GoalSection(props: GoalSectionProps) {
-    const {
-        calorieTotal,
-        calorieGoal,
-        carbTotal,
-        carbGoal,
-        proteinTotal,
-        proteinGoal,
-        fatTotal,
-        fatGoal,
-        smallVersion,
-    } = props;
+    const { calorieTotal, calorieGoal, carbTotal, carbGoal, proteinTotal, proteinGoal, fatTotal, fatGoal, bigVersion } =
+        props;
 
-    const largeMetricRadius = smallVersion ? 60 : 40;
-    const largeMetricFontSize = smallVersion ? "14pt" : "11pt";
-    const pieChartKeyFontSize = smallVersion ? "12pt" : "10pt";
+    const largeMetricRadius = bigVersion ? 60 : 40;
+    const largeMetricFontSize = bigVersion ? "14pt" : "11pt";
+    const pieChartKeyFontSize = bigVersion ? "12pt" : "10pt";
 
-    const smallMetricRadius = smallVersion ? 50 : 30;
-    const smallMetricFontSize = smallVersion ? "12pt" : "10pt";
+    const smallMetricRadius = bigVersion ? 50 : 30;
+    const smallMetricFontSize = bigVersion ? "12pt" : "10pt";
 
     const macroTotals = carbTotal + proteinTotal + fatTotal;
     let carbPercentage = carbTotal / macroTotals;
@@ -47,7 +38,7 @@ export function GoalSection(props: GoalSectionProps) {
     return (
         <GoalSectionDiv className="appWindow">
             <h2>Daily Goals</h2>
-            {smallVersion ? (
+            {bigVersion ? (
                 <>
                     <div className="subsection">
                         <div className="metric">

@@ -88,6 +88,7 @@ export function Journal() {
                     proteinGoal={100}
                     fatTotal={journal.totalFat}
                     fatGoal={50}
+                    bigVersion={false}
                 />
                 <FoodJournal className="appWindow">
                     <h2>Add a Food</h2>
