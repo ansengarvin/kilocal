@@ -1,4 +1,4 @@
-import { ContentWindow } from "../styles/AppStyle";
+import { ContentWindow } from "../styles/ContentWindow";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../redux/store";

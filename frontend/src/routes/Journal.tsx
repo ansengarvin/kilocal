@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ContentWindow } from "../styles/AppStyle";
+import { ContentWindow } from "../styles/ContentWindow";
 import styled from "@emotion/styled";
 import { FoodEntries } from "../components/data/FoodEntries";
 import { GoalSection } from "../components/appSections/GoalSection";
