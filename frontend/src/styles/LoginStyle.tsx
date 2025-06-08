@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
 import { appWindowColor, mobileView } from "../lib/defines";
 
+/**
+ * Used by both Signup and Login page
+ */
 export const LoginStyle = styled.div`
     height: min-content;
     width: 700px;

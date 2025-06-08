@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
 import { mobileView } from "../lib/defines";
 
+/**
+ * Provides a consistent style to both food post and food get fields
+ */
 export const FoodEntryStyle = styled.div`
     width: 100%;
     height: min-content;
