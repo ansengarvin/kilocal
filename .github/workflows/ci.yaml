@@ -105,8 +105,6 @@ jobs:
             - name: Run Build
               run: npm run build
               working-directory: frontend
-    # TODO: Add a step that speficially verifies the backend.
-    # To do so, we'd need to have a local instance of the database.
 
     docker_compose:
         name: validate docker build
