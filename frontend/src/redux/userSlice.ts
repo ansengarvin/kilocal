@@ -91,6 +91,9 @@ const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) =
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 },
+                body: JSON.stringify({
+                    name: localStorage.getItem("pendingName") || "",
+                }),
             });
             // Throw error if response not ok
             if (!response.ok) {
@@ -227,6 +230,7 @@ export const userSlice = createSlice({
                 state.isLoggedIn = true;
                 state.email = action.payload?.email || "";
                 state.name = action.payload?.name || "";
+                localStorage.setItem("pendingName", state.name);
                 console.log("User signed up successfully");
             })
             .addCase(firebaseSignUp.rejected, (state, action) => {
@@ -244,6 +248,9 @@ export const userSlice = createSlice({
                 state.isSynced = true;
                 state.email = action.payload.email || "";
                 state.name = action.payload.name || "";
+                if (localStorage.getItem("pendingName")) {
+                    localStorage.removeItem("pendingName");
+                }
                 console.log("Database sync successful");
             })
             .addCase(databaseSync.rejected, (state, action) => {

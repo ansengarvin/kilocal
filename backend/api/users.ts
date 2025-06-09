@@ -30,7 +30,7 @@ router.post("/sync", requireAuthentication, async function (req, res) {
                     USING (SELECT @id AS id, @email AS email, @name AS name, @weight AS weight) AS source
                     ON source.id = target.id
                     WHEN MATCHED THEN
-                        UPDATE SET name = source.name, weight = source.weight
+                        UPDATE SET email = source.email
                     WHEN NOT MATCHED THEN
                         INSERT (id, email, name, weight)
                         VALUES (source.id, source.email, source.name, source.weight)
