@@ -50,8 +50,6 @@ const initialState: JournalState = {
 const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
-    console.log(state.journal.day);
-    console.log(state.journal.dayName);
     const response = await fetch(`${apiURL}/days/${state.journal.day}`, {
         method: "GET",
         headers: {
