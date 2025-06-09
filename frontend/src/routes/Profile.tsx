@@ -5,9 +5,18 @@ import { RootState, useAppDispatch } from "../redux/store";
 import { userDispatch } from "../redux/userSlice";
 
 const SignOutButton = styled.button`
-    margin-top: auto;
-    width: 80%;
-    height: 50px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    height: 35px;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    width: 50%;
+    background-color: ${(props) => props.theme.colors.primary};
+    cursor: pointer;
 `;
 
 function Profile() {
@@ -16,15 +25,11 @@ function Profile() {
 
     return (
         <ContentWindow>
-            <div className="content">
+            <ProfileStyle>
                 {!user.isSyncing && (
                     <>
-                        <h1>{user.name}'s Profile</h1>
-                        <p>
-                            Email: {user.email}
-                            <br />
-                            Weight: {user.weight}
-                        </p>
+                        <h1>Your Profile</h1>
+                        <p>Email: {user.email}</p>
                     </>
                 )}
                 <SignOutButton
@@ -36,9 +41,25 @@ function Profile() {
                     Sign Out
                 </SignOutButton>
                 {user.signOutError && <>{user.signOutError}</>}
-            </div>
+            </ProfileStyle>
         </ContentWindow>
     );
 }
+
+const ProfileStyle = styled.div`
+    background-color: ${(props) => props.theme.colors.surface};
+    padding-top: 10px;
+    padding-bottom: 50px;
+    margin-top: 50px;
+    border-radius: 10px;
+
+    width: 350px;
+    max-width: 90%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+`;
 
 export default Profile;

@@ -15,8 +15,6 @@ export function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [name, setName] = useState("");
-
     const [passwordsMatch, setPasswordsMatch] = useState(true);
 
     return (
@@ -30,7 +28,7 @@ export function Signup() {
                     if (password !== confirmPassword) {
                         setPasswordsMatch(false);
                     } else {
-                        dispatch(userDispatch.firebaseSignUp({ email, password, name }));
+                        dispatch(userDispatch.firebaseSignUp({ email, password }));
                     }
                 }}
             >
@@ -63,15 +61,6 @@ export function Signup() {
                     onChange={(e) => {
                         setConfirmPassword(e.target.value);
                     }}
-                    required
-                    disabled={isSigningUp}
-                />
-                <label htmlFor="name">Name</label>
-                <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
                     required
                     disabled={isSigningUp}
                 />
