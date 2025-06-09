@@ -91,6 +91,9 @@ const databaseSync = createAsyncThunk("user/syncDatabase", async (_, thunkAPI) =
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 },
+                body: JSON.stringify({
+                    name: localStorage.getItem("pendingName") || "",
+                }),
             });
             // Throw error if response not ok
             if (!response.ok) {
@@ -129,7 +132,7 @@ const firebaseSignOut = createAsyncThunk("user/firebaseSignOut", async (_, thunk
 
 const firebaseSignUp = createAsyncThunk(
     "user/firebaseSignUp",
-    async (signup: { email: string; password: string; name: string }, thunkAPI) => {
+    async (signup: { email: string; password: string }, thunkAPI) => {
         try {
             const userCredentials = await createUserWithEmailAndPassword(firebaseAuth, signup.email, signup.password);
             if (!userCredentials.user) {
@@ -137,7 +140,7 @@ const firebaseSignUp = createAsyncThunk(
             }
             const user = userCredentials.user;
             await sendEmailVerification(user);
-            return { email: signup.email, name: signup.name };
+            return { email: signup.email };
         } catch (error: unknown) {
             if (error instanceof FirebaseError) {
                 if (error.code === "auth/email-already-in-use") {
@@ -226,7 +229,7 @@ export const userSlice = createSlice({
                 state.isSigningUp = false;
                 state.isLoggedIn = true;
                 state.email = action.payload?.email || "";
-                state.name = action.payload?.name || "";
+                localStorage.setItem("pendingName", state.name);
                 console.log("User signed up successfully");
             })
             .addCase(firebaseSignUp.rejected, (state, action) => {
@@ -244,6 +247,9 @@ export const userSlice = createSlice({
                 state.isSynced = true;
                 state.email = action.payload.email || "";
                 state.name = action.payload.name || "";
+                if (localStorage.getItem("pendingName")) {
+                    localStorage.removeItem("pendingName");
+                }
                 console.log("Database sync successful");
             })
             .addCase(databaseSync.rejected, (state, action) => {

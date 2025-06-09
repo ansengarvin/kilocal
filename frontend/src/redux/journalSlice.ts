@@ -30,6 +30,23 @@ export interface JournalState {
     deleteError: string | null;
 }
 
+const initialState: JournalState = {
+    day: new Date().toLocaleDateString("en-CA"), // Start with today's date in ISO format
+    dayName: getJournalDayName(parseLocalDate(new Date().toLocaleDateString("en-CA"))), // Get the name for today's date
+    totalCalories: 0,
+    totalCarbs: 0,
+    totalProtein: 0,
+    totalFat: 0,
+    food: [],
+    isToday: true, // Default to true since the initial day is today
+    isFetching: false,
+    fetchError: null,
+    isPosting: false,
+    postError: null,
+    isDeleting: false,
+    deleteError: null,
+};
+
 const fetchDayByDate = createAsyncThunk("journal/fetchDayByDate", async (_, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const token = await firebaseAuth.currentUser?.getIdToken();
@@ -79,38 +96,21 @@ const deleteFoodEntry = createAsyncThunk("journal/deleteFoodEntry", async (id: n
     return true;
 });
 
-const initialState: JournalState = {
-    day: new Date().toISOString().split("T")[0], // Start with today's date in ISO format
-    dayName: getJournalDayName(new Date()),
-    totalCalories: 0,
-    totalCarbs: 0,
-    totalProtein: 0,
-    totalFat: 0,
-    food: [],
-    isToday: true, // Default to true since the initial day is today
-    isFetching: false,
-    fetchError: null,
-    isPosting: false,
-    postError: null,
-    isDeleting: false,
-    deleteError: null,
-};
-
 export const journalSlice = createSlice({
     name: "journal",
     initialState: initialState,
     reducers: {
         nextDay(state) {
-            const thisDay = new Date(state.day);
+            const thisDay = parseLocalDate(state.day);
             thisDay.setDate(thisDay.getDate() + 1);
-            state.day = thisDay.toISOString().split("T")[0]; // Store date in ISO format
+            state.day = thisDay.toLocaleDateString("en-CA"); // Store date in ISO format
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
         },
         prevDay(state) {
-            const thisDay = new Date(state.day);
+            const thisDay = parseLocalDate(state.day);
             thisDay.setDate(thisDay.getDate() - 1);
-            state.day = thisDay.toISOString().split("T")[0]; // Store date in ISO format
+            state.day = thisDay.toLocaleDateString("en-CA"); // Store date in ISO format
             // Technically the UI shouldn't allow us to go into a future day, but check this anyway
             state.isToday = thisDay.toDateString() === new Date().toDateString();
             state.dayName = getJournalDayName(thisDay);
@@ -137,10 +137,6 @@ export const journalSlice = createSlice({
                 state.totalFat = data.totalFat;
                 state.isFetching = false;
                 state.fetchError = null;
-
-                // Update the day name and apiDate based on the fetched date
-                const fetchedDate = new Date(state.day);
-                state.dayName = getJournalDayName(fetchedDate);
             })
             .addCase(fetchDayByDate.rejected, (state, action) => {
                 state.isFetching = false;
@@ -190,6 +186,10 @@ export default journalSlice.reducer;
 /*
     Helper Functions
 */
+function parseLocalDate(dateString: string) {
+    const [year, month, day] = dateString.split("-");
+    return new Date(Number(year), Number(month) - 1, Number(day));
+}
 function getJournalDayName(date: Date): string {
     const month = date.toLocaleString("default", { month: "long" });
     const day = date.getDate();
